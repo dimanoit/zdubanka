@@ -1,4 +1,5 @@
 ﻿using Api.Mappers;
+using Application.Interfaces;
 using Domain.Response;
 using Google.Apis.Auth;
 
@@ -6,19 +7,14 @@ namespace Api.Extensions;
 
 public static class AccountExtension
 {
-    public static async Task<AccountShort> GetCurrentAccountAsync(
+    public static async Task<string> GetCurrentUserIdAsync(
         this HttpContext context,
-        AppSettings settings)
+        IAccountService accountService
+        )
     {
-        var token = context.Request.Headers["X-Google-Token"];
-        var validationSettings = new GoogleJsonWebSignature.ValidationSettings
-        {
-            Audience = new List<string> { settings.GoogleClientId }
-        };
-        
-        var payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings);
+        var token = context.Request.Headers["X-Token"];
 
-        return payload.ToAccountShort();
+        return await accountService.GetUserIdByTokenAsync(token);
     }
 }
 

@@ -4,5 +4,5 @@ namespace Domain.Requests;
 
 public record AppointmentRetrieveRequest : PageRequestBase
 {
-    public string Email { get; init; }
+    public string UserId { get; init; }
 }

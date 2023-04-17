@@ -8,7 +8,7 @@ public interface IAppointmentService
 {
     Task<Appointment> CreateAsync(
         AppointmentCreationRequest appointmentRequest,
-        string organizerEmail,
+        string organizerId,
         CancellationToken cancellationToken);
 
     public Task<AppointmentResponse> GetUsersAppointmentsAsync(

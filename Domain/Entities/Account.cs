@@ -14,5 +14,5 @@ public class Account
     public RelationshipStatus? RelationshipStatus { get; init; }
     public ICollection<UserLanguage>? UserLanguages { get; init; }
     public ICollection<Appointment>? Appointments { get; set; }
-    public AccountToken Token { get; set; }
+    public string Token { get; set; }
 }

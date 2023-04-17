@@ -9,4 +9,5 @@ public interface IAccountService
     Task<Account?> GetAccountByEmailAsync(string email, CancellationToken cancellationToken);
     Task UpdateAccountAsync(Account account);
     Task DeleteAccountAsync(Account account);
+    Task<string> GetUserIdByTokenAsync(string token);
 }

@@ -1,22 +1,18 @@
 using Application.Interfaces;
 using Domain.Entities;
-using Duende.IdentityServer.EntityFramework.Options;
-using Infrastructure.Identity;
 using Infrastructure.Persistence.Configurations;
 using MediatR;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Persistence;
 
-public sealed class ApplicationDbContext :  ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+public sealed class ApplicationDbContext :  DbContext, IApplicationDbContext
 {
     private readonly IMediator _mediator;
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
-        IOptions<OperationalStoreOptions> operationalStoreOptions,IMediator mediator)
-        : base(options, operationalStoreOptions)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
+       ,IMediator mediator)
+        : base(options)
     {
         _mediator = mediator;
         Database.Migrate();

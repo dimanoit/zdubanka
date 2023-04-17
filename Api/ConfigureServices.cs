@@ -11,7 +11,7 @@ public static class ConfigureServices
     {
         services.Configure<AppSettings>(configuration.GetSection("ApplicationSettings"));
         AddCors(services, environment);
-        services.AddScoped<SocialAuthFilter>();
+        services.AddScoped<AuthorizationAttribute>();
     }
 
     private static void AddCors(IServiceCollection services, IWebHostEnvironment environment)

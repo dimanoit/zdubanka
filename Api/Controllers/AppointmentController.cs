@@ -5,22 +5,19 @@ using Domain.Entities;
 using Domain.Requests;
 using Domain.Response;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace Api.Controllers;
 
-[SocialAuthFilter]
-[ApiController]
-[Route("api/[controller]")]
+[Authorization, ApiController, Route("api/[controller]")]
 public class AppointmentController : ControllerBase
 {
     private readonly IAppointmentService _appointmentService;
-    private readonly AppSettings _appSettings;
-
-    public AppointmentController(IAppointmentService appointmentService, IOptions<AppSettings> appSettings)
+    private readonly IAccountService _accountService;
+    
+    public AppointmentController(IAppointmentService appointmentService, IAccountService accountService)
     {
         _appointmentService = appointmentService;
-        _appSettings = appSettings.Value;
+        _accountService = accountService;
     }
 
     [HttpPost]
@@ -29,19 +26,21 @@ public class AppointmentController : ControllerBase
         AppointmentCreationRequest appointment,
         CancellationToken cancellationToken)
     {
-        var user = await HttpContext.GetCurrentAccountAsync(_appSettings);
-        var createdAppointment = await _appointmentService.CreateAsync(appointment, user.Email, cancellationToken);
+        var userId = await HttpContext.GetCurrentUserIdAsync(_accountService);
+        var createdAppointment = await _appointmentService.CreateAsync(appointment, userId, cancellationToken);
         return Ok(createdAppointment);
     }
 
     [HttpGet]
-    public async Task<AppointmentResponse> GetCurrentUserAppointments(int skip, int take, CancellationToken cancellationToken)
+    public async Task<AppointmentResponse> GetCurrentUserAppointments(int skip, int take,
+        CancellationToken cancellationToken)
     {
-        var user = await HttpContext.GetCurrentAccountAsync(_appSettings);
-        
-        var events = await _appointmentService.GetUsersAppointmentsAsync(new AppointmentRetrieveRequest
+        var userId = await HttpContext.GetCurrentUserIdAsync(_accountService);
+
+        var events = await _appointmentService.GetUsersAppointmentsAsync(
+            new AppointmentRetrieveRequest
         {
-            Email = user.Email,
+            UserId = userId,
             Skip = skip,
             Take = take
         }, cancellationToken);

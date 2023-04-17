@@ -19,11 +19,9 @@ public class AppointmentService : IAppointmentService
 
     public async Task<Appointment> CreateAsync(
         AppointmentCreationRequest appointmentRequest,
-        string organizerEmail,
+        string organizerId,
         CancellationToken cancellationToken)
     {
-        var organizerId = await GetUserIdAsync(organizerEmail, cancellationToken);
-        
         var appointment = appointmentRequest.ToAppointment(organizerId);
         appointment.AddDomainEvent(new AppointmentCreatedEvent(appointment.Id));
 
@@ -60,10 +58,9 @@ public class AppointmentService : IAppointmentService
        AppointmentRetrieveRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = await GetUserIdAsync(request.Email, cancellationToken);
-
         var baseQuery =  _context.Appointments
-            .Where(ap => ap.OrganizerId == userId)
+            .AsNoTracking()
+            .Where(ap => ap.OrganizerId == request.UserId)
             .Select(ap => ap.ToAppointmentResponseDto());
 
         var totalCount = await baseQuery.CountAsync(cancellationToken);
@@ -74,15 +71,5 @@ public class AppointmentService : IAppointmentService
             Data = data,
             TotalCount = totalCount
         };
-    }
-
-    private async Task<string> GetUserIdAsync(string email, CancellationToken cancellationToken)
-    {
-        var userId = await _context.Accounts
-            .Where(ac => ac.Email == email)
-            .Select(ac => ac.Id)
-            .FirstAsync(cancellationToken);
-        
-        return userId;
     }
 }
