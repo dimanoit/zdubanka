@@ -42,11 +42,15 @@ public class AppointmentController : ControllerBase
         {
             UserId = userId,
             Skip = skip,
-            Take = take
+            Take = take 
         }, cancellationToken);
 
         return events;
     }
+
+    [HttpPatch]
+    public async Task ApplyOnAppointmentAsync(string appointmentId, CancellationToken cancellationToken)
+        => await _appointmentService.ApplyOnAppointmentAsync(appointmentId, await HttpContext.GetCurrentUserIdAsync(_accountService), cancellationToken);
 
     [HttpGet("{appointmentId}")]
     public async Task<IActionResult> GetAppointment(string appointmentId, CancellationToken cancellationToken)

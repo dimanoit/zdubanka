@@ -54,6 +54,14 @@ public class AppointmentService : IAppointmentService
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task ApplyOnAppointmentAsync(
+        string appointmentId,
+        string userId,
+        CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<AppointmentResponse> GetUsersAppointmentsAsync(
        AppointmentRetrieveRequest request,
         CancellationToken cancellationToken)
