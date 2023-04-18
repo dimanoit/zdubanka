@@ -59,14 +59,24 @@ public class AppointmentService : IAppointmentService
         string userId,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var appointmentParticipant = new AppointmentParticipant
+        {
+            UserId = userId,
+            AppointmentId = appointmentId
+        };
+        var participantAppliedEvent = new ParticipantAppliedEvent(userId, appointmentId);
+
+        appointmentParticipant.AddDomainEvent(participantAppliedEvent);
+
+        _context.AppointmentParticipants.Add(appointmentParticipant);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<AppointmentResponse> GetUsersAppointmentsAsync(
-       AppointmentRetrieveRequest request,
+        AppointmentRetrieveRequest request,
         CancellationToken cancellationToken)
     {
-        var baseQuery =  _context.Appointments
+        var baseQuery = _context.Appointments
             .AsNoTracking()
             .Where(ap => ap.OrganizerId == request.UserId)
             .Select(ap => ap.ToAppointmentResponseDto());

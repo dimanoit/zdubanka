@@ -22,6 +22,7 @@ public sealed class ApplicationDbContext :  DbContext, IApplicationDbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Chat> Chats { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<AppointmentParticipant> AppointmentParticipants { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -30,9 +31,9 @@ public sealed class ApplicationDbContext :  DbContext, IApplicationDbContext
         return await base.SaveChangesAsync(cancellationToken);
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.ApplyConfigurationsFromAssembly(typeof(AccountConfiguration).Assembly);
-        base.OnModelCreating(builder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountConfiguration).Assembly);
+        base.OnModelCreating(modelBuilder);
     }
 }

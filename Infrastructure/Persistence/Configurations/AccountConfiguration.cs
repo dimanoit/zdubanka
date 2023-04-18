@@ -13,6 +13,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.ToTable("Accounts", "public");
 
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.Id).ValueGeneratedOnAdd();
 
         builder.Property(a => a.Id).IsRequired();
         builder.Property(a => a.Email).IsRequired();
