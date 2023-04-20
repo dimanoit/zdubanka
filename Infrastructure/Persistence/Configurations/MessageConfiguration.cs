@@ -10,6 +10,7 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
     {
         builder.ToTable("Messages", "public");
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.Id).ValueGeneratedOnAdd();
 
         builder.Property(m => m.SenderId).IsRequired();
         builder.Property(m => m.Content).IsRequired();

@@ -27,6 +27,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Account", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
@@ -68,6 +69,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Appointment", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<AppointmentLimitation>("AppointmentLimitation")
@@ -103,6 +105,34 @@ namespace Infrastructure.Migrations
                     b.ToTable("Appointments", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppointmentParticipant", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<string>("AppointmentId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("UserId", "AppointmentId")
+                        .IsUnique();
+
+                    b.ToTable("AppointmentParticipants", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Chat", b =>
                 {
                     b.Property<string>("AppointmentId")
@@ -122,6 +152,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Message", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ChatId")
@@ -157,6 +188,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Organizer");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppointmentParticipant", b =>
+                {
+                    b.HasOne("Domain.Entities.Appointment", "Appointment")
+                        .WithMany("AppointmentParticipants")
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Account", "Account")
+                        .WithMany("AppointmentParticipations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Appointment");
+                });
+
             modelBuilder.Entity("Domain.Entities.Chat", b =>
                 {
                     b.HasOne("Domain.Entities.Appointment", "Appointment")
@@ -181,11 +231,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
                 {
+                    b.Navigation("AppointmentParticipations");
+
                     b.Navigation("Appointments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Appointment", b =>
                 {
+                    b.Navigation("AppointmentParticipants");
+
                     b.Navigation("Chat");
                 });
 

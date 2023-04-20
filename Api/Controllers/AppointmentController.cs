@@ -48,7 +48,7 @@ public class AppointmentController : ControllerBase
         return events;
     }
 
-    [HttpPatch]
+    [HttpPatch("{appointmentId}/apply")]
     public async Task ApplyOnAppointmentAsync(string appointmentId, CancellationToken cancellationToken)
         => await _appointmentService.ApplyOnAppointmentAsync(appointmentId, await HttpContext.GetCurrentUserIdAsync(_accountService), cancellationToken);
 

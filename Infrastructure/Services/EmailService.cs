@@ -12,7 +12,7 @@ public class EmailService : IEmailService
         _logger = logger;
     }
 
-    public async Task SendEmail(string emailTo, string message, string subject)
+    public async Task SendEmailAsync(string emailTo, string message, string subject)
     {
         await Task.CompletedTask;
         _logger.LogInformation("Mock email sent");

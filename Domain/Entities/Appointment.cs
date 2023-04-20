@@ -15,4 +15,5 @@ public class Appointment : BaseEntity
     public string OrganizerId { get; set; } = null!;
     public Account? Organizer { get; set; }
     public Chat? Chat { get; set; }
+    public ICollection<AppointmentParticipant>? AppointmentParticipants { get; set; }
 }

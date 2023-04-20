@@ -11,6 +11,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.ToTable("Appointments", "public");
 
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.Id).ValueGeneratedOnAdd();
 
         builder.Property(a => a.StartDay).IsRequired();
         builder.Property(a => a.Title).IsRequired();

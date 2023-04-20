@@ -28,7 +28,8 @@ namespace Infrastructure.Migrations
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
                     Gender = table.Column<string>(type: "text", nullable: true),
                     RelationshipStatus = table.Column<string>(type: "text", nullable: true),
-                    UserLanguages = table.Column<ICollection<UserLanguage>>(type: "jsonb", nullable: true)
+                    UserLanguages = table.Column<ICollection<UserLanguage>>(type: "jsonb", nullable: true),
+                    Token = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,6 +58,34 @@ namespace Infrastructure.Migrations
                         column: x => x.OrganizerId,
                         principalSchema: "public",
                         principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppointmentParticipants",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    AppointmentId = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppointmentParticipants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppointmentParticipants_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "public",
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppointmentParticipants_Appointments_AppointmentId",
+                        column: x => x.AppointmentId,
+                        principalSchema: "public",
+                        principalTable: "Appointments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -113,6 +142,17 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppointmentParticipants_AppointmentId",
+                table: "AppointmentParticipants",
+                column: "AppointmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentParticipants_UserId_AppointmentId",
+                table: "AppointmentParticipants",
+                columns: new[] { "UserId", "AppointmentId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Appointments_OrganizerId",
                 schema: "public",
                 table: "Appointments",
@@ -128,6 +168,9 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppointmentParticipants");
+
             migrationBuilder.DropTable(
                 name: "Messages",
                 schema: "public");

@@ -15,4 +15,5 @@ public class Account
     public ICollection<UserLanguage>? UserLanguages { get; init; }
     public ICollection<Appointment>? Appointments { get; set; }
     public string Token { get; set; }
+    public ICollection<AppointmentParticipant>? AppointmentParticipations { get; set; }
 }

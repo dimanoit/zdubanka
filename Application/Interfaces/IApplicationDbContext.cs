@@ -9,6 +9,7 @@ public interface IApplicationDbContext
     DbSet<Account> Accounts { get; set; }
     DbSet<Chat> Chats { get; set; }
     DbSet<Message> Messages { get; set; }
+    DbSet<AppointmentParticipant> AppointmentParticipants { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
