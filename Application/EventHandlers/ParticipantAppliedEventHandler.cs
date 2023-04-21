@@ -8,8 +8,8 @@ namespace Application.EventHandlers;
 
 public class ParticipantAppliedEventHandler: INotificationHandler<ParticipantAppliedEvent>
 {
-    private readonly IEmailService _emailService;
     private readonly IApplicationDbContext _applicationDbContext;
+    private readonly IEmailService _emailService;
 
     public ParticipantAppliedEventHandler(IEmailService emailService, IApplicationDbContext applicationDbContext)
     {

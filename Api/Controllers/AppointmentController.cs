@@ -11,9 +11,9 @@ namespace Api.Controllers;
 [Authorization, ApiController, Route("api/[controller]")]
 public class AppointmentController : ControllerBase
 {
-    private readonly IAppointmentService _appointmentService;
     private readonly IAccountService _accountService;
-    
+    private readonly IAppointmentService _appointmentService;
+
     public AppointmentController(IAppointmentService appointmentService, IAccountService accountService)
     {
         _appointmentService = appointmentService;

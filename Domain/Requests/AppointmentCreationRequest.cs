@@ -10,7 +10,4 @@ public record AppointmentCreationRequest
     public DateTime StartDay { get; init; }
     public DateTime EndDay { get; init; }
     public AppointmentLimitation AppointmentLimitation { get; init; } = null!;
-
-
-
 }
