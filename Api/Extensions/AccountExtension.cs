@@ -1,7 +1,4 @@
-﻿using Api.Mappers;
-using Application.Interfaces;
-using Domain.Response;
-using Google.Apis.Auth;
+﻿using Application.Interfaces;
 
 namespace Api.Extensions;
 

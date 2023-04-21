@@ -1,9 +1,7 @@
 ﻿using Application.Interfaces;
-using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Api.Filters;
 public class AuthorizationAttribute : ActionFilterAttribute
