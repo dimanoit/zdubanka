@@ -1,5 +1,6 @@
 ﻿using Api.Mappers;
 using Application.Interfaces;
+using Domain.Entities;
 using Domain.Response;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
@@ -14,10 +15,10 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly AppSettings _applicationSettings;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<Account> _userManager;
 
     public AuthController(
-        UserManager<IdentityUser> userManager,
+        UserManager<Account> userManager,
         IAccountService accountService,
         IOptions<AppSettings> applicationSettings)
     {
@@ -48,9 +49,13 @@ public class AuthController : ControllerBase
     [HttpPost]
     public async Task<IResult> PostUser(UserRegistrationModel user)
     {
-        var identityUser = new IdentityUser()
+        var identityUser = new Account()
         {
-            Email = user.Email
+            Email = user.Email,
+            FullName = user.Name,
+            UserName = user.Email,
+            Id = Guid.NewGuid().ToString(),
+            Token = Guid.NewGuid().ToString()
         };
 
         var result = await _userManager.CreateAsync(identityUser, user.Password);
@@ -69,4 +74,5 @@ public class UserRegistrationModel
 {
     public string Email { get; set; }
     public string Password { get; set; }
+    public string Name { get; set; }
 }
