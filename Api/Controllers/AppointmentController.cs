@@ -4,11 +4,12 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Requests;
 using Domain.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Authorization, ApiController, Route("api/[controller]")]
+[Authorize, ApiController, Route("api/[controller]")]
 public class AppointmentController : ControllerBase
 {
     private readonly IAccountService _accountService;

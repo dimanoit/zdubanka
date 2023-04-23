@@ -5,11 +5,12 @@ using Application.Queries;
 using Domain.Requests;
 using Domain.Response;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Authorization, ApiController, Route("api/event-participants")]
+[Authorize, ApiController, Route("api/event-participants")]
 public class EventParticipantController : ControllerBase
 {
     private readonly IAccountService _accountService;

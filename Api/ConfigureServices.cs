@@ -11,7 +11,7 @@ public static class ConfigureServices
     {
         services.Configure<AppSettings>(configuration.GetSection("ApplicationSettings"));
         AddCors(services, environment);
-        services.AddScoped<AuthorizationAttribute>();
+        services.AddScoped<AuthorizationObsoleteAttribute>();
         services.AddScoped<JwtService>();
     }
 

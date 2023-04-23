@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Filters;
-public class AuthorizationAttribute : ActionFilterAttribute
+
+[Obsolete("Old auth verification should be deleted")]
+public class AuthorizationObsoleteAttribute : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(
         ActionExecutingContext context,
