@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Services;
+using Domain.Entities;
 using Infrastructure.Migrations;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
@@ -17,7 +18,7 @@ public static class ConfigureServices
         services.AddScoped<IEmailService, EmailService>();
         
         services
-            .AddIdentityCore<IdentityUser>(options => {
+            .AddIdentityCore<Account>(options => {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 6;

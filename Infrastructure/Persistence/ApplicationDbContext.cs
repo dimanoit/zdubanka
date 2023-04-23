@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-public sealed class ApplicationDbContext :  IdentityUserContext<IdentityUser>, IApplicationDbContext
+public sealed class ApplicationDbContext :  IdentityUserContext<Account>, IApplicationDbContext
 {
     private readonly IMediator _mediator;
 

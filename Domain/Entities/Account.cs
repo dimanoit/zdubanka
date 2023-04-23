@@ -1,12 +1,11 @@
 ﻿using Domain.Enums;
 using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities;
 
-public class Account
+public class Account: IdentityUser
 {
-    public string Id { get; init; } = null!;
-    public string Email { get; init; } = null!;
     public string FullName { get; init; } = null!;
     public string? Bio { get; init; }
     public string? ImageUrl { get; init; }
