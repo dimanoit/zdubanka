@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Services;
+using Infrastructure.Migrations;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,19 @@ public static class ConfigureServices
         IConfiguration configuration)
     {
         services.AddScoped<IEmailService, EmailService>();
+        
+        services
+            .AddIdentityCore<IdentityUser>(options => {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+        
         var dbConfiguration = configuration
             .GetSection("DbConfiguration")
             .Get<DbConfiguration>()!;
