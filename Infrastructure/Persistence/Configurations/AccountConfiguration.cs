@@ -24,6 +24,10 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
             .IsUnique()
             .HasDatabaseName("IX_Users_Email");
 
+        builder.Property(a => a.AuthMethod)
+            .HasConversion(new EnumToStringConverter<AuthMethod>())
+            .IsRequired();
+
         builder.Property(a => a.Gender)
             .HasConversion(new EnumToStringConverter<Gender>());
 
