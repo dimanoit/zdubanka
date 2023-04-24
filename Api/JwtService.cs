@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Api.Controllers;
 using Domain.Entities;
+using Domain.Response;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 

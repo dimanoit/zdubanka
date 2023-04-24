@@ -1,6 +1,7 @@
 ﻿using Api.Mappers;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
@@ -50,7 +51,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IResult> PostUser(UserRegistrationModel user)
+    public async Task<IResult> PostUser(RegistrationRequestModel user)
     {
         var identityUser = new Account
         {
@@ -70,13 +71,14 @@ public class AuthController : ControllerBase
         user.Password = null;
         return Results.Created("api/auth", user);
     }
-    
-    [HttpPost]
-    [Route("refresh")]
-    public async Task<IActionResult> Refresh(TokenApiModel tokenApiModel, CancellationToken cancellationToken)
+
+    [HttpPost, Route("refresh")]
+    public async Task<ActionResult<AuthenticationResponse>> Refresh(
+        RefreshTokenRequestModel refreshTokenRequestModel,
+        CancellationToken cancellationToken)
     {
-        string accessToken = tokenApiModel.AccessToken;
-        string refreshToken = tokenApiModel.RefreshToken;
+        string accessToken = refreshTokenRequestModel.AccessToken;
+        string refreshToken = refreshTokenRequestModel.RefreshToken;
         var principal = _jwtService.GetPrincipalFromExpiredToken(accessToken);
         var username = principal.Identity!.Name; //this is mapped to the Name claim by default
 
@@ -90,13 +92,15 @@ public class AuthController : ControllerBase
         user.RefreshToken = newRefreshToken;
         
         await _accountService.UpdateAccountAsync(user);
-        
-        return Ok(new AuthenticationResponse()
+
+        var authenticationResponse = new AuthenticationResponse()
         {
             Token = newAccessToken.Token,
             Expiration = newAccessToken.Expiration,
             RefreshToken = newRefreshToken
-        });
+        };
+        
+        return Ok(authenticationResponse);
     }
 
     [HttpPost("token")]
@@ -122,28 +126,3 @@ public class AuthController : ControllerBase
     }
 }
 
-public class TokenApiModel
-{
-    public string AccessToken { get; set; }
-    public string RefreshToken { get; set; }
-}
-
-public class UserRegistrationModel
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string Name { get; set; }
-}
-
-public class AuthenticationRequest
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
-}
-
-public class AuthenticationResponse
-{
-    public string Token { get; set; }
-    public string? RefreshToken { get; set; }
-    public DateTime Expiration { get; set; }
-}
