@@ -1,11 +1,13 @@
-﻿using Application.Interfaces;
+﻿using Application.Services.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[ApiController, Authorize, Route("api/[controller]")]
+[ApiController]
+[Authorize]
+[Route("api/[controller]")]
 public class MessageController : ControllerBase
 {
     private readonly IMessageService _messageService;

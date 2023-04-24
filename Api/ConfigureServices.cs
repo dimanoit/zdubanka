@@ -1,5 +1,6 @@
 
 using System.Text;
+using Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,10 +13,9 @@ public static class ConfigureServices
     public static void AddApiServices(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment environment)
     {
-        services.Configure<AppSettings>(configuration.GetSection("ApplicationSettings"));
         AddCors(services, environment);
         services.AddScoped<AuthService>();
-        
+
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -26,11 +26,9 @@ public static class ConfigureServices
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidAudience = configuration["Jwt:Audience"],
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration["Jwt:Key"])
-                    )
+                    ValidAudience = configuration["TokenOptions:Audience"],
+                    ValidIssuer = configuration["TokenOptions:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenOptions:Key"]))
                 };
             });
     }

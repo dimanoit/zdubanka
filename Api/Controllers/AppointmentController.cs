@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using Application.Interfaces;
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Requests;
 using Domain.Response;
@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Authorize, ApiController, Route("api/[controller]")]
+[Authorize]
+[ApiController]
+[Route("api/[controller]")]
 public class AppointmentController : ControllerBase
 {
     private readonly IAppointmentService _appointmentService;
@@ -20,10 +22,9 @@ public class AppointmentController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> CreateAppointment(
-        [FromBody]
-        AppointmentCreationRequest appointment,
+        [FromBody] AppointmentCreationRequest appointment,
         CancellationToken cancellationToken)
-    { 
+    {
         var userId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
 
         var createdAppointment = await _appointmentService.CreateAsync(appointment, userId, cancellationToken);
@@ -38,18 +39,21 @@ public class AppointmentController : ControllerBase
 
         var events = await _appointmentService.GetUsersAppointmentsAsync(
             new AppointmentRetrieveRequest
-        {
-            UserId = userId,
-            Skip = skip,
-            Take = take 
-        }, cancellationToken);
+            {
+                UserId = userId,
+                Skip = skip,
+                Take = take
+            }, cancellationToken);
 
         return events;
     }
 
     [HttpPatch("{appointmentId}/apply")]
     public async Task ApplyOnAppointmentAsync(string appointmentId, CancellationToken cancellationToken)
-        => await _appointmentService.ApplyOnAppointmentAsync(appointmentId, User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value, cancellationToken);
+    {
+        await _appointmentService.ApplyOnAppointmentAsync(appointmentId,
+            User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value, cancellationToken);
+    }
 
     [HttpGet("{appointmentId}")]
     public async Task<IActionResult> GetAppointment(string appointmentId, CancellationToken cancellationToken)

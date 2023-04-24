@@ -1,9 +1,10 @@
 ﻿using Api.Mappers;
-using Application.Interfaces;
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
+using Infrastructure.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -15,14 +16,14 @@ namespace Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
-    private readonly AppSettings _applicationSettings;
+    private readonly GoogleOptions _applicationSettings;
     private readonly AuthService _authService;
     private readonly UserManager<Account> _userManager;
 
     public AuthController(
         UserManager<Account> userManager,
         IAccountService accountService,
-        IOptions<AppSettings> applicationSettings,
+        IOptions<GoogleOptions> applicationSettings,
         AuthService authService)
     {
         _userManager = userManager;
@@ -58,48 +59,46 @@ public class AuthController : ControllerBase
             Email = user.Email,
             FullName = user.Name,
             UserName = user.Email,
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.NewGuid().ToString()
         };
 
         var result = await _userManager.CreateAsync(identityUser, user.Password);
 
-        if (!result.Succeeded)
-        {
-            return Results.BadRequest(result.Errors);
-        }
+        if (!result.Succeeded) return Results.BadRequest(result.Errors);
 
         user.Password = null;
         return Results.Created("api/auth", user);
     }
 
-    [HttpPost, Route("refresh")]
+    [HttpPost]
+    [Route("refresh")]
     public async Task<ActionResult<AuthenticationResponse>> Refresh(
         RefreshTokenRequestModel refreshTokenRequestModel,
         CancellationToken cancellationToken)
     {
-        string accessToken = refreshTokenRequestModel.AccessToken;
-        string refreshToken = refreshTokenRequestModel.RefreshToken;
+        var accessToken = refreshTokenRequestModel.AccessToken;
+        var refreshToken = refreshTokenRequestModel.RefreshToken;
         var principal = _authService.GetPrincipalFromExpiredToken(accessToken);
         var username = principal.Identity!.Name; //this is mapped to the Name claim by default
 
         var user = await _accountService.GetAccountByEmailAsync(username, default);
-        
-        
+
+
         if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             return BadRequest("Invalid client request");
         var newAccessToken = _authService.CreateToken(user);
         var newRefreshToken = _authService.GenerateRefreshToken();
         user.RefreshToken = newRefreshToken;
-        
+
         await _accountService.UpdateAccountAsync(user);
 
-        var authenticationResponse = new AuthenticationResponse()
+        var authenticationResponse = new AuthenticationResponse
         {
             Token = newAccessToken.Token,
             Expiration = newAccessToken.Expiration,
             RefreshToken = newRefreshToken
         };
-        
+
         return Ok(authenticationResponse);
     }
 
@@ -108,21 +107,14 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.FindByNameAsync(request.UserName);
 
-        if (user == null)
-        {
-            return BadRequest($"User with {request.UserName} hasn't registered");
-        }
+        if (user == null) return BadRequest($"User with {request.UserName} hasn't registered");
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
 
-        if (!isPasswordValid)
-        {
-            return BadRequest("Bad credentials");
-        }
+        if (!isPasswordValid) return BadRequest("Bad credentials");
 
         var token = _authService.CreateToken(user);
 
         return Ok(token);
     }
 }
-
