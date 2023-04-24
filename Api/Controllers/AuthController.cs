@@ -16,18 +16,18 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly AppSettings _applicationSettings;
-    private readonly JwtService _jwtService;
+    private readonly AuthService _authService;
     private readonly UserManager<Account> _userManager;
 
     public AuthController(
         UserManager<Account> userManager,
         IAccountService accountService,
         IOptions<AppSettings> applicationSettings,
-        JwtService jwtService)
+        AuthService authService)
     {
         _userManager = userManager;
         _accountService = accountService;
-        _jwtService = jwtService;
+        _authService = authService;
         _applicationSettings = applicationSettings.Value;
     }
 
@@ -79,7 +79,7 @@ public class AuthController : ControllerBase
     {
         string accessToken = refreshTokenRequestModel.AccessToken;
         string refreshToken = refreshTokenRequestModel.RefreshToken;
-        var principal = _jwtService.GetPrincipalFromExpiredToken(accessToken);
+        var principal = _authService.GetPrincipalFromExpiredToken(accessToken);
         var username = principal.Identity!.Name; //this is mapped to the Name claim by default
 
         var user = await _accountService.GetAccountByEmailAsync(username, default);
@@ -87,8 +87,8 @@ public class AuthController : ControllerBase
         
         if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             return BadRequest("Invalid client request");
-        var newAccessToken = _jwtService.CreateToken(user);
-        var newRefreshToken = _jwtService.GenerateRefreshToken();
+        var newAccessToken = _authService.CreateToken(user);
+        var newRefreshToken = _authService.GenerateRefreshToken();
         user.RefreshToken = newRefreshToken;
         
         await _accountService.UpdateAccountAsync(user);
@@ -120,7 +120,7 @@ public class AuthController : ControllerBase
             return BadRequest("Bad credentials");
         }
 
-        var token = _jwtService.CreateToken(user);
+        var token = _authService.CreateToken(user);
 
         return Ok(token);
     }

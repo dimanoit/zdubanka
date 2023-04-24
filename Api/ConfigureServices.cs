@@ -14,7 +14,7 @@ public static class ConfigureServices
     {
         services.Configure<AppSettings>(configuration.GetSection("ApplicationSettings"));
         AddCors(services, environment);
-        services.AddScoped<JwtService>();
+        services.AddScoped<AuthService>();
         
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
