@@ -15,8 +15,8 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly AppSettings _applicationSettings;
-    private readonly UserManager<Account> _userManager;
     private readonly JwtService _jwtService;
+    private readonly UserManager<Account> _userManager;
 
     public AuthController(
         UserManager<Account> userManager,
@@ -52,7 +52,7 @@ public class AuthController : ControllerBase
     [HttpPost]
     public async Task<IResult> PostUser(UserRegistrationModel user)
     {
-        var identityUser = new Account()
+        var identityUser = new Account
         {
             Email = user.Email,
             FullName = user.Name,
@@ -72,6 +72,34 @@ public class AuthController : ControllerBase
         return Results.Created("api/auth", user);
     }
     
+    [HttpPost]
+    [Route("refresh")]
+    public async Task<IActionResult> Refresh(TokenApiModel tokenApiModel, CancellationToken cancellationToken)
+    {
+        string accessToken = tokenApiModel.AccessToken;
+        string refreshToken = tokenApiModel.RefreshToken;
+        var principal = _jwtService.GetPrincipalFromExpiredToken(accessToken);
+        var username = principal.Identity!.Name; //this is mapped to the Name claim by default
+
+        var user = await _accountService.GetAccountByEmailAsync(username, default);
+        
+        
+        if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            return BadRequest("Invalid client request");
+        var newAccessToken = _jwtService.CreateToken(user);
+        var newRefreshToken = _jwtService.GenerateRefreshToken();
+        user.RefreshToken = newRefreshToken;
+        
+        await _accountService.UpdateAccountAsync(user);
+        
+        return Ok(new AuthenticationResponse()
+        {
+            Token = newAccessToken.Token,
+            Expiration = newAccessToken.Expiration,
+            RefreshToken = newRefreshToken
+        });
+    }
+
     [HttpPost("token")]
     public async Task<ActionResult<AuthenticationResponse>> CreateBearerToken(AuthenticationRequest request)
     {
@@ -95,6 +123,12 @@ public class AuthController : ControllerBase
     }
 }
 
+public class TokenApiModel
+{
+    public string AccessToken { get; set; }
+    public string RefreshToken { get; set; }
+}
+
 public class UserRegistrationModel
 {
     public string Email { get; set; }
@@ -111,5 +145,6 @@ public class AuthenticationRequest
 public class AuthenticationResponse
 {
     public string Token { get; set; }
+    public string? RefreshToken { get; set; }
     public DateTime Expiration { get; set; }
 }
