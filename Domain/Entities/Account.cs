@@ -14,7 +14,7 @@ public class Account: IdentityUser
     public string RefreshToken { get; set; }
 
     public AuthMethod AuthMethod { get; set; }
-    public DateTime RefreshTokenExpiryTime { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
     public ICollection<UserLanguage>? UserLanguages { get; init; }
     public ICollection<Appointment>? Appointments { get; set; }
     public ICollection<AppointmentParticipant>? AppointmentParticipations { get; set; }
