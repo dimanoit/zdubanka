@@ -15,6 +15,8 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Id).ValueGeneratedOnAdd();
 
+        builder.Property(a => a.RefreshToken).IsRequired(false);
+        builder.Property(a => a.RefreshTokenExpiryTime).IsRequired(false);
         builder.Property(a => a.Id).IsRequired();
         builder.Property(a => a.Email).IsRequired();
         builder.Property(a => a.FullName).IsRequired();

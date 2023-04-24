@@ -14,7 +14,6 @@ public static class AccountMapper
             FullName = payload.Name,
             ImageUrl = payload.Picture,
             Id = Guid.NewGuid().ToString(),
-            Token = Guid.NewGuid().ToString()
         };
 
         return account;
@@ -39,7 +38,6 @@ public static class AccountMapper
             Email = account.Email,
             FullName = account.FullName,
             ProfileImg = account.ImageUrl!,
-            Token = account.Token
         };
 
         return shortAccount;

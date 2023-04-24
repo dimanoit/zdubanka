@@ -1,4 +1,3 @@
-using Api.Filters;
 
 namespace Api;
 
@@ -11,7 +10,6 @@ public static class ConfigureServices
     {
         services.Configure<AppSettings>(configuration.GetSection("ApplicationSettings"));
         AddCors(services, environment);
-        services.AddScoped<AuthorizationObsoleteAttribute>();
         services.AddScoped<JwtService>();
     }
 

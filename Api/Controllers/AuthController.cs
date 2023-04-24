@@ -58,7 +58,6 @@ public class AuthController : ControllerBase
             FullName = user.Name,
             UserName = user.Email,
             Id = Guid.NewGuid().ToString(),
-            Token = Guid.NewGuid().ToString()
         };
 
         var result = await _userManager.CreateAsync(identityUser, user.Password);

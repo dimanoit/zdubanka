@@ -40,7 +40,4 @@ public class AccountService : IAccountService
         _context.Accounts.Remove(account);
         await _context.SaveChangesAsync();
     }
-
-    public async Task<string> GetUserIdByTokenAsync(string token) =>
-        await _context.Accounts.AsNoTracking().Where(ac => ac.Token == token).Select(ac => ac.Id).FirstAsync();
 }
