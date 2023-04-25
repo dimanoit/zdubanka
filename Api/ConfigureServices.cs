@@ -1,4 +1,8 @@
-using Api.Filters;
+
+using System.Text;
+using Infrastructure.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api;
 
@@ -9,9 +13,24 @@ public static class ConfigureServices
     public static void AddApiServices(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment environment)
     {
-        services.Configure<AppSettings>(configuration.GetSection("ApplicationSettings"));
         AddCors(services, environment);
-        services.AddScoped<AuthorizationAttribute>();
+        services.AddScoped<AuthService>();
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = configuration["TokenOptions:Audience"],
+                    ValidIssuer = configuration["TokenOptions:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenOptions:Key"] ?? throw new InvalidOperationException()))
+                };
+            });
     }
 
     private static void AddCors(IServiceCollection services, IWebHostEnvironment environment)

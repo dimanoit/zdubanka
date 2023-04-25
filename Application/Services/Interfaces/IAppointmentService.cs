@@ -2,7 +2,7 @@
 using Domain.Requests;
 using Domain.Response;
 
-namespace Application.Interfaces;
+namespace Application.Services.Interfaces;
 
 public interface IAppointmentService
 {

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Mappers;
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Events;
 using Domain.Requests;

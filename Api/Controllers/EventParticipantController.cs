@@ -1,35 +1,35 @@
-﻿using Api.Extensions;
-using Api.Filters;
+﻿using System.Security.Claims;
 using Application.Interfaces;
 using Application.Queries;
 using Domain.Requests;
 using Domain.Response;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Authorization, ApiController, Route("api/event-participants")]
+[Authorize, ApiController, Route("api/event-participants")]
 public class EventParticipantController : ControllerBase
 {
-    private readonly IAccountService _accountService;
     private readonly IMediator _mediator;
 
-    public EventParticipantController(IMediator mediator, IAccountService accountService)
+    public EventParticipantController(IMediator mediator)
     {
         _mediator = mediator;
-        _accountService = accountService;
     }
 
     [HttpGet]
     public async Task<EventParticipantsResponse> GetEventParticipantsAsync(
-        [FromQuery]EventParticipantRestRequest request,
+        [FromQuery]
+        EventParticipantRestRequest request,
         CancellationToken cancellationToken)
     {
-        var organizerId = await HttpContext.GetCurrentUserIdAsync(_accountService);
+        var organizerId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
         var queryRequestModel = new EventParticipantRequest(request.EventId, organizerId);
         var query = new EventParticipantQuery(queryRequestModel);
-        
+
         return await _mediator.Send(query, cancellationToken);
     }
 }

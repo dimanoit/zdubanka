@@ -1,5 +1,5 @@
-using Application.Interfaces;
 using Application.Services;
+using Application.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -11,7 +11,7 @@ public static class ConfigureServices
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
         services.AddScoped<IMessageService, MessageService>();
-        
+
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IAccountService>());
     }
 }

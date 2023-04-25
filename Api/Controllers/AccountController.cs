@@ -1,11 +1,13 @@
-﻿using Api.Filters;
-using Application.Interfaces;
+﻿using Application.Services.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[ApiController, Route("api/[controller]"), Authorization]
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;

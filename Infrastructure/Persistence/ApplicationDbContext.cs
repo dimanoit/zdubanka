@@ -2,11 +2,13 @@ using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence.Configurations;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-public sealed class ApplicationDbContext :  DbContext, IApplicationDbContext
+public sealed class ApplicationDbContext :  IdentityUserContext<Account>, IApplicationDbContext
 {
     private readonly IMediator _mediator;
 
@@ -31,9 +33,9 @@ public sealed class ApplicationDbContext :  DbContext, IApplicationDbContext
         return await base.SaveChangesAsync(cancellationToken);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountConfiguration).Assembly);
-        base.OnModelCreating(modelBuilder);
+        builder.ApplyConfigurationsFromAssembly(typeof(AccountConfiguration).Assembly);
+        base.OnModelCreating(builder);
     }
 }
