@@ -32,7 +32,7 @@ public class AuthService : IAuthService
 
     private SymmetricSecurityKey Key => new(Encoding.UTF8.GetBytes(_tokenOptions.Key));
 
-    public AuthenticationResponse CreateToken(Account user)
+    public AuthenticationResponse GenerateToken(Account user)
     {
         var expiration = _dateTimeProvider.UtcNow.AddMinutes(_tokenOptions.ExpirationMinutes);
 

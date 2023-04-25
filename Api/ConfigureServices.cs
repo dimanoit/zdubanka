@@ -28,7 +28,7 @@ public static class ConfigureServices
                     ValidateIssuerSigningKey = true,
                     ValidAudience = configuration["TokenOptions:Audience"],
                     ValidIssuer = configuration["TokenOptions:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenOptions:Key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenOptions:Key"] ?? throw new InvalidOperationException()))
                 };
             });
     }

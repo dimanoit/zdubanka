@@ -86,7 +86,7 @@ public class AuthController : ControllerBase
 
         if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             return BadRequest("Invalid client request");
-        var newAccessToken = _authService.CreateToken(user);
+        var newAccessToken = _authService.GenerateToken(user);
         var newRefreshToken = _authService.GenerateRefreshToken();
         user.RefreshToken = newRefreshToken;
 
@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
 
         if (!isPasswordValid) return BadRequest("Bad credentials");
 
-        var token = _authService.CreateToken(user);
+        var token = _authService.GenerateToken(user);
 
         return Ok(token);
     }
