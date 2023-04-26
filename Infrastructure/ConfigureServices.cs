@@ -17,6 +17,7 @@ public static class ConfigureServices
     public static void AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
+        LogInjector.AddLogging();
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();
