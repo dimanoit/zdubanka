@@ -1,24 +1,25 @@
 ﻿namespace Domain.Models;
 
-public record Result
+public record Result<TResult>
 {
-    internal Result(bool succeeded, IEnumerable<string> errors)
+    private Result(TResult value, Exception? exception = null)
     {
-        Succeeded = succeeded;
-        Errors = errors.ToArray();
+        Value = value;
+        Exception = exception;
     }
 
-    public bool Succeeded { get; init; }
+    public TResult Value { get; }
+    public Exception? Exception { get; }
 
-    public string[] Errors { get; init; }
+    public bool IsSuccess => Exception == null;
 
-    public static Result Success()
+    public static Result<TResult> Success(TResult value)
     {
-        return new Result(true, Array.Empty<string>());
+        return new Result<TResult>(value, null);
     }
 
-    public static Result Failure(IEnumerable<string> errors)
+    public static Result<TResult?> Failure(Exception exception)
     {
-        return new Result(false, errors);
+        return new Result<TResult?>(default, exception);
     }
 }

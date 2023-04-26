@@ -6,6 +6,7 @@ using System.Text;
 using Application.Interfaces;
 using Application.Providers.Interfaces;
 using Domain.Entities;
+using Domain.Models;
 using Domain.Response;
 using Infrastructure.Handlers;
 using Infrastructure.Options;
@@ -72,7 +73,7 @@ public class AuthService : IAuthService
         return Convert.ToBase64String(randomNumber);
     }
 
-    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    public Result<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -91,8 +92,11 @@ public class AuthService : IAuthService
             !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                 StringComparison.InvariantCultureIgnoreCase)
         )
-            throw new SecurityTokenException("Invalid token");
+        {
+            var exception = new SecurityTokenException("Invalid token");
+            Result<ClaimsPrincipal>.Failure(exception);
+        }
 
-        return principal;
+        return Result<ClaimsPrincipal>.Success(principal);
     }
 }
