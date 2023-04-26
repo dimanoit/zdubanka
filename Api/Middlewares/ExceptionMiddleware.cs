@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net.Mime;
+using System.Text.Json;
 using Api.Extensions;
 using Domain.Models;
 
@@ -31,7 +32,7 @@ public class ExceptionMiddleware
             _logger.LogError("Internal Server Error", ex);
             var response = new RestErrorDetails("Internal Server Error"); 
             
-            context.Response.ContentType = "text/plain";
+            context.Response.ContentType = MediaTypeNames.Application.Json;
             context.Response.StatusCode = (int)response.StatusCode;
             await context.Response.WriteAsync(response.Message);
         }
