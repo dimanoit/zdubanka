@@ -2,9 +2,15 @@ using System.Text.Json.Serialization;
 using Api;
 using Application;
 using Infrastructure;
+using Serilog;
 using ConfigureServices = Api.ConfigureServices;
 
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+
+var host = builder.Host;
+host.UseSerilog();
 
 builder.Services
     .AddControllers()
