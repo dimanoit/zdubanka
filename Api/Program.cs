@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Api;
+using Api.Middlewares;
 using Application;
 using Infrastructure;
 using Serilog;
@@ -28,6 +29,7 @@ builder.Services.AddApiServices(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
