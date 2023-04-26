@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -75,6 +76,7 @@ public class AuthService : IAuthService
 
     public Result<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
     {
+        
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false,
@@ -93,8 +95,8 @@ public class AuthService : IAuthService
                 StringComparison.InvariantCultureIgnoreCase)
         )
         {
-            var exception = new SecurityTokenException("Invalid token");
-            Result<ClaimsPrincipal>.Failure(exception);
+            var error = new RestErrorDetails("Security token not valid", HttpStatusCode.BadRequest);
+            return Result<ClaimsPrincipal>.Failure(error)!;
         }
 
         return Result<ClaimsPrincipal>.Success(principal);

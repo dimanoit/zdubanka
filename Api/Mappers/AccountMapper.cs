@@ -35,7 +35,7 @@ public static class AccountMapper
     {
         var shortAccount = new AccountShort
         {
-            Email = account.Email,
+            Email = account.Email!,
             FullName = account.FullName,
             ProfileImg = account.ImageUrl!,
         };

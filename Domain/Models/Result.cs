@@ -2,24 +2,24 @@
 
 public record Result<TResult>
 {
-    private Result(TResult value, Exception? exception = null)
+    private Result(TResult value, RestErrorDetails? error = null)
     {
         Value = value;
-        Exception = exception;
+        Error = error;
     }
 
     public TResult Value { get; }
-    public Exception? Exception { get; }
+    public RestErrorDetails? Error { get; }
 
-    public bool IsSuccess => Exception == null;
+    public bool IsSuccess => Error == null;
 
     public static Result<TResult> Success(TResult value)
     {
         return new Result<TResult>(value, null);
     }
 
-    public static Result<TResult?> Failure(Exception exception)
+    public static Result<TResult?> Failure(RestErrorDetails error)
     {
-        return new Result<TResult?>(default, exception);
+        return new Result<TResult?>(default, error);
     }
 }

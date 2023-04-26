@@ -1,4 +1,5 @@
-﻿using Api.Mappers;
+﻿using Api.Extensions;
+using Api.Mappers;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Models;
@@ -83,7 +84,7 @@ public class AuthController : ControllerBase
 
         if (!principal.IsSuccess)
         {
-            return BadRequest(principal.Exception);
+            return principal.Error!.ErrorResponse<AuthenticationResponse>();
         }
         
         var username = principal.Value.Identity!.Name; //this is mapped to the Name claim by default

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
-using Api.Models;
+using Api.Extensions;
+using Domain.Models;
 
 namespace Api.Middlewares;
 
@@ -27,22 +28,12 @@ public class ExceptionMiddleware
                 throw;
             }
 
-            var handlingResponse = HandleException(ex);
-            await WriteResponseAsync(context, handlingResponse);
+            _logger.LogError("Internal Server Error", ex);
+            var response = new RestErrorDetails("Internal Server Error"); 
+            
+            context.Response.ContentType = "text/plain";
+            context.Response.StatusCode = (int)response.StatusCode;
+            await context.Response.WriteAsync(response.Message);
         }
-    }
-
-    private RestErrorDetails HandleException(Exception ex)
-    {
-        _logger.LogError(ex.Message, ex);
-        throw new NotImplementedException();
-    }
-
-    private Task WriteResponseAsync(HttpContext context, RestErrorDetails details)
-    {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)details.StatusCode;
-
-        return context.Response.WriteAsync(JsonSerializer.Serialize(details));
     }
 }
