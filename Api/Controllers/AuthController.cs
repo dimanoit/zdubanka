@@ -1,6 +1,8 @@
-﻿using Api.Mappers;
+﻿using Api.Extensions;
+using Api.Mappers;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
@@ -79,7 +81,13 @@ public class AuthController : ControllerBase
         var accessToken = refreshTokenRequestModel.AccessToken;
         var refreshToken = refreshTokenRequestModel.RefreshToken;
         var principal = _authService.GetPrincipalFromExpiredToken(accessToken);
-        var username = principal.Identity!.Name; //this is mapped to the Name claim by default
+
+        if (!principal.IsSuccess)
+        {
+            return principal.Error!.ErrorResponse<AuthenticationResponse>();
+        }
+        
+        var username = principal.Value.Identity!.Name; //this is mapped to the Name claim by default
 
         var user = await _accountService.GetAccountByEmailAsync(username, default);
 

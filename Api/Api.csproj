@@ -31,8 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Extensions\" />
-      <Folder Include="Middlewares\" />
+      <Folder Include="Models\" />
     </ItemGroup>
 
 </Project>
