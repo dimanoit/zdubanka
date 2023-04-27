@@ -21,18 +21,18 @@ public class EventParticipantController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<EventParticipantsResponse> GetEventParticipantsAsync(
-        [FromQuery]
-        EventParticipantRestRequest request,
+    public async Task<ActionResult<EventParticipantsResponse>> GetEventParticipantsAsync(
+        [FromQuery] EventParticipantRestRequest request,
         CancellationToken cancellationToken)
     {
         var queryRequestModel = new EventParticipantRequest(request.EventId, User.GetId());
         var query = new EventParticipantQuery(queryRequestModel);
+        var result = await _mediator.Send(query, cancellationToken);
 
-        return await _mediator.Send(query, cancellationToken);
+        return result.IsSuccess ? result.Value : result.Error!.ErrorResponse<EventParticipantsResponse>();
     }
 
-    [HttpPatch]
+    [HttpPatch("{eventParticipantId}/accept")]
     public async Task<Result<bool>> AcceptEventParticipantAsync(
         string eventParticipantId,
         CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ public class EventParticipantController : ControllerBase
         return await _mediator.Send(new AcceptEventParticipantCommand(request), cancellationToken);
     }
 
-    [HttpPatch]
+    [HttpPatch("{eventParticipantId}/reject")]
     public async Task<Result<bool>> RejectEventParticipantAsync(
         string eventParticipantId,
         CancellationToken cancellationToken)

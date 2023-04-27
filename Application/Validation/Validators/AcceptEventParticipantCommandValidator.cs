@@ -1,5 +1,6 @@
 ﻿using Application.Commands;
 using Application.Interfaces;
+using Application.Validation.Rules;
 using Domain.Enums;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,11 @@ public class AcceptEventParticipantCommandValidator : AbstractValidator<AcceptEv
 {
     public AcceptEventParticipantCommandValidator(IApplicationDbContext dbContext)
     {
+        RuleFor(c => c.Request)
+            .MustAsync(async (r, cancellation) =>
+                await dbContext.IsEventBelongsToOrganizerAsync(r.OrganizerId, r.EventParticipantId, cancellation))
+            .OverridePropertyName(r => r.Request.OrganizerId);
+        
         RuleFor(c => c.Request)
             .MustAsync(async (r, cancellation) => await IsEnoughPlaceInEventAsync(dbContext, r.EventParticipantId, cancellation))
             .OverridePropertyName(r => r.Request.OrganizerId);

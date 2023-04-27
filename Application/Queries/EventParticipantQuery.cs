@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Mappers;
+using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using MediatR;
@@ -7,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries;
 
-public record EventParticipantQuery(EventParticipantRequest Request) : IRequest<EventParticipantsResponse>;
+public record EventParticipantQuery(EventParticipantRequest Request) : IRequest<Result<EventParticipantsResponse>>;
 
-internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQuery, EventParticipantsResponse>
+internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQuery, Result<EventParticipantsResponse>>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -18,7 +19,7 @@ internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQu
         _dbContext = dbContext;
     }
 
-    public async Task<EventParticipantsResponse> Handle(EventParticipantQuery request,
+    public async Task<Result<EventParticipantsResponse>> Handle(EventParticipantQuery request,
         CancellationToken cancellationToken)
     {
         var eventParticipantsQuery = _dbContext
@@ -40,6 +41,6 @@ internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQu
             TotalCount = totalCount
         };
 
-        return result;
+        return Result<EventParticipantsResponse>.Success(result)!;
     }
 }
