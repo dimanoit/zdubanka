@@ -1,6 +1,7 @@
-﻿using System.Security.Claims;
-using Application.Interfaces;
+﻿using Api.Extensions;
+using Application.Commands;
 using Application.Queries;
+using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using MediatR;
@@ -25,11 +26,27 @@ public class EventParticipantController : ControllerBase
         EventParticipantRestRequest request,
         CancellationToken cancellationToken)
     {
-        var organizerId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
-
-        var queryRequestModel = new EventParticipantRequest(request.EventId, organizerId);
+        var queryRequestModel = new EventParticipantRequest(request.EventId, User.GetId());
         var query = new EventParticipantQuery(queryRequestModel);
 
         return await _mediator.Send(query, cancellationToken);
+    }
+
+    [HttpPatch]
+    public async Task<Result<bool>> AcceptEventParticipantAsync(
+        string eventParticipantId,
+        CancellationToken cancellationToken)
+    {
+        var request = new EventParticipantStateRequest(User.GetId(), eventParticipantId);
+        return await _mediator.Send(new AcceptEventParticipantCommand(request), cancellationToken);
+    }
+
+    [HttpPatch]
+    public async Task<Result<bool>> RejectEventParticipantAsync(
+        string eventParticipantId,
+        CancellationToken cancellationToken)
+    {
+        var request = new EventParticipantStateRequest(User.GetId(), eventParticipantId);
+        return await _mediator.Send(new RejectEventParticipantCommand(request), cancellationToken);
     }
 }
