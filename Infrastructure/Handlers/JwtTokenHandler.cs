@@ -18,7 +18,7 @@ public class JwtTokenHandler : ITokenHandler
         return _jwtSecurityTokenHandler.WriteToken(token);
     }
 
-    public ClaimsPrincipal ValidateToken(
+    public ClaimsPrincipal? ValidateToken(
         string token,
         TokenValidationParameters validationParameters,
         out SecurityToken validatedToken)

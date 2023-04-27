@@ -9,5 +9,5 @@ public interface IAuthService
 {
     public AuthenticationResponse GenerateToken(Account user);
     public string GenerateRefreshToken();
-    public Result<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token);
+    public Result<ClaimsPrincipal?> GetPrincipalFromExpiredToken(string token);
 }

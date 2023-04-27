@@ -1,4 +1,5 @@
-﻿using Api.Extensions;
+﻿using System.Security.Claims;
+using Api.Extensions;
 using Api.Mappers;
 using Application.Services.Interfaces;
 using Domain.Entities;

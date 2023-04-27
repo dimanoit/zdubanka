@@ -13,9 +13,9 @@ public record Result<TResult>
 
     public bool IsSuccess => Error == null;
 
-    public static Result<TResult> Success(TResult value)
+    public static Result<TResult?> Success(TResult? value = default)
     {
-        return new Result<TResult>(value, null);
+        return new Result<TResult?>(value, null);
     }
 
     public static Result<TResult?> Failure(RestErrorDetails error)

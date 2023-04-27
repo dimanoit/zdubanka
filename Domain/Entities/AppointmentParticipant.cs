@@ -1,5 +1,6 @@
 using Domain.Common;
 using Domain.Enums;
+using Domain.Events;
 
 namespace Domain.Entities;
 
@@ -7,8 +8,22 @@ public class AppointmentParticipant : BaseEntity
 {
     public string UserId { get; init; } = null!;
     public string AppointmentId { get; init; } = null!;
-    public ParticipantStatus Status { get; init; } = ParticipantStatus.InReview;
+    public ParticipantStatus Status { get; private set; } = ParticipantStatus.InReview;
 
     public Appointment Appointment { get; set; } = null!;
     public Account Account { get; set; } = null!;
+
+    public void UpdateToAcceptStatus()
+    {
+        Status = ParticipantStatus.Accepted;
+        var participantAcceptedEvent = new ParticipantAcceptedEvent(AppointmentId, UserId);
+        AddDomainEvent(participantAcceptedEvent);
+    }
+    
+    public void UpdateToRejectStatus()
+    {
+        Status = ParticipantStatus.Rejected;
+        var participantRejectedEvent = new ParticipantRejectedEvent(AppointmentId, UserId);
+        AddDomainEvent(participantRejectedEvent);
+    }
 }
