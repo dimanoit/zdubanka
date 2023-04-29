@@ -30,7 +30,7 @@ public class AcceptEventParticipantCommandValidator : AbstractValidator<AcceptEv
         string eventParticipantId,
         CancellationToken cancellationToken)
     {
-        var isEnoughPlaceInPlaceEvent = await dbContext.AppointmentParticipants
+        var isEnoughPlaceInEvent = await dbContext.AppointmentParticipants
             .Include(ap => ap.Appointment)
             .Where(ap => ap.Id == eventParticipantId)
             .Where(ap =>
@@ -38,6 +38,6 @@ public class AcceptEventParticipantCommandValidator : AbstractValidator<AcceptEv
                 ap.Appointment.AppointmentParticipants!.Count(p => p.Status == ParticipantStatus.Accepted)
             ).AnyAsync(cancellationToken);
 
-        return isEnoughPlaceInPlaceEvent;
+        return isEnoughPlaceInEvent;
     }
 }
