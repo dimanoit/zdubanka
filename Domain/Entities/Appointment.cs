@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Enums;
 using Domain.Models;
 
 namespace Domain.Entities;
@@ -12,6 +13,7 @@ public class Appointment : BaseEntity
     public DateTime EndDay { get; init; }
     public AppointmentLimitation AppointmentLimitation { get; init; } = null!;
 
+    public EventStatus Status { get; set; }
     public string OrganizerId { get; set; } = null!;
     public Account? Organizer { get; set; }
     public Chat? Chat { get; set; }

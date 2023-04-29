@@ -1,17 +1,16 @@
 using Application.Interfaces;
-using Application.Services;
 using Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.EventHandlers;
+namespace Application.EventHandlers.ParticipantApplied;
 
-public class ParticipantAppliedEventHandler: INotificationHandler<ParticipantAppliedEvent>
+public class ParticipantAppliedSentEmailHandler: INotificationHandler<ParticipantAppliedEvent>
 {
     private readonly IApplicationDbContext _applicationDbContext;
     private readonly IEmailService _emailService;
 
-    public ParticipantAppliedEventHandler(IEmailService emailService, IApplicationDbContext applicationDbContext)
+    public ParticipantAppliedSentEmailHandler(IEmailService emailService, IApplicationDbContext applicationDbContext)
     {
         _emailService = emailService;
         _applicationDbContext = applicationDbContext;
