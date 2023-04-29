@@ -16,14 +16,14 @@ public class AppointmentParticipant : BaseEntity
     public void UpdateToAcceptStatus()
     {
         Status = ParticipantStatus.Accepted;
-        var participantAcceptedEvent = new ParticipantAcceptedEvent(AppointmentId, UserId);
+        var participantAcceptedEvent = new ParticipantAcceptedEvent(UserId, AppointmentId);
         AddDomainEvent(participantAcceptedEvent);
     }
     
     public void UpdateToRejectStatus()
     {
         Status = ParticipantStatus.Rejected;
-        var participantRejectedEvent = new ParticipantRejectedEvent(AppointmentId, UserId);
+        var participantRejectedEvent = new ParticipantRejectedEvent(UserId, AppointmentId);
         AddDomainEvent(participantRejectedEvent);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Enums;
+using Domain.Models;
 
 namespace Domain.Response;
 
@@ -10,6 +11,7 @@ public record AppointmentResponseDto
     public string Description { get; init; } = null!;
     public DateTime StartDay { get; init; }
     public DateTime EndDay { get; init; }
+    public EventStatus Status { get; init; }
     public AppointmentLimitation AppointmentLimitation { get; init; } = null!;
     public string OrganizerId { get; init; } = null!;
 }

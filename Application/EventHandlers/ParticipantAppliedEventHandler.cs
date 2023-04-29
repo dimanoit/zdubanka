@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.EventHandlers.ParticipantApplied;
 
-public class ParticipantAppliedSentEmailHandler: INotificationHandler<ParticipantAppliedEvent>
+public class ParticipantAppliedEventHandler: INotificationHandler<ParticipantAppliedEvent>
 {
     private readonly IApplicationDbContext _applicationDbContext;
     private readonly IEmailService _emailService;
 
-    public ParticipantAppliedSentEmailHandler(IEmailService emailService, IApplicationDbContext applicationDbContext)
+    public ParticipantAppliedEventHandler(IEmailService emailService, IApplicationDbContext applicationDbContext)
     {
         _emailService = emailService;
         _applicationDbContext = applicationDbContext;

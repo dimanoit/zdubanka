@@ -35,7 +35,8 @@ public static class AppointmentMapper
             EndDay = entity.EndDay,
             AppointmentLimitation = entity.AppointmentLimitation,
             OrganizerId = entity.OrganizerId,
-            Id = entity.Id
+            Id = entity.Id,
+            Status = entity.Status
         };
 
         return appointment;

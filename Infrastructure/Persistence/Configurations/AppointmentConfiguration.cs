@@ -18,6 +18,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(a => a.Description).IsRequired();
         builder.Property(a => a.EndDay).IsRequired();
         builder.Property(a => a.OrganizerId).IsRequired();
+        builder.Property(a => a.Status).IsRequired();
 
         builder
             .Property(a => a.AppointmentLimitation)
