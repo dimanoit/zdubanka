@@ -33,7 +33,7 @@ public class EventParticipantController : ControllerBase
     }
 
     [HttpPatch("{eventParticipantId}/accept")]
-    public async Task<Result<bool>> AcceptEventParticipantAsync(
+    public async Task<Result> AcceptEventParticipantAsync(
         string eventParticipantId,
         CancellationToken cancellationToken)
     {
@@ -42,7 +42,7 @@ public class EventParticipantController : ControllerBase
     }
 
     [HttpPatch("{eventParticipantId}/reject")]
-    public async Task<Result<bool>> RejectEventParticipantAsync(
+    public async Task<Result> RejectEventParticipantAsync(
         string eventParticipantId,
         CancellationToken cancellationToken)
     {

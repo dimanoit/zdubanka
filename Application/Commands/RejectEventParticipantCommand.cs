@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands;
 
-public record RejectEventParticipantCommand(EventParticipantStateRequest Request) : IRequest<Result<bool>>;
+public record RejectEventParticipantCommand(EventParticipantStateRequest Request) : IRequest<Result>;
 
-public class RejectEventParticipantCommandHandler : IRequestHandler<RejectEventParticipantCommand, Result<bool>>
+public class RejectEventParticipantCommandHandler : IRequestHandler<RejectEventParticipantCommand, Result>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -17,7 +17,7 @@ public class RejectEventParticipantCommandHandler : IRequestHandler<RejectEventP
         _dbContext = dbContext;
     }
 
-    public async Task<Result<bool>> Handle(RejectEventParticipantCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(RejectEventParticipantCommand request, CancellationToken cancellationToken)
     {
         var eventParticipant = await _dbContext.AppointmentParticipants
             .FirstAsync(ap => ap.Id == request.Request.EventParticipantId, cancellationToken);
@@ -26,6 +26,6 @@ public class RejectEventParticipantCommandHandler : IRequestHandler<RejectEventP
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return Result<bool>.Success();
+        return Result.Success();
     }
 }

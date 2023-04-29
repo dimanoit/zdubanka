@@ -14,11 +14,15 @@ public class AcceptEventParticipantCommandValidator : AbstractValidator<AcceptEv
         RuleFor(c => c.Request)
             .MustAsync(async (r, cancellation) =>
                 await dbContext.IsEventBelongsToOrganizerAsync(r.OrganizerId, r.EventParticipantId, cancellation))
-            .OverridePropertyName(r => r.Request.OrganizerId);
-        
+            .OverridePropertyName(r => r.Request.OrganizerId)
+            .WithMessage("User isn't organizer of this event");
+
+
         RuleFor(c => c.Request)
-            .MustAsync(async (r, cancellation) => await IsEnoughPlaceInEventAsync(dbContext, r.EventParticipantId, cancellation))
-            .OverridePropertyName(r => r.Request.OrganizerId);
+            .MustAsync(async (r, cancellation) =>
+                await IsEnoughPlaceInEventAsync(dbContext, r.EventParticipantId, cancellation))
+            .OverridePropertyName(r => r.Request.OrganizerId)
+            .WithMessage("Event already fully booked");
     }
 
     private async Task<bool> IsEnoughPlaceInEventAsync(
@@ -30,9 +34,8 @@ public class AcceptEventParticipantCommandValidator : AbstractValidator<AcceptEv
             .Include(ap => ap.Appointment)
             .Where(ap => ap.Id == eventParticipantId)
             .Where(ap =>
-                !ap.Appointment.AppointmentLimitation.CountOfPeople.Any() ||
-                ap.Appointment.AppointmentLimitation.CountOfPeople.Max() <= ap.Appointment.AppointmentParticipants!.Count
-                (participant => participant.Status == ParticipantStatus.Accepted)
+                ap.Appointment.AppointmentLimitation.CountOfPeople <=
+                ap.Appointment.AppointmentParticipants!.Count(p => p.Status == ParticipantStatus.Accepted)
             ).AnyAsync(cancellationToken);
 
         return isEnoughPlaceInPlaceEvent;

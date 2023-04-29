@@ -12,6 +12,7 @@ public class RejectEventParticipantCommandValidator: AbstractValidator<RejectEve
         RuleFor(c => c.Request)
             .MustAsync(async (r, cancellation) =>
                 await dbContext.IsEventBelongsToOrganizerAsync(r.OrganizerId, r.EventParticipantId, cancellation))
-            .OverridePropertyName(r => r.Request.OrganizerId);
+            .OverridePropertyName(r => r.Request.OrganizerId)
+            .WithMessage("User isn't organizer of this event");
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Api.Extensions;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Requests;
@@ -35,7 +36,7 @@ public class AppointmentController : ControllerBase
     public async Task<AppointmentResponse> GetCurrentUserAppointments(int skip, int take,
         CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var userId = User.GetId();
 
         var events = await _appointmentService.GetUsersAppointmentsAsync(
             new AppointmentRetrieveRequest
