@@ -13,7 +13,7 @@ public class Appointment : BaseEntity
     public DateTime EndDay { get; init; }
     public AppointmentLimitation AppointmentLimitation { get; init; } = null!;
 
-    public EventStatus Status { get; set; }
+    public EventStatus Status { get; set; } = EventStatus.Opened;
     public string OrganizerId { get; set; } = null!;
     public Account? Organizer { get; set; }
     public Chat? Chat { get; set; }

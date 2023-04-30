@@ -1,5 +1,4 @@
 ﻿using Application.Services.Interfaces;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,28 +16,7 @@ public class AccountController : ControllerBase
         _accountService = accountService;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddAccount([FromBody] Account account)
-    {
-        await _accountService.AddAsync(account);
-        return Ok();
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetAccountById(string id, CancellationToken cancellationToken = default)
-    {
-        var account = await _accountService.GetAccountByIdAsync(id, cancellationToken);
-        if (account == null) return NotFound();
-        return Ok(account);
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> UpdateAccount([FromBody] Account account)
-    {
-        await _accountService.UpdateAccountAsync(account);
-        return Ok();
-    }
-
+    // TODO check that User.GetId() == id
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAccount(string id, CancellationToken cancellationToken)
     {

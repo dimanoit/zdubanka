@@ -2,7 +2,6 @@ using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence.Configurations;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

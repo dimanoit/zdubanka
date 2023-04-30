@@ -13,19 +13,7 @@ public static class AccountMapper
             Email = payload.Email,
             FullName = payload.Name,
             ImageUrl = payload.Picture,
-            Id = Guid.NewGuid().ToString(),
-        };
-
-        return account;
-    }
-
-    public static AccountShort ToAccountShort(this GoogleJsonWebSignature.Payload payload)
-    {
-        var account = new AccountShort
-        {
-            Email = payload.Email,
-            FullName = payload.Name,
-            ProfileImg = payload.Picture
+            Id = Guid.NewGuid().ToString()
         };
 
         return account;
@@ -37,7 +25,7 @@ public static class AccountMapper
         {
             Email = account.Email!,
             FullName = account.FullName,
-            ProfileImg = account.ImageUrl!,
+            ProfileImg = account.ImageUrl!
         };
 
         return shortAccount;

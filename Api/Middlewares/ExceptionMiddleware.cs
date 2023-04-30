@@ -1,14 +1,12 @@
 ﻿using System.Net.Mime;
-using System.Text.Json;
-using Api.Extensions;
 using Domain.Models;
 
 namespace Api.Middlewares;
 
 public class ExceptionMiddleware
 {
-    private readonly RequestDelegate _next;
     private readonly ILogger<ExceptionMiddleware> _logger;
+    private readonly RequestDelegate _next;
 
     public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {

@@ -17,5 +17,4 @@ public class Account: IdentityUser
     public ICollection<UserLanguage>? UserLanguages { get; init; }
     public ICollection<Appointment>? Appointments { get; set; }
     public ICollection<AppointmentParticipant>? AppointmentParticipations { get; set; }
-
 }
