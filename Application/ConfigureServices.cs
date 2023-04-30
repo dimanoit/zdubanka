@@ -1,4 +1,3 @@
-using System.Reflection;
 using Application.Behaviours;
 using Application.Commands;
 using Application.Services;
@@ -16,7 +15,6 @@ public static class ConfigureServices
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
-        services.AddScoped<IMessageService, MessageService>();
 
         services.AddValidatorsFromAssemblyContaining<AcceptEventParticipantCommandValidator>();
 

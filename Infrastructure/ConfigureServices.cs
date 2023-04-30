@@ -3,6 +3,7 @@ using Application.Providers;
 using Application.Providers.Interfaces;
 using Domain.Entities;
 using Infrastructure.Handlers;
+using Infrastructure.Handlers.Interfaces;
 using Infrastructure.Options;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
@@ -28,6 +29,7 @@ public static class ConfigureServices
 
     private static void AddDb(IServiceCollection services, IConfiguration configuration)
     {
+        // TODO get data from config
         services
             .AddIdentityCore<Account>(options =>
             {

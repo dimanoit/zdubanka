@@ -6,26 +6,17 @@ using Infrastructure;
 using Serilog;
 using ConfigureServices = Api.ConfigureServices;
 
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 
 var host = builder.Host;
 host.UseSerilog();
 
-builder.Services
-    .AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+var services = builder.Services;
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddApplicationServices();
-builder.Services.AddApiServices(builder.Configuration, builder.Environment);
+services.AddInfrastructureServices(builder.Configuration);
+services.AddApplicationServices();
+services.AddApiServices(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 

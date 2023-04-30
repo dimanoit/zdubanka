@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Handlers;
+namespace Infrastructure.Handlers.Interfaces;
 
 public interface ITokenHandler
 {

@@ -31,30 +31,6 @@ public class AppointmentService : IAppointmentService
         return appointment;
     }
 
-    public async Task<Appointment?> GetAsync(string appointmentId, CancellationToken cancellationToken)
-    {
-        return await _context.Appointments
-            .AsNoTracking()
-            .FirstOrDefaultAsync(ap => ap.Id == appointmentId, cancellationToken);
-    }
-
-    public async Task UpdateAsync(Appointment appointment, CancellationToken cancellationToken)
-    {
-        _context.Appointments.Update(appointment);
-        await _context.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task DeleteAsync(string appointmentId, CancellationToken cancellationToken)
-    {
-        var appointment = await _context.Appointments
-            .FirstOrDefaultAsync(ap => ap.Id == appointmentId, cancellationToken);
-
-        if (appointment == null) return;
-
-        _context.Appointments.Remove(appointment);
-        await _context.SaveChangesAsync(cancellationToken);
-    }
-
     public async Task ApplyOnAppointmentAsync(
         string appointmentId,
         string userId,

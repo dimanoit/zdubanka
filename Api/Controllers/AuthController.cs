@@ -1,13 +1,12 @@
-﻿using System.Security.Claims;
-using Api.Extensions;
+﻿using Api.Extensions;
 using Api.Mappers;
 using Application.Services.Interfaces;
 using Domain.Entities;
-using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
 using Infrastructure.Options;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -87,14 +86,16 @@ public class AuthController : ControllerBase
         {
             return principal.Error!.ErrorResponse<AuthenticationResponse>();
         }
-        
-        var username = principal.Value.Identity!.Name; //this is mapped to the Name claim by default
 
-        var user = await _accountService.GetAccountByEmailAsync(username, default);
+        var username = principal.Value!.Identity!.Name;
 
+        var user = await _accountService.GetAccountByEmailAsync(username!, default);
 
         if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        {
             return BadRequest("Invalid client request");
+        }
+        
         var newAccessToken = _authService.GenerateToken(user);
         var newRefreshToken = _authService.GenerateRefreshToken();
         user.RefreshToken = newRefreshToken;

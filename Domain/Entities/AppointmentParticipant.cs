@@ -19,7 +19,7 @@ public class AppointmentParticipant : BaseEntity
         var participantAcceptedEvent = new ParticipantAcceptedEvent(UserId, AppointmentId);
         AddDomainEvent(participantAcceptedEvent);
     }
-    
+
     public void UpdateToRejectStatus()
     {
         Status = ParticipantStatus.Rejected;

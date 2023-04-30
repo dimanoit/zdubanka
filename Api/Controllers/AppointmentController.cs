@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Api.Extensions;
 using Application.Services.Interfaces;
-using Domain.Entities;
 using Domain.Requests;
 using Domain.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -54,28 +53,5 @@ public class AppointmentController : ControllerBase
     {
         await _appointmentService.ApplyOnAppointmentAsync(appointmentId,
             User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value, cancellationToken);
-    }
-
-    [HttpGet("{appointmentId}")]
-    public async Task<IActionResult> GetAppointment(string appointmentId, CancellationToken cancellationToken)
-    {
-        var appointment = await _appointmentService.GetAsync(appointmentId, cancellationToken);
-        if (appointment == null) return NotFound();
-        return Ok(appointment);
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> UpdateAppointment([FromBody] Appointment appointment,
-        CancellationToken cancellationToken)
-    {
-        await _appointmentService.UpdateAsync(appointment, cancellationToken);
-        return Ok();
-    }
-
-    [HttpDelete("{appointmentId}")]
-    public async Task<IActionResult> DeleteAppointment(string appointmentId, CancellationToken cancellationToken)
-    {
-        await _appointmentService.DeleteAsync(appointmentId, cancellationToken);
-        return Ok();
     }
 }

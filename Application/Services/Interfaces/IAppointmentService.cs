@@ -15,8 +15,5 @@ public interface IAppointmentService
         AppointmentRetrieveRequest request,
         CancellationToken cancellationToken);
 
-    Task<Appointment?> GetAsync(string appointmentId, CancellationToken cancellationToken);
-    Task UpdateAsync(Appointment appointment, CancellationToken cancellationToken);
-    Task DeleteAsync(string appointmentId, CancellationToken cancellationToken);
     Task ApplyOnAppointmentAsync(string appointmentId, string userId, CancellationToken cancellationToken);
 }

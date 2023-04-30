@@ -1,6 +1,7 @@
 
 using System.Text;
-using Infrastructure.Options;
+using System.Text.Json.Serialization;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,14 +14,25 @@ public static class ConfigureServices
     public static void AddApiServices(this IServiceCollection services,
         IConfiguration configuration, IWebHostEnvironment environment)
     {
-        AddCors(services, environment);
+        services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+        services.AddCors(environment);
         services.AddScoped<AuthService>();
 
+        // TODO get data from IOptions
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -33,7 +45,7 @@ public static class ConfigureServices
             });
     }
 
-    private static void AddCors(IServiceCollection services, IWebHostEnvironment environment)
+    private static void AddCors(this IServiceCollection services, IWebHostEnvironment environment)
     {
         services.AddCors(o => o.AddPolicy(CorsPolicyName, builder =>
         {
@@ -43,7 +55,7 @@ public static class ConfigureServices
             }
             else
             {
-                var allowedOrigins = "http://localhost:4200";
+                var allowedOrigins = "http://localhost:4200"; // TODO do not hard code
                 builder.WithOrigins(allowedOrigins);
             }
 

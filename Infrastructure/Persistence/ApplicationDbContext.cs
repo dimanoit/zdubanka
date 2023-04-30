@@ -2,29 +2,28 @@ using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence.Configurations;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-public sealed class ApplicationDbContext :  IdentityUserContext<Account>, IApplicationDbContext
+public sealed class ApplicationDbContext : IdentityUserContext<Account>, IApplicationDbContext
 {
     private readonly IMediator _mediator;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
-       ,IMediator mediator)
+        , IMediator mediator)
         : base(options)
     {
         _mediator = mediator;
         Database.Migrate();
     }
 
-    public DbSet<Appointment> Appointments { get; set; }
-    public DbSet<Account> Accounts { get; set; }
-    public DbSet<Chat> Chats { get; set; }
-    public DbSet<Message> Messages { get; set; }
-    public DbSet<AppointmentParticipant> AppointmentParticipants { get; set; }
+    public DbSet<Appointment> Appointments { get; set; } = null!;
+    public DbSet<Account> Accounts { get; set; } = null!;
+    public DbSet<Chat> Chats { get; set; } = null!;
+    public DbSet<Message> Messages { get; set; } = null!;
+    public DbSet<AppointmentParticipant> AppointmentParticipants { get; set; } = null!;
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

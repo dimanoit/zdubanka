@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Infrastructure.Handlers.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Handlers;

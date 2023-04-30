@@ -15,7 +15,7 @@ public record Result<TResult>
 
     public static Result<TResult?> Success(TResult? value = default)
     {
-        return new Result<TResult?>(value, null);
+        return new Result<TResult?>(value);
     }
 
     public static Result<TResult?> Failure(RestErrorDetails error)

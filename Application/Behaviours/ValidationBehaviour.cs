@@ -42,6 +42,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
             return await next();
         }
 
+        // TODO enrich RestErrorDetails with better data 
         var errorDetails = new RestErrorDetails(JsonSerializer.Serialize(failures), HttpStatusCode.BadRequest);
         var result = Result.Failure(errorDetails);
         return (TResponse)result;
