@@ -7,7 +7,7 @@ public interface ITokenHandler
 {
     public string WriteToken(SecurityToken token);
 
-    public ClaimsPrincipal ValidateToken(
+    public ClaimsPrincipal? ValidateToken(
         string token,
         TokenValidationParameters validationParameters,
         out SecurityToken validatedToken);

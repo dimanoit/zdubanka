@@ -9,6 +9,7 @@ public static class EventParticipantMapper
     {
         var eventParticipant = new EventParticipant
         {
+            Id = appointmentParticipant.Id,
             UserId = appointmentParticipant.UserId,
             UserName = appointmentParticipant.Account.FullName,
             AppointmentId = appointmentParticipant.AppointmentId,

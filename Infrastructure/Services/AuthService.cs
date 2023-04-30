@@ -74,7 +74,7 @@ public class AuthService : IAuthService
         return Convert.ToBase64String(randomNumber);
     }
 
-    public Result<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
+    public Result<ClaimsPrincipal?> GetPrincipalFromExpiredToken(string token)
     {
         
         var tokenValidationParameters = new TokenValidationParameters

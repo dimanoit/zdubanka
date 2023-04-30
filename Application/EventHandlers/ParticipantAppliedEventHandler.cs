@@ -1,10 +1,9 @@
 using Application.Interfaces;
-using Application.Services;
 using Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.EventHandlers;
+namespace Application.EventHandlers.ParticipantApplied;
 
 public class ParticipantAppliedEventHandler: INotificationHandler<ParticipantAppliedEvent>
 {

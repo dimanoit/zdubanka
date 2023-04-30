@@ -1,6 +1,7 @@
-﻿using System.Security.Claims;
-using Application.Interfaces;
+﻿using Api.Extensions;
+using Application.Commands;
 using Application.Queries;
+using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using MediatR;
@@ -20,16 +21,32 @@ public class EventParticipantController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<EventParticipantsResponse> GetEventParticipantsAsync(
-        [FromQuery]
-        EventParticipantRestRequest request,
+    public async Task<ActionResult<EventParticipantsResponse>> GetEventParticipantsAsync(
+        [FromQuery] EventParticipantRestRequest request,
         CancellationToken cancellationToken)
     {
-        var organizerId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
-
-        var queryRequestModel = new EventParticipantRequest(request.EventId, organizerId);
+        var queryRequestModel = new EventParticipantRequest(request.EventId, User.GetId());
         var query = new EventParticipantQuery(queryRequestModel);
+        var result = await _mediator.Send(query, cancellationToken);
 
-        return await _mediator.Send(query, cancellationToken);
+        return result.IsSuccess ? result.Value : result.Error!.ErrorResponse<EventParticipantsResponse>();
+    }
+
+    [HttpPatch("{eventParticipantId}/accept")]
+    public async Task<Result> AcceptEventParticipantAsync(
+        string eventParticipantId,
+        CancellationToken cancellationToken)
+    {
+        var request = new EventParticipantStateRequest(User.GetId(), eventParticipantId);
+        return await _mediator.Send(new AcceptEventParticipantCommand(request), cancellationToken);
+    }
+
+    [HttpPatch("{eventParticipantId}/reject")]
+    public async Task<Result> RejectEventParticipantAsync(
+        string eventParticipantId,
+        CancellationToken cancellationToken)
+    {
+        var request = new EventParticipantStateRequest(User.GetId(), eventParticipantId);
+        return await _mediator.Send(new RejectEventParticipantCommand(request), cancellationToken);
     }
 }

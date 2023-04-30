@@ -5,7 +5,7 @@ namespace Api.Extensions;
 
 public static class HttpResponseExtensions
 {
-    public static ActionResult<T> ErrorResponse<T>(this RestErrorDetails details)
+    public static ActionResult<T> ErrorResponse<T>(this RestErrorDetails? details)
     {
         return new BadRequestObjectResult(details.Message)
         {

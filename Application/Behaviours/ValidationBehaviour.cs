@@ -6,8 +6,9 @@ using MediatR;
 
 namespace Application.Behaviours;
 
-public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, Result<TResponse>>
+public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
+    where TResponse : Result
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -16,34 +17,33 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
         _validators = validators;
     }
 
-    public async Task<Result<TResponse>> Handle(
-        TRequest request,
-        RequestHandlerDelegate<Result<TResponse>> next,
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
         if (!_validators.Any())
         {
             return await next();
         }
-        
+
         var context = new ValidationContext<TRequest>(request);
 
         var validationResults = await Task.WhenAll(
-            _validators.Select(v =>
-                v.ValidateAsync(context, cancellationToken)));
+            _validators.Select(v => v.ValidateAsync(context, cancellationToken))
+            );
 
         var failures = validationResults
             .Where(r => r.Errors.Any())
             .SelectMany(r => r.Errors)
-            .ToList();
+            .Select(r => new { r.PropertyName, r.ErrorMessage })
+            .ToArray();
 
         if (!failures.Any())
         {
             return await next();
         }
-        
+
         var errorDetails = new RestErrorDetails(JsonSerializer.Serialize(failures), HttpStatusCode.BadRequest);
-        return Result<TResponse>.Failure(errorDetails)!;
+        var result = Result.Failure(errorDetails);
+        return (TResponse)result;
     }
 }
-

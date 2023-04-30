@@ -1,7 +1,11 @@
 using System.Reflection;
+using Application.Behaviours;
+using Application.Commands;
 using Application.Services;
 using Application.Services.Interfaces;
+using Application.Validation.Validators;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -13,8 +17,13 @@ public static class ConfigureServices
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
         services.AddScoped<IMessageService, MessageService>();
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IAccountService>());
+        services.AddValidatorsFromAssemblyContaining<AcceptEventParticipantCommandValidator>();
+
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblyContaining<AcceptEventParticipantCommand>();
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        });
     }
 }
