@@ -1,8 +1,9 @@
 using Domain.Common;
+using MediatR;
 
 namespace Domain.Events;
 
-public class ParticipantAppliedEvent : BaseEvent
+public class ParticipantAppliedEvent : INotification
 {
     public ParticipantAppliedEvent(string userId, string appointmentId)
     {

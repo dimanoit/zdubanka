@@ -1,8 +1,9 @@
 ﻿using Domain.Common;
+using MediatR;
 
 namespace Domain.Events;
 
-public class AppointmentCreatedEvent : BaseEvent
+public class AppointmentCreatedEvent : INotification
 {
     public AppointmentCreatedEvent(string appointmentId)
     {
