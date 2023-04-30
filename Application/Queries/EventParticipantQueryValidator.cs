@@ -21,6 +21,7 @@ public class EventParticipantQueryValidator : AbstractValidator<EventParticipant
         CancellationToken cancellationToken)
     {
         var isEventBelongsToOrganizer = await dbContext.Appointments
+            .AsNoTracking()
             .AnyAsync(ap => ap.Id == eventId && ap.OrganizerId == organizerId, cancellationToken);
 
         return isEventBelongsToOrganizer;
