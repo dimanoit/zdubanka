@@ -9,13 +9,14 @@ using Application.Providers.Interfaces;
 using Domain.Entities;
 using Domain.Models;
 using Domain.Response;
-using Infrastructure.Handlers;
+using Infrastructure.Handlers.Interfaces;
 using Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Api;
+namespace Infrastructure.Services;
 
+// TODO refactor service
 public class AuthService : IAuthService
 {
     private readonly IDateTimeProvider _dateTimeProvider;
