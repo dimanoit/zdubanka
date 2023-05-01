@@ -25,14 +25,16 @@ public class AppointmentController : ControllerBase
         [FromBody] AppointmentCreationRequest appointment,
         CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var userId = User.GetId();
 
         var createdAppointment = await _appointmentService.CreateAsync(appointment, userId, cancellationToken);
-        return Ok(createdAppointment);
+        return Created("api/appointment", createdAppointment);
     }
 
     [HttpGet]
-    public async Task<AppointmentResponse> GetCurrentUserAppointments(int skip, int take,
+    public async Task<AppointmentResponse> GetCurrentUserAppointments(
+        int skip,
+        int take,
         CancellationToken cancellationToken)
     {
         var userId = User.GetId();
