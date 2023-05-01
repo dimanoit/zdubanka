@@ -60,16 +60,23 @@ public class AuthController : ControllerBase
         {
             Email = user.Email,
             FullName = user.Name,
-            UserName = user.Email,
-            Id = Guid.NewGuid().ToString()
+            UserName = user.UserName,
+            Id = Guid.NewGuid().ToString(),
+            DateOfBirth = user.DateOfBirth,
+            Gender = user.Gender
         };
 
         var result = await _userManager.CreateAsync(identityUser, user.Password);
 
         if (!result.Succeeded) return Results.BadRequest(result.Errors);
 
-        user.Password = null;
-        return Results.Created("api/auth", user);
+        var userResponse = new
+        {
+            identityUser.Email,
+            identityUser.UserName,
+        };
+        
+        return Results.Created("api/auth", userResponse);
     }
 
     [HttpPost]
@@ -113,18 +120,19 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("token")]
-    public async Task<ActionResult<AuthenticationResponse>> CreateBearerToken(AuthenticationRequest request)
+    public async Task<ActionResult<AuthenticationResponse>> CreateBearerToken(
+        AuthenticationRequest request)
     {
-        var user = await _userManager.FindByNameAsync(request.UserName);
+        var user = await _accountService.GetAccountByEmailAsync(request.Email, default);
 
-        if (user == null) return BadRequest($"User with {request.UserName} hasn't registered");
+        if (user == null) return BadRequest($"User with {request.Email} hasn't registered");
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
 
         if (!isPasswordValid) return BadRequest("Bad credentials");
 
         var token = _authService.GenerateToken(user);
-
+        await _accountService.SaveRefreshTokenAsync(user, token.RefreshToken!, token.Expiration);
         return Ok(token);
     }
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using Api;
+using Domain.Enums;
 using Domain.Requests;
 using FluentAssertions;
 using Integration.Extensions;
@@ -26,6 +27,9 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
             Email = SharedTestData.TestEmail,
             Name = "Dimonchik Testyvalbnuk",
             Password = "somePassword123",
+            DateOfBirth = DateTime.UtcNow.AddYears(-20),
+            UserName = "Dimonchik",
+            Gender = Gender.Male
         };
 
         var response = await client.Post("api/auth", userRegistrationModel);
@@ -33,7 +37,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
         if (response.StatusCode == HttpStatusCode.BadRequest)
         {
             var responseText = await response.Content.ReadAsStringAsync();
-            responseText.Should().Contain("DuplicateUserName");
+            responseText.Should().Contain("DuplicateEmail");
             return;
         }
 
@@ -46,7 +50,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
         var client = _factory.CreateClient();
         var userSignInModel = new AuthenticationRequest()
         {
-            UserName = SharedTestData.TestEmail,
+            Email = SharedTestData.TestEmail,
             Password = "somePassword123",
         };
 

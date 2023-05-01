@@ -29,6 +29,7 @@ namespace Infrastructure.Migrations
                     RelationshipStatus = table.Column<string>(type: "text", nullable: true),
                     RefreshToken = table.Column<string>(type: "text", nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AuthMethod = table.Column<string>(type: "text", nullable: false),
                     UserLanguages = table.Column<ICollection<UserLanguage>>(type: "jsonb", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),

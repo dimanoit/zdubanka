@@ -41,4 +41,14 @@ public class AccountService : IAccountService
         _context.Accounts.Remove(account);
         await _context.SaveChangesAsync();
     }
+
+    public async Task SaveRefreshTokenAsync(
+        Account account,
+        string refreshToken,
+        DateTime tokenExpiration)
+    {
+        account.RefreshToken = refreshToken;
+        account.RefreshTokenExpiryTime = tokenExpiration;
+        await _context.SaveChangesAsync();
+    }
 }
