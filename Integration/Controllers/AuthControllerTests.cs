@@ -37,7 +37,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
         if (response.StatusCode == HttpStatusCode.BadRequest)
         {
             var responseText = await response.Content.ReadAsStringAsync();
-            responseText.Should().Contain("DuplicateUserName");
+            responseText.Should().Contain("DuplicateEmail");
             return;
         }
 
