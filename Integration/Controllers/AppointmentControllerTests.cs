@@ -4,7 +4,6 @@ using Api;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Requests;
-using Domain.Response;
 using FluentAssertions;
 using Integration.Extensions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -57,19 +56,25 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
     }
-    
+
     [Fact]
     public async Task GetCurrentUserAppointments_ShouldReturn_AppointmentResultWithoutErrors()
     {
         // Arrange
         var client = _factory.CreateClient();
         var url = "api/appointment?skip=0&take=100";
-        
+
         // Act
-        var result = await client.GetAuth<AppointmentResponse>(url);
-        
+        var result = await client.GetAuth(url);
+
         // Assert
-        result!.Data.Should().NotBeNull();
+        result!.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var jsonResult = await result.Content.ReadAsStringAsync();
+        var totalCount = JsonDocument.Parse(jsonResult)
+            .RootElement.GetProperty("totalCount").GetInt32();
+
+        totalCount.Should().BeGreaterThan(0);
     }
 
     [Fact]
@@ -77,14 +82,16 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
     {
         // Arrange
         var client = _factory.CreateClient();
-        var events = await client.GetAuth<AppointmentResponse>("api/appointment?skip=0&take=100");
-        var eventId = events.Data.Last().Id;
-            
+        var response = await client.GetAuth("api/appointment?skip=0&take=100");
+        var jsonResult = await response.Content.ReadAsStringAsync();
+        var eventId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
+            .EnumerateArray().Last()
+            .GetProperty("id").GetString();
+        
         // Act
         var result = await client.PatchAuth($"api/appointment/{eventId}/apply");
-        
+
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);
-        
     }
 }

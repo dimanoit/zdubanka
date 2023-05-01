@@ -25,7 +25,7 @@ public class AppointmentController : ControllerBase
         [FromBody] AppointmentCreationRequest appointment,
         CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var userId = User.GetId();
 
         var createdAppointment = await _appointmentService.CreateAsync(appointment, userId, cancellationToken);
         return Created("api/appointment", createdAppointment);
