@@ -13,6 +13,7 @@ public class Account: IdentityUser
     public RelationshipStatus? RelationshipStatus { get; init; }
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }
+    public DateTime DateOfBirth { get; set; }
     public AuthMethod AuthMethod { get; set; }
     public ICollection<UserLanguage>? UserLanguages { get; init; }
     public ICollection<Appointment>? Appointments { get; set; }

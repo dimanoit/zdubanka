@@ -75,7 +75,7 @@ public static class HttpClientExtension
     {
         var userSignInModel = new AuthenticationRequest
         {
-            UserName = SharedTestData.TestEmail,
+            Email = SharedTestData.TestEmail,
             Password = "somePassword123"
         };
 
