@@ -6,6 +6,7 @@ using Domain.Models;
 using Domain.Requests;
 using FluentAssertions;
 using Integration.Extensions;
+using Integration.Fixtures;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Integration.Controllers;
@@ -51,7 +52,7 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
         };
 
         // Act 
-        var result = await client.PostAuth("api/appointment", appointmentRequest);
+        var result = await client.PostAuth("api/appointment", appointmentRequest, SharedTestData.TestEmail);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -65,7 +66,7 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
         var url = "api/appointment?skip=0&take=100";
 
         // Act
-        var result = await client.GetAuth(url);
+        var result = await client.GetAuth(url, SharedTestData.TestEmail);
 
         // Assert
         result!.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -82,14 +83,14 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
     {
         // Arrange
         var client = _factory.CreateClient();
-        var response = await client.GetAuth("api/appointment?skip=0&take=100");
+        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
         var jsonResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
 
         // Act
-        var result = await client.PatchAuth($"api/appointment/{eventId}/apply");
+        var result = await client.PatchAuth($"api/appointment/{eventId}/apply", SharedTestData.TestEmailSecondUser);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);

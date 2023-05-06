@@ -3,6 +3,7 @@ using System.Text.Json;
 using Api;
 using FluentAssertions;
 using Integration.Extensions;
+using Integration.Fixtures;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Integration.Controllers;
@@ -23,7 +24,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var client = _factory.CreateClient();
         var url = "api/event-participants?eventId=";
 
-        var response = await client.GetAuth("api/appointment?skip=0&take=100");
+        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
         var jsonEventResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
@@ -31,7 +32,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
 
         url += eventId;
         // Act
-        var result = await client.GetAuth(url);
+        var result = await client.GetAuth(url, SharedTestData.TestEmail);
 
         // Assert
         result!.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -50,14 +51,14 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var client = _factory.CreateClient();
         var url = "api/event-participants?eventId=";
 
-        var response = await client.GetAuth("api/appointment?skip=0&take=100");
+        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
         var jsonEventResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
 
         url += eventId;
-        var eventParticipantHttpResult = await client.GetAuth(url);
+        var eventParticipantHttpResult = await client.GetAuth(url, SharedTestData.TestEmail);
 
         var jsonResult = await eventParticipantHttpResult.Content.ReadAsStringAsync();
         var eventParticipantId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
@@ -65,7 +66,9 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
             .GetProperty("id").GetString();
 
         // Act
-        var result = await client.PatchAuth($"api/event-participants/{eventParticipantId}/accept");
+        var result = await client.PatchAuth(
+            $"api/event-participants/{eventParticipantId}/accept",
+            SharedTestData.TestEmail);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -78,14 +81,14 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var client = _factory.CreateClient();
         var url = "api/event-participants?eventId=";
 
-        var response = await client.GetAuth("api/appointment?skip=0&take=100");
+        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
         var jsonEventResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
 
         url += eventId;
-        var eventParticipantHttpResult = await client.GetAuth(url);
+        var eventParticipantHttpResult = await client.GetAuth(url, SharedTestData.TestEmail);
 
         var jsonResult = await eventParticipantHttpResult.Content.ReadAsStringAsync();
         var eventParticipantId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
@@ -93,7 +96,9 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
             .GetProperty("id").GetString();
 
         // Act
-        var result = await client.PatchAuth($"api/event-participants/{eventParticipantId}/reject");
+        var result = await client.PatchAuth(
+            $"api/event-participants/{eventParticipantId}/reject",
+            SharedTestData.TestEmail);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);
