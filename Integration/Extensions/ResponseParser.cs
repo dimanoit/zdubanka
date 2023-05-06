@@ -16,7 +16,7 @@ public static class ResponseParser
             PropertyNameCaseInsensitive = true,
         };
         options.Converters.Add(new JsonStringEnumConverter());
-        
+
         return JsonSerializer.Deserialize<T>(responseJson, options);
     }
 }

@@ -55,10 +55,10 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
 
         //Act
         var response = await client.PutAuth("api/account", updateAccountRequest, SharedTestData.TestEmail);
-        
+
         //Arrange
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         var result2 = await client.GetAuth("api/account", SharedTestData.TestEmail);
         var data2 = await ResponseParser.ParseJson<Account>(result2);
         data2.FullName.Should().Be(newFullName);
