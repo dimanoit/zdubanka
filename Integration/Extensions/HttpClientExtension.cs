@@ -61,7 +61,7 @@ public static class HttpClientExtension
     {
         if (email == SharedTestData.TestEmail && !string.IsNullOrEmpty(SharedTestData.Token))
             return SharedTestData.Token;
-        
+
         if (email == SharedTestData.TestEmailSecondUser && !string.IsNullOrEmpty(SharedTestData.TokenSecondUser))
             return SharedTestData.TokenSecondUser;
 
@@ -69,8 +69,8 @@ public static class HttpClientExtension
         try
         {
             var token = await GetTokenFromClient(client, email);
-            if(email == SharedTestData.TestEmail) SharedTestData.Token = token;
-            if(email == SharedTestData.TestEmailSecondUser) SharedTestData.TokenSecondUser = token;
+            if (email == SharedTestData.TestEmail) SharedTestData.Token = token;
+            if (email == SharedTestData.TestEmailSecondUser) SharedTestData.TokenSecondUser = token;
             return token;
         }
         finally

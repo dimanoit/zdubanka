@@ -44,8 +44,8 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
-    
-    
+
+
     [Fact]
     public async Task RegisterNewAccountSecondUser_ShouldReturn_201StatusCode_OR_Already_Exist_Account()
     {
@@ -72,7 +72,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
-    
+
 
     [Fact]
     public async Task SignInTestAccount_ShouldReturn_200StatusCode()
@@ -88,7 +88,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
     public async Task SignInTestAccountSecondUser_ShouldReturn_200StatusCode()
     {
