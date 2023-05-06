@@ -27,6 +27,16 @@ public static class HttpClientExtension
         return await client.PostAsync(url, content);
     }
 
+    public static async Task<HttpResponseMessage> PutAuth<T>(
+        this HttpClient client,
+        string url,
+        T data, string email) where T : class
+    {
+        var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+        await SetAuthorizationHeader(client, email);
+        return await client.PutAsync(url, content);
+    }
+    
     public static async Task<HttpResponseMessage> PatchAuth(
         this HttpClient client,
         string url,
@@ -46,6 +56,7 @@ public static class HttpClientExtension
         return await client.GetAsync(url);
     }
 
+    
 
     #region Set up Token
 
