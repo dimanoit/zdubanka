@@ -1,4 +1,5 @@
-﻿using Application.Services.Interfaces;
+﻿using Api.Extensions;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,11 @@ public class AccountController : ControllerBase
         _accountService = accountService;
     }
 
-    // TODO check that User.GetId() == id
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAccount(string id, CancellationToken cancellationToken)
     {
+        if (User.GetId() != id) return Forbid();
+        
         var account = await _accountService.GetAccountByIdAsync(id, cancellationToken);
         if (account == null) return NotFound();
 
