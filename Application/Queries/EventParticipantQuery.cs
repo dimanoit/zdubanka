@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries;
 
-public record EventParticipantQuery(EventParticipantRequest Request) : IRequest<Result>;
+public record EventParticipantQuery(EventParticipantRequest Request) : IRequest<EventParticipantsResponse>;
 
-internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQuery, Result>
+internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQuery, EventParticipantsResponse>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -19,7 +19,7 @@ internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQu
         _dbContext = dbContext;
     }
 
-    public async Task<Result> Handle(
+    public async Task<EventParticipantsResponse> Handle(
         EventParticipantQuery request,
         CancellationToken cancellationToken)
     {
@@ -43,6 +43,6 @@ internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQu
             TotalCount = totalCount
         };
 
-        return Result.Success(result)!;
+        return result;
     }
 }

@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Events;
 using Domain.Requests;
 using Domain.Response;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
@@ -36,6 +37,12 @@ public class AppointmentService : IAppointmentService
         string userId,
         CancellationToken cancellationToken)
     {
+        var appointment = await _context.Appointments
+            .Where(ap => ap.Id == appointmentId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (appointment == null) throw new ValidationException("There is no appointment with this id");
+
         var appointmentParticipant = new AppointmentParticipant
         {
             UserId = userId,

@@ -90,12 +90,7 @@ public class AuthController : ControllerBase
         var refreshToken = refreshTokenRequestModel.RefreshToken;
         var principal = _authService.GetPrincipalFromExpiredToken(accessToken);
 
-        if (!principal.IsSuccess)
-        {
-            return principal.Error!.ErrorResponse<AuthenticationResponse>();
-        }
-
-        var username = principal.Value!.Identity!.Name;
+        var username = principal!.Identity!.Name;
 
         var user = await _accountService.GetAccountByEmailAsync(username!, default);
 

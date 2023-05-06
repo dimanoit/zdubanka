@@ -21,32 +21,30 @@ public class EventParticipantController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<EventParticipantsResponse>> GetEventParticipantsAsync(
+    public async Task<EventParticipantsResponse> GetEventParticipantsAsync(
         [FromQuery] EventParticipantRestRequest request,
         CancellationToken cancellationToken)
     {
         var queryRequestModel = new EventParticipantRequest(request.EventId, User.GetId());
         var query = new EventParticipantQuery(queryRequestModel);
-        var result = await _mediator.Send(query, cancellationToken);
-
-        return result.IsSuccess ? result.Value : result.Error!.ErrorResponse<EventParticipantsResponse>();
+        return await _mediator.Send(query, cancellationToken);
     }
 
     [HttpPatch("{eventParticipantId}/accept")]
-    public async Task<Result> AcceptEventParticipantAsync(
+    public async Task AcceptEventParticipantAsync(
         string eventParticipantId,
         CancellationToken cancellationToken)
     {
         var request = new EventParticipantStateRequest(User.GetId(), eventParticipantId);
-        return await _mediator.Send(new AcceptEventParticipantCommand(request), cancellationToken);
+        await _mediator.Send(new AcceptEventParticipantCommand(request), cancellationToken);
     }
 
     [HttpPatch("{eventParticipantId}/reject")]
-    public async Task<Result> RejectEventParticipantAsync(
+    public async Task RejectEventParticipantAsync(
         string eventParticipantId,
         CancellationToken cancellationToken)
     {
         var request = new EventParticipantStateRequest(User.GetId(), eventParticipantId);
-        return await _mediator.Send(new RejectEventParticipantCommand(request), cancellationToken);
+        await _mediator.Send(new RejectEventParticipantCommand(request), cancellationToken);
     }
 }
