@@ -3,4 +3,4 @@
 namespace Domain.Response;
 
 public record AppointmentResponse : PageResponseBase<AppointmentResponseDto>
-{}
+{ }

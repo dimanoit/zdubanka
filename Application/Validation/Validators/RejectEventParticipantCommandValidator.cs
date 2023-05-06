@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace Application.Validation.Validators;
 
-public class RejectEventParticipantCommandValidator: AbstractValidator<RejectEventParticipantCommand>
+public class RejectEventParticipantCommandValidator : AbstractValidator<RejectEventParticipantCommand>
 {
     public RejectEventParticipantCommandValidator(IApplicationDbContext dbContext)
     {

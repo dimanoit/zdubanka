@@ -48,7 +48,7 @@ public class AppointmentService : IAppointmentService
         if (appointment == null) throw new NotFoundException();
         if (appointment.OrganizerId == userId) throw new ValidationException();
         if (appointment.Status != EventStatus.Opened) throw new ValidationException();
-        
+
         var appointmentParticipant = new AppointmentParticipant
         {
             UserId = userId,

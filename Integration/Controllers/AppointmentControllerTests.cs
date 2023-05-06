@@ -87,7 +87,7 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
         var eventId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
-        
+
         // Act
         var result = await client.PatchAuth($"api/appointment/{eventId}/apply");
 

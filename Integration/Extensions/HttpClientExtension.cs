@@ -37,7 +37,7 @@ public static class HttpClientExtension
 
     public static async Task<HttpResponseMessage> GetAuth(
         this HttpClient client,
-        string url) 
+        string url)
     {
         await SetAuthorizationHeader(client);
         return await client.GetAsync(url);

@@ -21,7 +21,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> DeleteAccount(string id, CancellationToken cancellationToken)
     {
         if (User.GetId() != id) return Forbid();
-        
+
         var account = await _accountService.GetAccountByIdAsync(id, cancellationToken);
         if (account == null) return NotFound();
 

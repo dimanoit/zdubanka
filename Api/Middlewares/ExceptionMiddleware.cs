@@ -28,8 +28,8 @@ public class ExceptionMiddleware
             }
 
             _logger.LogError("Internal Server Error", ex);
-            var response = new RestErrorDetails("Internal Server Error"); 
-            
+            var response = new RestErrorDetails("Internal Server Error");
+
             context.Response.ContentType = MediaTypeNames.Application.Json;
             context.Response.StatusCode = (int)response.StatusCode;
             await context.Response.WriteAsync(response.Message);

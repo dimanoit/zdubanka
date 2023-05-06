@@ -22,7 +22,7 @@ public static class ConfigureServices
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();
-        
+
         AddOptions(services, configuration);
         AddDb(services, configuration);
     }
@@ -42,7 +42,7 @@ public static class ConfigureServices
                 options.Password.RequireLowercase = false;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
-        
+
         var dbConfiguration = configuration
             .GetSection("DbConfiguration")
             .Get<DbConfiguration>()!;

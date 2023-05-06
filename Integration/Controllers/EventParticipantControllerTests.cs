@@ -15,7 +15,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
     {
         _factory = factory;
     }
-    
+
     [Fact]
     public async Task GetEventParticipantsAsync_ShouldReturn_StatusCode200()
     {
@@ -28,7 +28,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
-        
+
         url += eventId;
         // Act
         var result = await client.GetAuth(url);
@@ -55,7 +55,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
-        
+
         url += eventId;
         var eventParticipantHttpResult = await client.GetAuth(url);
 
@@ -70,7 +70,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
     public async Task RejectEventParticipantAsync_ShouldReturn_HttpStatusCode200()
     {
@@ -83,7 +83,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
-        
+
         url += eventId;
         var eventParticipantHttpResult = await client.GetAuth(url);
 

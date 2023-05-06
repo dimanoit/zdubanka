@@ -76,7 +76,7 @@ public class AuthController : ControllerBase
             identityUser.Email,
             identityUser.UserName,
         };
-        
+
         return Results.Created("api/auth", userResponse);
     }
 
@@ -98,7 +98,7 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Invalid client request");
         }
-        
+
         var newAccessToken = _authService.GenerateToken(user);
         var newRefreshToken = _authService.GenerateRefreshToken();
         user.RefreshToken = newRefreshToken;
@@ -122,7 +122,7 @@ public class AuthController : ControllerBase
         var user = await _accountService.GetAccountByEmailAsync(request.Email, default);
 
         if (user.AuthMethod == AuthMethod.Google) return BadRequest("User registered with Google");
-        
+
         if (user == null) return BadRequest($"User with {request.Email} hasn't registered");
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);

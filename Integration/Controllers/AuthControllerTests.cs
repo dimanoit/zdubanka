@@ -43,9 +43,9 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
-    
+
     [Fact]
-    public async Task  SignInTestAccount_ShouldReturn_200StatusCode()
+    public async Task SignInTestAccount_ShouldReturn_200StatusCode()
     {
         var client = _factory.CreateClient();
         var userSignInModel = new AuthenticationRequest()
