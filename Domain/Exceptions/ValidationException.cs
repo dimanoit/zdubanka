@@ -4,15 +4,18 @@ using FluentValidation.Results;
 namespace Domain.Exceptions;
 
 [Serializable]
-public class ZdubankaValidationException : Exception
+public class ValidationException : Exception
 {
-    public ZdubankaValidationException()
+    public ValidationException()
         : base("One or more validation failures have occurred.")
     {
         Errors = new Dictionary<string, string[]>();
     }
-
-    public ZdubankaValidationException(IEnumerable<ValidationFailure> failures)
+    
+    public ValidationException(ValidationFailure failure)
+        : this(new[] { failure }) { }
+    
+    public ValidationException(IEnumerable<ValidationFailure> failures)
         : this()
     {
         Errors = failures
@@ -22,7 +25,7 @@ public class ZdubankaValidationException : Exception
 
     public IDictionary<string, string[]> Errors { get; }
 
-    protected ZdubankaValidationException(SerializationInfo info, StreamingContext context)
+    protected ValidationException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
         Errors = (Dictionary<string, string[]>)info.GetValue("Errors", typeof(Dictionary<string, string[]>))!;

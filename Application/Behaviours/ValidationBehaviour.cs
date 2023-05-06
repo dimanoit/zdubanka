@@ -2,6 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using ValidationException = Domain.Exceptions.ValidationException;
 
 namespace Application.Behaviours;
 
@@ -39,6 +40,6 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
             return await next();
         }
         
-        throw new ZdubankaValidationException(failures);
+        throw new ValidationException(failures);
     }
 }
