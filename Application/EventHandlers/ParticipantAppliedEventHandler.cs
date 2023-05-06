@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.EventHandlers;
 
-public class ParticipantAppliedEventHandler: INotificationHandler<ParticipantAppliedEvent>
+public class ParticipantAppliedEventHandler : INotificationHandler<ParticipantAppliedEvent>
 {
     private readonly IApplicationDbContext _applicationDbContext;
     private readonly IEmailService _emailService;

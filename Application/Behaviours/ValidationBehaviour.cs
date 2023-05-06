@@ -1,14 +1,13 @@
-﻿using System.Net;
-using System.Text.Json;
-using Domain.Models;
+﻿using Domain.Exceptions;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
+using ValidationException = Domain.Exceptions.ValidationException;
 
 namespace Application.Behaviours;
 
 public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
-    where TResponse : Result
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -29,12 +28,11 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
 
         var validationResults = await Task.WhenAll(
             _validators.Select(v => v.ValidateAsync(context, cancellationToken))
-            );
+        );
 
         var failures = validationResults
-            .Where(r => r.Errors.Any())
-            .SelectMany(r => r.Errors)
-            .Select(r => new { r.PropertyName, r.ErrorMessage })
+            .Where(v => !v.IsValid)
+            .SelectMany(v => v.Errors)
             .ToArray();
 
         if (!failures.Any())
@@ -42,9 +40,6 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
             return await next();
         }
 
-        // TODO enrich RestErrorDetails with better data 
-        var errorDetails = new RestErrorDetails(JsonSerializer.Serialize(failures), HttpStatusCode.BadRequest);
-        var result = Result.Failure(errorDetails);
-        return (TResponse)result;
+        throw new ValidationException(failures);
     }
 }

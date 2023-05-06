@@ -16,7 +16,7 @@ public static class EventParticipantMapper
             AppointmentTitle = appointmentParticipant.Appointment.Title,
             Status = appointmentParticipant.Status
         };
-        
+
         return eventParticipant;
     }
 }

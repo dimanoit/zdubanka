@@ -2,10 +2,15 @@
 using Application.Mappers;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Events;
+using Domain.Exceptions;
 using Domain.Requests;
 using Domain.Response;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using ValidationException = Domain.Exceptions.ValidationException;
 
 namespace Application.Services;
 
@@ -36,6 +41,14 @@ public class AppointmentService : IAppointmentService
         string userId,
         CancellationToken cancellationToken)
     {
+        var appointment = await _context.Appointments
+            .Where(ap => ap.Id == appointmentId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (appointment == null) throw new NotFoundException();
+        if (appointment.OrganizerId == userId) throw new ValidationException();
+        if (appointment.Status != EventStatus.Opened) throw new ValidationException();
+
         var appointmentParticipant = new AppointmentParticipant
         {
             UserId = userId,

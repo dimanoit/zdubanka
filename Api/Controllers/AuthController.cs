@@ -2,6 +2,7 @@
 using Api.Mappers;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
@@ -75,7 +76,7 @@ public class AuthController : ControllerBase
             identityUser.Email,
             identityUser.UserName,
         };
-        
+
         return Results.Created("api/auth", userResponse);
     }
 
@@ -89,12 +90,7 @@ public class AuthController : ControllerBase
         var refreshToken = refreshTokenRequestModel.RefreshToken;
         var principal = _authService.GetPrincipalFromExpiredToken(accessToken);
 
-        if (!principal.IsSuccess)
-        {
-            return principal.Error!.ErrorResponse<AuthenticationResponse>();
-        }
-
-        var username = principal.Value!.Identity!.Name;
+        var username = principal!.Identity!.Name;
 
         var user = await _accountService.GetAccountByEmailAsync(username!, default);
 
@@ -102,7 +98,7 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Invalid client request");
         }
-        
+
         var newAccessToken = _authService.GenerateToken(user);
         var newRefreshToken = _authService.GenerateRefreshToken();
         user.RefreshToken = newRefreshToken;
@@ -124,6 +120,8 @@ public class AuthController : ControllerBase
         AuthenticationRequest request)
     {
         var user = await _accountService.GetAccountByEmailAsync(request.Email, default);
+
+        if (user.AuthMethod == AuthMethod.Google) return BadRequest("User registered with Google");
 
         if (user == null) return BadRequest($"User with {request.Email} hasn't registered");
 

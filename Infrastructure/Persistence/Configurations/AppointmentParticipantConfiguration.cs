@@ -8,15 +8,15 @@ public class AppointmentParticipantConfiguration : IEntityTypeConfiguration<Appo
 {
     public void Configure(EntityTypeBuilder<AppointmentParticipant> builder)
     {
-        builder.ToTable("AppointmentParticipants"); 
+        builder.ToTable("AppointmentParticipants");
 
-        builder.HasKey(x => x.Id); 
-        builder.Property(x => x.Id).ValueGeneratedOnAdd(); 
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
         builder.Property(x => x.UserId)
-            .IsRequired(); 
+            .IsRequired();
         builder.Property(x => x.AppointmentId)
-            .IsRequired(); 
+            .IsRequired();
 
         builder.Property(x => x.Status)
             .HasConversion<string>()
@@ -29,7 +29,7 @@ public class AppointmentParticipantConfiguration : IEntityTypeConfiguration<Appo
         builder.HasOne(ap => ap.Account)
             .WithMany(ac => ac.AppointmentParticipations)
             .HasForeignKey(x => x.UserId);
-        
+
         builder.HasOne(ap => ap.Appointment)
             .WithMany(ac => ac.AppointmentParticipants)
             .HasForeignKey(x => x.AppointmentId);

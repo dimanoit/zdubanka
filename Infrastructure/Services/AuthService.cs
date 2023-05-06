@@ -75,9 +75,8 @@ public class AuthService : IAuthService
         return Convert.ToBase64String(randomNumber);
     }
 
-    public Result<ClaimsPrincipal?> GetPrincipalFromExpiredToken(string token)
+    public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
     {
-        
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false,
@@ -97,9 +96,10 @@ public class AuthService : IAuthService
         )
         {
             var error = new RestErrorDetails("Security token not valid", HttpStatusCode.BadRequest);
-            return Result<ClaimsPrincipal>.Failure(error)!;
+            throw new NotImplementedException();
+            // throw new BadRequest Exception
         }
 
-        return Result<ClaimsPrincipal>.Success(principal);
+        return principal;
     }
 }
