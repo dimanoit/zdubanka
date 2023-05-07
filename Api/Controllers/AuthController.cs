@@ -1,5 +1,6 @@
-﻿using Api.Extensions;
-using Api.Mappers;
+﻿using Api.Mappers;
+using Api.Models;
+using Application.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
@@ -21,17 +22,20 @@ public class AuthController : ControllerBase
     private readonly IAccountService _accountService;
     private readonly GoogleOptions _applicationSettings;
     private readonly AuthService _authService;
+    private readonly IEmailService _emailService;
     private readonly UserManager<Account> _userManager;
 
     public AuthController(
         UserManager<Account> userManager,
         IAccountService accountService,
         IOptions<GoogleOptions> applicationSettings,
-        AuthService authService)
+        AuthService authService,
+        IEmailService emailService)
     {
         _userManager = userManager;
         _accountService = accountService;
         _authService = authService;
+        _emailService = emailService;
         _applicationSettings = applicationSettings.Value;
     }
 
@@ -68,13 +72,17 @@ public class AuthController : ControllerBase
         };
 
         var result = await _userManager.CreateAsync(identityUser, user.Password);
-
         if (!result.Succeeded) return Results.BadRequest(result.Errors);
+
+        var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
+
+        var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{emailToken}/confirmation";
+        await _emailService.SendEmailAsync(identityUser.Email, confirmationLink, "You confirmation link");
 
         var userResponse = new
         {
             identityUser.Email,
-            identityUser.UserName,
+            identityUser.UserName
         };
 
         return Results.Created("api/auth", userResponse);
@@ -95,9 +103,7 @@ public class AuthController : ControllerBase
         var user = await _accountService.GetAccountByEmailAsync(username!, default);
 
         if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-        {
             return BadRequest("Invalid client request");
-        }
 
         var newAccessToken = _authService.GenerateToken(user);
         var newRefreshToken = _authService.GenerateRefreshToken();
@@ -132,5 +138,39 @@ public class AuthController : ControllerBase
         var token = _authService.GenerateToken(user);
         await _accountService.SaveRefreshTokenAsync(user, token.RefreshToken!, token.Expiration);
         return Ok(token);
+    }
+
+    [HttpPatch("{token}/confirmation/{userId}")]
+    public async Task<IActionResult> ConfirmEmailAsync(string token, string userId)
+    {
+        var account = await _accountService.GetAccountByIdAsync(userId, default);
+
+        if (account == null) return NotFound();
+        if (account.EmailConfirmed) return BadRequest("Email already confirmed");
+
+        await _userManager.ConfirmEmailAsync(account, token);
+        return Ok();
+    }
+
+    [HttpPost("{email}/reset-link")]
+    public async Task<IActionResult> SendChangePasswordLinkAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null) return NotFound();
+        var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var resetPasswordLink = $"{Request.Scheme}://{Request.Host}/api/auth/{resetToken}/password";
+
+        await _emailService.SendEmailAsync(email, resetPasswordLink, "Your password reset link");
+        return Ok();
+    }
+
+    [HttpPost("password-change")]
+    public async Task<IActionResult> ChangePasswordAsync([FromBody] PasswordChangeRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null) return NotFound();
+
+        await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        return Ok();
     }
 }
