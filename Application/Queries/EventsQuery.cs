@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Helpers;
+using Application.Interfaces;
 using Application.Mappers;
 using Domain.Requests;
 using Domain.Response;
@@ -26,46 +27,35 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         var dbQuery = _dbContext.Events
             .AsNoTracking();
 
-        if (request.StartDate.HasValue)
-        {
-            dbQuery = dbQuery.Where(ap => ap.StartDay >= request.StartDate);
-        }
+        if (request.StartDate.HasValue) dbQuery = dbQuery.Where(ap => ap.StartDay >= request.StartDate);
 
-        if (request.EndDate.HasValue)
-        {
-            dbQuery = dbQuery.Where(ap => ap.EndDay <= request.EndDate);
-        }
+        if (request.EndDate.HasValue) dbQuery = dbQuery.Where(ap => ap.EndDay <= request.EndDate);
 
         if (!string.IsNullOrEmpty(request.SearchKeyword))
-        {
             // TODO think about full text search 
-            dbQuery = dbQuery.Where(ap => ap.Title.Contains(request.SearchKeyword) || ap.Description.Contains(request.SearchKeyword));
-        }
+            dbQuery = dbQuery.Where(ap =>
+                ap.Title.Contains(request.SearchKeyword) || ap.Description.Contains(request.SearchKeyword));
 
         if (request.PeopleCount.HasValue)
-        {
             dbQuery = dbQuery.Where(ap => ap.EventLimitation.CountOfPeople == request.PeopleCount);
-        }
 
         if (request.Gender.HasValue)
-        {
             dbQuery = dbQuery.Where(ap => ap.EventLimitation.Gender.Contains(request.Gender.Value));
-        }
 
         if (request.RelationshipStatus.HasValue)
-        {
-            dbQuery = dbQuery.Where(ap => ap.EventLimitation.RelationshipStatus.Contains(request.RelationshipStatus.Value));
-        }
+            dbQuery = dbQuery.Where(ap =>
+                ap.EventLimitation.RelationshipStatus.Contains(request.RelationshipStatus.Value));
 
         if (request.MinAge.HasValue)
-        {
             dbQuery = dbQuery.Where(ap => ap.EventLimitation.AgeLimit.Min >= request.MinAge.Value);
-        }
 
         if (request.MaxAge.HasValue)
-        {
             dbQuery = dbQuery.Where(ap => ap.EventLimitation.AgeLimit.Max <= request.MaxAge.Value);
-        }
+
+        if (request.DistanceFromKm.HasValue)
+            dbQuery = dbQuery.Where(e =>
+                GeoHelper.CalculateDistance(e.Latitude, e.Longitude, request.Latitude!.Value, request.Longitude!.Value)
+                <= request.DistanceFromKm.Value);
 
         var count = await dbQuery.CountAsync(cancellationToken);
         var data = await dbQuery

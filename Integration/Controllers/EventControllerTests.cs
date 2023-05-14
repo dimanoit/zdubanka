@@ -38,6 +38,8 @@ public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>
             Description = "Discuss project progress",
             StartDay = DateTime.UtcNow.AddDays(1),
             EndDay = DateTime.UtcNow.AddDays(1).AddHours(2),
+            Longitude = CoordinatesFixture.GenerateLongitude(),
+            Latitude = CoordinatesFixture.GenerateLatitude(),
             EventLimitation = new EventLimitation
             {
                 CountOfPeople = 3,
