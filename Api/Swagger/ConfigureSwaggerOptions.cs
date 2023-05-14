@@ -17,7 +17,7 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
             BearerFormat = "JTW",
             Scheme = "Bearer"
         };
-        
+
         var openApiSecurityRequirement = new OpenApiSecurityRequirement
         {
             {
