@@ -4,11 +4,11 @@ using Domain.Response;
 
 namespace Application.Mappers;
 
-public static class AppointmentMapper
+public static class EventMapper
 {
-    public static Appointment ToAppointment(this AppointmentCreationRequest request, string organizerId)
+    public static Event ToEvent(this EventCreationRequest request, string organizerId)
     {
-        var appointment = new Appointment
+        var eventEntity = new Event
         {
             Id = Guid.NewGuid().ToString(),
             Location = request.Location,
@@ -16,29 +16,29 @@ public static class AppointmentMapper
             Description = request.Description,
             StartDay = request.StartDay,
             EndDay = request.EndDay,
-            AppointmentLimitation = request.AppointmentLimitation,
+            EventLimitation = request.EventLimitation,
             OrganizerId = organizerId
         };
 
-        return appointment;
+        return eventEntity;
     }
 
 
-    public static AppointmentResponseDto ToAppointmentResponseDto(this Appointment entity)
+    public static EventResponseDto ToEventResponseDto(this Event entity)
     {
-        var appointment = new AppointmentResponseDto
+        var eventEntity = new EventResponseDto
         {
             Location = entity.Location,
             Title = entity.Title,
             Description = entity.Description,
             StartDay = entity.StartDay,
             EndDay = entity.EndDay,
-            AppointmentLimitation = entity.AppointmentLimitation,
+            EventLimitation = entity.EventLimitation,
             OrganizerId = entity.OrganizerId,
             Id = entity.Id,
             Status = entity.Status
         };
 
-        return appointment;
+        return eventEntity;
     }
 }

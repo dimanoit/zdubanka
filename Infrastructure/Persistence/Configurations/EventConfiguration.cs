@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Persistence.Configurations;
 
-public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
+public class EventConfiguration : IEntityTypeConfiguration<Event>
 {
-    public void Configure(EntityTypeBuilder<Appointment> builder)
+    public void Configure(EntityTypeBuilder<Event> builder)
     {
-        builder.ToTable("Appointments", "public");
+        builder.ToTable("Events", "public");
 
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Id).ValueGeneratedOnAdd();
@@ -27,7 +27,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .IsRequired();
 
         builder
-            .Property(a => a.AppointmentLimitation)
+            .Property(a => a.EventLimitation)
             .HasColumnType("jsonb")
             .IsRequired();
 

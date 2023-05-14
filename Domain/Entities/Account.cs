@@ -16,6 +16,6 @@ public class Account : IdentityUser
     public DateTime DateOfBirth { get; set; }
     public AuthMethod AuthMethod { get; set; }
     public ICollection<UserLanguage>? UserLanguages { get; set; }
-    public ICollection<Appointment>? Appointments { get; set; }
-    public ICollection<AppointmentParticipant>? AppointmentParticipations { get; set; }
+    public ICollection<Event>? Events { get; set; }
+    public ICollection<EventParticipant>? EventParticipations { get; set; }
 }

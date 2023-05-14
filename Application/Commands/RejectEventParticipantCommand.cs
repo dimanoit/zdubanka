@@ -19,7 +19,7 @@ public class RejectEventParticipantCommandHandler : IRequestHandler<RejectEventP
 
     public async Task Handle(RejectEventParticipantCommand request, CancellationToken cancellationToken)
     {
-        var eventParticipant = await _dbContext.AppointmentParticipants
+        var eventParticipant = await _dbContext.EventParticipants
             .FirstAsync(ap => ap.Id == request.Request.EventParticipantId, cancellationToken);
 
         eventParticipant.UpdateToRejectStatus();

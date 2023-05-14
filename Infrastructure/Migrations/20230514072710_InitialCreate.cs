@@ -53,32 +53,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<Address>(type: "jsonb", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    StartDay = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndDay = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AppointmentLimitation = table.Column<AppointmentLimitation>(type: "jsonb", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
-                    OrganizerId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_OrganizerId",
-                        column: x => x.OrganizerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -140,92 +114,57 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppointmentParticipants",
+                name: "Events",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    AppointmentId = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false)
+                    Location = table.Column<Address>(type: "jsonb", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    StartDay = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDay = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EventLimitation = table.Column<EventLimitation>(type: "jsonb", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    OrganizerId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppointmentParticipants", x => x.Id);
+                    table.PrimaryKey("PK_Events", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AppointmentParticipants_Appointments_AppointmentId",
-                        column: x => x.AppointmentId,
-                        principalSchema: "public",
-                        principalTable: "Appointments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AppointmentParticipants_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Events_AspNetUsers_OrganizerId",
+                        column: x => x.OrganizerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chats",
-                schema: "public",
-                columns: table => new
-                {
-                    AppointmentId = table.Column<string>(type: "text", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ImageUrl = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Chats", x => x.AppointmentId);
-                    table.ForeignKey(
-                        name: "FK_Chats_Appointments_AppointmentId",
-                        column: x => x.AppointmentId,
-                        principalSchema: "public",
-                        principalTable: "Appointments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                schema: "public",
+                name: "EventParticipants",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    SenderId = table.Column<string>(type: "text", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: false),
-                    SentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ChatId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    EventId = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.PrimaryKey("PK_EventParticipants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_Chats_ChatId",
-                        column: x => x.ChatId,
+                        name: "FK_EventParticipants_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventParticipants_Events_EventId",
+                        column: x => x.EventId,
                         principalSchema: "public",
-                        principalTable: "Chats",
-                        principalColumn: "AppointmentId",
+                        principalTable: "Events",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppointmentParticipants_AppointmentId",
-                table: "AppointmentParticipants",
-                column: "AppointmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppointmentParticipants_UserId_AppointmentId",
-                table: "AppointmentParticipants",
-                columns: new[] { "UserId", "AppointmentId" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Appointments_OrganizerId",
-                schema: "public",
-                table: "Appointments",
-                column: "OrganizerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -255,18 +194,26 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ChatId",
+                name: "IX_EventParticipants_EventId",
+                table: "EventParticipants",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventParticipants_UserId_EventId",
+                table: "EventParticipants",
+                columns: new[] { "UserId", "EventId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_OrganizerId",
                 schema: "public",
-                table: "Messages",
-                column: "ChatId");
+                table: "Events",
+                column: "OrganizerId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AppointmentParticipants");
-
             migrationBuilder.DropTable(
                 name: "AspNetUserClaims");
 
@@ -277,15 +224,10 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Messages",
-                schema: "public");
+                name: "EventParticipants");
 
             migrationBuilder.DropTable(
-                name: "Chats",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "Appointments",
+                name: "Events",
                 schema: "public");
 
             migrationBuilder.DropTable(

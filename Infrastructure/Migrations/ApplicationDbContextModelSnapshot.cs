@@ -126,15 +126,11 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Appointment", b =>
+            modelBuilder.Entity("Domain.Entities.Event", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
-
-                    b.Property<AppointmentLimitation>("AppointmentLimitation")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -142,6 +138,10 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("EndDay")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<EventLimitation>("EventLimitation")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.Property<Address>("Location")
                         .IsRequired()
@@ -166,16 +166,16 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("OrganizerId");
 
-                    b.ToTable("Appointments", "public");
+                    b.ToTable("Events", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppointmentParticipant", b =>
+            modelBuilder.Entity("Domain.Entities.EventParticipant", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<string>("AppointmentId")
+                    b.Property<string>("EventId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -189,56 +189,12 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppointmentId");
+                    b.HasIndex("EventId");
 
-                    b.HasIndex("UserId", "AppointmentId")
+                    b.HasIndex("UserId", "EventId")
                         .IsUnique();
 
-                    b.ToTable("AppointmentParticipants", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Chat", b =>
-                {
-                    b.Property<string>("AppointmentId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
-
-                    b.HasKey("AppointmentId");
-
-                    b.ToTable("Chats", "public");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Message", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ChatId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("SentDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("Messages", "public");
+                    b.ToTable("EventParticipants", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -307,10 +263,10 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Appointment", b =>
+            modelBuilder.Entity("Domain.Entities.Event", b =>
                 {
                     b.HasOne("Domain.Entities.Account", "Organizer")
-                        .WithMany("Appointments")
+                        .WithMany("Events")
                         .HasForeignKey("OrganizerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -318,45 +274,23 @@ namespace Infrastructure.Migrations
                     b.Navigation("Organizer");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppointmentParticipant", b =>
+            modelBuilder.Entity("Domain.Entities.EventParticipant", b =>
                 {
-                    b.HasOne("Domain.Entities.Appointment", "Appointment")
-                        .WithMany("AppointmentParticipants")
-                        .HasForeignKey("AppointmentId")
+                    b.HasOne("Domain.Entities.Event", "Event")
+                        .WithMany("EventParticipants")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Account", "Account")
-                        .WithMany("AppointmentParticipations")
+                        .WithMany("EventParticipations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
 
-                    b.Navigation("Appointment");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Chat", b =>
-                {
-                    b.HasOne("Domain.Entities.Appointment", "Appointment")
-                        .WithOne("Chat")
-                        .HasForeignKey("Domain.Entities.Chat", "AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Appointment");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Message", b =>
-                {
-                    b.HasOne("Domain.Entities.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -388,21 +322,14 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
                 {
-                    b.Navigation("AppointmentParticipations");
+                    b.Navigation("EventParticipations");
 
-                    b.Navigation("Appointments");
+                    b.Navigation("Events");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Appointment", b =>
+            modelBuilder.Entity("Domain.Entities.Event", b =>
                 {
-                    b.Navigation("AppointmentParticipants");
-
-                    b.Navigation("Chat");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Chat", b =>
-                {
-                    b.Navigation("Messages");
+                    b.Navigation("EventParticipants");
                 });
 #pragma warning restore 612, 618
         }

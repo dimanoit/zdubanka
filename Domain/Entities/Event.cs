@@ -4,18 +4,17 @@ using Domain.Models;
 
 namespace Domain.Entities;
 
-public class Appointment : BaseEntity
+public class Event : BaseEntity
 {
     public Address Location { get; init; } = null!;
     public string Title { get; init; } = null!;
     public string Description { get; init; } = null!;
     public DateTime StartDay { get; init; }
     public DateTime EndDay { get; init; }
-    public AppointmentLimitation AppointmentLimitation { get; init; } = null!;
+    public EventLimitation EventLimitation { get; init; } = null!;
 
     public EventStatus Status { get; set; } = EventStatus.Opened;
     public string OrganizerId { get; set; } = null!;
     public Account? Organizer { get; set; }
-    public Chat? Chat { get; set; }
-    public ICollection<AppointmentParticipant>? AppointmentParticipants { get; set; }
+    public ICollection<EventParticipant>? EventParticipants { get; set; }
 }

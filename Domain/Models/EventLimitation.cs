@@ -2,7 +2,7 @@
 
 namespace Domain.Models;
 
-public record AppointmentLimitation
+public record EventLimitation
 {
     public int CountOfPeople { get; init; } = 2;
     public Gender[] Gender { get; init; } = Array.Empty<Gender>();

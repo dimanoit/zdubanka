@@ -3,4 +3,4 @@ using Domain.Response.Common;
 
 namespace Domain.Response;
 
-public record EventParticipantsResponse : PageResponseBase<EventParticipant>;
+public record EventParticipantsResponse : PageResponseBase<EventParticipantDto>;

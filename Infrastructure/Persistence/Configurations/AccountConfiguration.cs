@@ -38,7 +38,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
             .Property(a => a.UserLanguages)
             .HasColumnType("jsonb");
 
-        builder.HasMany(a => a.Appointments)
+        builder.HasMany(a => a.Events)
             .WithOne(ap => ap.Organizer)
             .HasForeignKey(ap => ap.OrganizerId)
             .IsRequired();

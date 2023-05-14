@@ -11,21 +11,21 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Integration.Controllers;
 
-public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public AppointmentControllerTests(WebApplicationFactory<Program> factory)
+    public EventControllerTests(WebApplicationFactory<Program> factory)
     {
         _factory = factory;
     }
 
     [Fact]
-    public async Task CreateAppointment_ShouldReturn_201StatusCode()
+    public async Task CreateEvent_ShouldReturn_201StatusCode()
     {
         // Arrange
         var client = _factory.CreateClient();
-        var appointmentRequest = new AppointmentCreationRequest
+        var eventRequest = new EventCreationRequest
         {
             Location = new Address
             {
@@ -38,7 +38,7 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
             Description = "Discuss project progress",
             StartDay = DateTime.UtcNow.AddDays(1),
             EndDay = DateTime.UtcNow.AddDays(1).AddHours(2),
-            AppointmentLimitation = new AppointmentLimitation
+            EventLimitation = new EventLimitation
             {
                 CountOfPeople = 3,
                 Gender = new[] { Gender.Male, Gender.Female },
@@ -52,18 +52,18 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
         };
 
         // Act 
-        var result = await client.PostAuth("api/appointment", appointmentRequest, SharedTestData.TestEmail);
+        var result = await client.PostAuth("api/event", eventRequest, SharedTestData.TestEmail);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
     }
 
     [Fact]
-    public async Task GetCurrentUserAppointments_ShouldReturn_AppointmentResultWithoutErrors()
+    public async Task GetCurrentUserEvents_ShouldReturn_EventResultWithoutErrors()
     {
         // Arrange
         var client = _factory.CreateClient();
-        var url = "api/appointment?skip=0&take=100";
+        var url = "api/Event?skip=0&take=100";
 
         // Act
         var result = await client.GetAuth(url, SharedTestData.TestEmail);
@@ -79,18 +79,18 @@ public class AppointmentControllerTests : IClassFixture<WebApplicationFactory<Pr
     }
 
     [Fact]
-    public async Task ApplyOnAppointmentAsync_ShouldReturn_HttpStatusCode200()
+    public async Task ApplyOnEventAsync_ShouldReturn_HttpStatusCode200()
     {
         // Arrange
         var client = _factory.CreateClient();
-        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
+        var response = await client.GetAuth("api/Event?skip=0&take=100", SharedTestData.TestEmail);
         var jsonResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
             .GetProperty("id").GetString();
 
         // Act
-        var result = await client.PatchAuth($"api/appointment/{eventId}/apply", SharedTestData.TestEmailSecondUser);
+        var result = await client.PatchAuth($"api/event/{eventId}/apply", SharedTestData.TestEmailSecondUser);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);

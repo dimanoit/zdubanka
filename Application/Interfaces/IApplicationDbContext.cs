@@ -5,11 +5,9 @@ namespace Application.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<Appointment> Appointments { get; }
+    DbSet<Event> Events { get; }
     DbSet<Account> Accounts { get; }
-    DbSet<Chat> Chats { get; }
-    DbSet<Message> Messages { get; }
-    DbSet<AppointmentParticipant> AppointmentParticipants { get; }
+    DbSet<EventParticipant> EventParticipants { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

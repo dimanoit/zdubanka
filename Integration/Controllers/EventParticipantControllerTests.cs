@@ -24,7 +24,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var client = _factory.CreateClient();
         var url = "api/event-participants?eventId=";
 
-        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
+        var response = await client.GetAuth("api/Event?skip=0&take=100", SharedTestData.TestEmail);
         var jsonEventResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
@@ -51,7 +51,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var client = _factory.CreateClient();
         var url = "api/event-participants?eventId=";
 
-        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
+        var response = await client.GetAuth("api/Event?skip=0&take=100", SharedTestData.TestEmail);
         var jsonEventResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
@@ -81,7 +81,7 @@ public class EventParticipantControllerTests : IClassFixture<WebApplicationFacto
         var client = _factory.CreateClient();
         var url = "api/event-participants?eventId=";
 
-        var response = await client.GetAuth("api/appointment?skip=0&take=100", SharedTestData.TestEmail);
+        var response = await client.GetAuth("api/Event?skip=0&take=100", SharedTestData.TestEmail);
         var jsonEventResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonEventResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()
