@@ -5,7 +5,6 @@ namespace Domain.Requests;
 
 public record SearchEventRequest : PageRequestBase
 {
-    public string? Location { get; init; }
     public DateTime? StartDate { get; init; }
     public DateTime? EndDate { get; init; }
     public string? SearchKeyword { get; init; }

@@ -1,8 +1,9 @@
-﻿using System.Security.Claims;
-using Api.Extensions;
+﻿using Api.Extensions;
+using Application.Queries;
 using Application.Services.Interfaces;
 using Domain.Requests;
 using Domain.Response;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,19 +11,24 @@ namespace Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/event")]
 public class EventController : ControllerBase
 {
     private readonly IEventService _eventService;
+    private readonly IMediator _mediator;
 
-    public EventController(IEventService eventService)
+    public EventController(
+        IEventService eventService,
+        IMediator mediator)
     {
         _eventService = eventService;
+        _mediator = mediator;
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateEvent(
-        [FromBody] EventCreationRequest eventCreationRequest,
+        [FromBody]
+        EventCreationRequest eventCreationRequest,
         CancellationToken cancellationToken)
     {
         var userId = User.GetId();
@@ -32,6 +38,15 @@ public class EventController : ControllerBase
     }
 
     [HttpGet]
+    public async Task<EventResponse> GetEventsAsync(
+        [FromQuery] SearchEventRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = new EventsQuery(request);
+        return await _mediator.Send(query, cancellationToken);
+    }
+
+    [HttpGet("own")]
     public async Task<EventResponse> GetCurrentUserEvents(
         int skip,
         int take,
