@@ -33,7 +33,7 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
             }
         };
 
-        options.AddSecurityDefinition(" Bearer", openApiSecurityScheme);
+        options.AddSecurityDefinition("Bearer", openApiSecurityScheme);
         options.AddSecurityRequirement(openApiSecurityRequirement);
     }
 }

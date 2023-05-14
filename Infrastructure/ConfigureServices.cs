@@ -7,9 +7,11 @@ using Infrastructure.Handlers.Interfaces;
 using Infrastructure.Options;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TokenOptions = Infrastructure.Options.TokenOptions;
 
 namespace Infrastructure;
 
@@ -41,7 +43,8 @@ public static class ConfigureServices
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         var dbConfiguration = configuration
             .GetSection("DbConfiguration")

@@ -25,8 +25,9 @@ public static class ConfigureServices
             });
 
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        services.AddSwaggerGen();
+
         services.AddCors(environment);
         services.AddScoped<AuthService>();
 
