@@ -3,7 +3,7 @@ using Domain.Models;
 
 namespace Domain.Response;
 
-public record AppointmentResponseDto
+public record EventResponseDto
 {
     public string Id { get; init; } = null!;
     public Address Location { get; init; } = null!;
@@ -12,6 +12,6 @@ public record AppointmentResponseDto
     public DateTime StartDay { get; init; }
     public DateTime EndDay { get; init; }
     public EventStatus Status { get; init; }
-    public AppointmentLimitation AppointmentLimitation { get; init; } = null!;
+    public EventLimitation EventLimitation { get; init; } = null!;
     public string OrganizerId { get; init; } = null!;
 }

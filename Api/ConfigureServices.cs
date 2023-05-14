@@ -1,9 +1,11 @@
-
 using System.Text;
 using System.Text.Json.Serialization;
+using Api.Swagger;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Api;
 
@@ -23,11 +25,12 @@ public static class ConfigureServices
             });
 
         services.AddEndpointsApiExplorer();
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         services.AddSwaggerGen();
+
         services.AddCors(environment);
         services.AddScoped<AuthService>();
 
-        // TODO get data from IOptions
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -40,7 +43,9 @@ public static class ConfigureServices
                     ValidateIssuerSigningKey = true,
                     ValidAudience = configuration["TokenOptions:Audience"],
                     ValidIssuer = configuration["TokenOptions:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenOptions:Key"] ?? throw new InvalidOperationException()))
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["TokenOptions:Key"] ??
+                                               throw new InvalidOperationException()))
                 };
             });
     }

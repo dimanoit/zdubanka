@@ -2,7 +2,7 @@
 
 namespace Domain.Requests;
 
-public record AppointmentRetrieveRequest : PageRequestBase
+public record EventRetrieveRequest : PageRequestBase
 {
     public string UserId { get; init; } = null!;
 }

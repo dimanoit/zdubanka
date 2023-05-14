@@ -2,7 +2,7 @@ namespace Api.Models;
 
 public record PasswordChangeRequest
 {
-    public string Email { get; set; }
-    public string Token { get; set; }
-    public string NewPassword { get; set; }
+    public string Email { get; init; } = null!;
+    public string Token { get; init; } = null!;
+    public string NewPassword { get; init; } = null!;
 }

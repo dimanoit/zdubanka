@@ -23,7 +23,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         var client = _factory.CreateClient();
 
-        var userRegistrationModel = new RegistrationRequestModel()
+        var userRegistrationModel = new RegistrationRequestModel
         {
             Email = SharedTestData.TestEmail,
             Name = "Dimonchik Testyvalbnuk",
@@ -51,13 +51,13 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         var client = _factory.CreateClient();
 
-        var userRegistrationModel = new RegistrationRequestModel()
+        var userRegistrationModel = new RegistrationRequestModel
         {
             Email = SharedTestData.TestEmailSecondUser,
             Name = "Dimonchik Testyvalbnuk",
             Password = "somePassword123",
             DateOfBirth = DateTime.UtcNow.AddYears(-20),
-            UserName = "Dimonchik",
+            UserName = "Dimonchik1",
             Gender = Gender.Male
         };
 
@@ -78,10 +78,10 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task SignInTestAccount_ShouldReturn_200StatusCode()
     {
         var client = _factory.CreateClient();
-        var userSignInModel = new AuthenticationRequest()
+        var userSignInModel = new AuthenticationRequest
         {
             Email = SharedTestData.TestEmail,
-            Password = "somePassword123",
+            Password = "somePassword123"
         };
 
         var response = await client.Post("api/auth/token", userSignInModel);
@@ -93,10 +93,10 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task SignInTestAccountSecondUser_ShouldReturn_200StatusCode()
     {
         var client = _factory.CreateClient();
-        var userSignInModel = new AuthenticationRequest()
+        var userSignInModel = new AuthenticationRequest
         {
             Email = SharedTestData.TestEmailSecondUser,
-            Password = "somePassword123",
+            Password = "somePassword123"
         };
 
         var response = await client.Post("api/auth/token", userSignInModel);

@@ -27,7 +27,7 @@ public class ExceptionMiddleware
                 throw;
             }
 
-            _logger.LogError("Internal Server Error", ex);
+            _logger.LogError(ex, "Internal Server Error");
             var response = new RestErrorDetails("Internal Server Error");
 
             context.Response.ContentType = MediaTypeNames.Application.Json;

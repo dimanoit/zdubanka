@@ -24,13 +24,13 @@ internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQu
         CancellationToken cancellationToken)
     {
         var eventParticipantsQuery = _dbContext
-            .AppointmentParticipants
-            .Where(app => app.AppointmentId == request.Request.EventId)
+            .EventParticipants
+            .Where(app => app.EventId == request.Request.EventId)
             .AsNoTracking();
 
         var totalCount = await eventParticipantsQuery.CountAsync(cancellationToken);
         var data = await eventParticipantsQuery
-            .Include(ap => ap.Appointment)
+            .Include(ap => ap.Event)
             .Include(ap => ap.Account)
             .Skip(request.Request.Skip)
             .Take(request.Request.Take)

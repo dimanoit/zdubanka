@@ -5,12 +5,12 @@ namespace Domain.Events;
 
 public class ParticipantAppliedEvent : INotification
 {
-    public ParticipantAppliedEvent(string userId, string appointmentId)
+    public ParticipantAppliedEvent(string userId, string eventId)
     {
         UserId = userId;
-        AppointmentId = appointmentId;
+        EventId = eventId;
     }
 
     public string UserId { get; }
-    public string AppointmentId { get; }
+    public string EventId { get; }
 }

@@ -20,7 +20,7 @@ public class EventParticipantQueryValidator : AbstractValidator<EventParticipant
         string eventId,
         CancellationToken cancellationToken)
     {
-        var isEventBelongsToOrganizer = await dbContext.Appointments
+        var isEventBelongsToOrganizer = await dbContext.Events
             .AsNoTracking()
             .AnyAsync(ap => ap.Id == eventId && ap.OrganizerId == organizerId, cancellationToken);
 

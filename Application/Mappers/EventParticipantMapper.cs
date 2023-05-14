@@ -5,18 +5,18 @@ namespace Application.Mappers;
 
 public static class EventParticipantMapper
 {
-    public static EventParticipant ToEventParticipant(this AppointmentParticipant appointmentParticipant)
+    public static EventParticipantDto ToEventParticipant(this EventParticipant eventParticipant)
     {
-        var eventParticipant = new EventParticipant
+        var participantDto = new EventParticipantDto
         {
-            Id = appointmentParticipant.Id,
-            UserId = appointmentParticipant.UserId,
-            UserName = appointmentParticipant.Account.FullName,
-            AppointmentId = appointmentParticipant.AppointmentId,
-            AppointmentTitle = appointmentParticipant.Appointment.Title,
-            Status = appointmentParticipant.Status
+            Id = eventParticipant.Id,
+            UserId = eventParticipant.UserId,
+            UserName = eventParticipant.Account.FullName,
+            EventId = eventParticipant.EventId,
+            EventTitle = eventParticipant.Event.Title,
+            Status = eventParticipant.Status
         };
 
-        return eventParticipant;
+        return participantDto;
     }
 }

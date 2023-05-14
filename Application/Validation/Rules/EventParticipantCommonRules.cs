@@ -11,9 +11,9 @@ public static class EventParticipantCommonRules
         string eventParticipantId,
         CancellationToken cancellationToken)
     {
-        var isEventBelongsToOrganizer = await dbContext.AppointmentParticipants
-            .Include(ap => ap.Appointment)
-            .AnyAsync(ap => ap.Id == eventParticipantId && ap.Appointment.OrganizerId == organizerId, cancellationToken);
+        var isEventBelongsToOrganizer = await dbContext.EventParticipants
+            .Include(ap => ap.Event)
+            .AnyAsync(ap => ap.Id == eventParticipantId && ap.Event.OrganizerId == organizerId, cancellationToken);
 
         return isEventBelongsToOrganizer;
     }

@@ -18,9 +18,9 @@ public class ParticipantAppliedEventHandler : INotificationHandler<ParticipantAp
 
     public async Task Handle(ParticipantAppliedEvent notification, CancellationToken cancellationToken)
     {
-        var organizerEmail = await _applicationDbContext.Appointments
+        var organizerEmail = await _applicationDbContext.Events
             .Include(ap => ap.Organizer)
-            .Where(ap => ap.Id == notification.AppointmentId)
+            .Where(ap => ap.Id == notification.EventId)
             .Select(ap => ap.Organizer!.Email)
             .FirstAsync(cancellationToken);
 

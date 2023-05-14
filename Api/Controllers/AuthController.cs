@@ -127,9 +127,9 @@ public class AuthController : ControllerBase
     {
         var user = await _accountService.GetAccountByEmailAsync(request.Email, default);
 
-        if (user.AuthMethod == AuthMethod.Google) return BadRequest("User registered with Google");
-
         if (user == null) return BadRequest($"User with {request.Email} hasn't registered");
+
+        if (user.AuthMethod == AuthMethod.Google) return BadRequest("User registered with Google");
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
 

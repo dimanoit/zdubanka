@@ -20,19 +20,19 @@ public class AcceptEventParticipantCommandValidator : AbstractValidator<AcceptEv
 
         RuleFor(c => c.Request)
             .MustAsync(async (r, cancellation) =>
-                await IsAppointmentOpened(dbContext, r.EventParticipantId, cancellation))
+                await IsEventOpened(dbContext, r.EventParticipantId, cancellation))
             .OverridePropertyName(r => r.Request.OrganizerId)
             .WithMessage("Event already fully booked");
     }
 
-    private async Task<bool> IsAppointmentOpened(
+    private async Task<bool> IsEventOpened(
         IApplicationDbContext dbContext,
         string eventParticipantId,
         CancellationToken cancellation)
     {
-        return await dbContext.AppointmentParticipants.Include(ap => ap.Appointment)
+        return await dbContext.EventParticipants.Include(ap => ap.Event)
             .Where(ap => ap.Id == eventParticipantId)
-            .Where(ap => ap.Appointment.Status == EventStatus.Opened)
+            .Where(ap => ap.Event.Status == EventStatus.Opened)
             .AnyAsync(cancellation);
     }
 }
