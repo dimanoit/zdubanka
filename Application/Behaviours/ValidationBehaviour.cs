@@ -1,6 +1,4 @@
-﻿using Domain.Exceptions;
-using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation;
 using MediatR;
 using ValidationException = Domain.Exceptions.ValidationException;
 
@@ -19,10 +17,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (!_validators.Any())
-        {
-            return await next();
-        }
+        if (!_validators.Any()) return await next();
 
         var context = new ValidationContext<TRequest>(request);
 
@@ -35,10 +30,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
             .SelectMany(v => v.Errors)
             .ToArray();
 
-        if (!failures.Any())
-        {
-            return await next();
-        }
+        if (!failures.Any()) return await next();
 
         throw new ValidationException(failures);
     }

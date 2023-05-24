@@ -27,12 +27,12 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         var dbQuery = _dbContext.Events
             .AsNoTracking();
 
+        await GetEventsWithin5Km(0,0);
         if (request.StartDate.HasValue) dbQuery = dbQuery.Where(ap => ap.StartDay >= request.StartDate);
 
         if (request.EndDate.HasValue) dbQuery = dbQuery.Where(ap => ap.EndDay <= request.EndDate);
 
         if (!string.IsNullOrEmpty(request.SearchKeyword))
-            // TODO think about full text search 
             dbQuery = dbQuery.Where(ap =>
                 ap.Title.Contains(request.SearchKeyword) || ap.Description.Contains(request.SearchKeyword));
 
@@ -69,5 +69,19 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
             Data = data,
             TotalCount = count
         };
+    }
+
+    public async Task GetEventsWithin5Km(double myLatitude, double myLongitude)
+    {
+        const double distanceThreshold = 5; 
+
+        var eventsWithin5Km = _dbContext.Events
+            .FromSqlInterpolated($@"SELECT * FROM Events WHERE 
+                ACOS(SIN(RADIANS({myLatitude})) * SIN(RADIANS(Latitude)) +
+                COS(RADIANS({myLatitude})) * COS(RADIANS(Latitude)) *
+                COS(RADIANS(Longitude) - RADIANS({myLongitude}))) * 6371 <= {distanceThreshold}");
+
+        var data = await eventsWithin5Km.ToListAsync();
+        throw new NotImplementedException();
     }
 }
