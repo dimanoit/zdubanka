@@ -1,6 +1,7 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
 using Application.Mappers;
+using Domain.Entities;
 using Domain.Requests;
 using Domain.Response;
 using MediatR;
@@ -27,7 +28,6 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         var dbQuery = _dbContext.Events
             .AsNoTracking();
 
-        await GetEventsWithin5Km(0,0);
         if (request.StartDate.HasValue) dbQuery = dbQuery.Where(ap => ap.StartDay >= request.StartDate);
 
         if (request.EndDate.HasValue) dbQuery = dbQuery.Where(ap => ap.EndDay <= request.EndDate);
@@ -52,10 +52,8 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         if (request.MaxAge.HasValue)
             dbQuery = dbQuery.Where(ap => ap.EventLimitation.AgeLimit.Max <= request.MaxAge.Value);
 
-        if (request.DistanceFromKm.HasValue)
-            dbQuery = dbQuery.Where(e =>
-                GeoHelper.CalculateDistance(e.Latitude, e.Longitude, request.Latitude!.Value, request.Longitude!.Value)
-                <= request.DistanceFromKm.Value);
+        if (request.DistanceFromKm.HasValue) ;
+
 
         var count = await dbQuery.CountAsync(cancellationToken);
         var data = await dbQuery
@@ -71,17 +69,12 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         };
     }
 
-    public async Task GetEventsWithin5Km(double myLatitude, double myLongitude)
+    private IQueryable<Event> GetEventsWithin5Km(double myLatitude, double myLongitude, double distanceThreshold)
     {
-        const double distanceThreshold = 5; 
-
-        var eventsWithin5Km = _dbContext.Events
-            .FromSqlInterpolated($@"SELECT * FROM Events WHERE 
-                ACOS(SIN(RADIANS({myLatitude})) * SIN(RADIANS(Latitude)) +
-                COS(RADIANS({myLatitude})) * COS(RADIANS(Latitude)) *
-                COS(RADIANS(Longitude) - RADIANS({myLongitude}))) * 6371 <= {distanceThreshold}");
-
-        var data = await eventsWithin5Km.ToListAsync();
-        throw new NotImplementedException();
+        _dbContext.Events
+            .FromSqlInterpolated($@"SELECT * FROM ""Events"" WHERE
+             ACOS(SIN(RADIANS({myLatitude})) * SIN(RADIANS(""Latitude"")) +
+             COS(RADIANS({myLatitude})) * COS(RADIANS(""Latitude"")) *
+             COS(RADIANS(""Longitude"") - RADIANS({myLongitude}))) * 6371 <= {distanceThreshold}");
     }
 }
