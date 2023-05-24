@@ -65,7 +65,7 @@ public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>
     {
         // Arrange
         var client = _factory.CreateClient();
-        var url = "api/event?skip=0&take=100";
+        var url = "api/event/own?skip=0&take=100";
 
         // Act
         var result = await client.GetAuth(url, SharedTestData.TestEmail);
@@ -85,7 +85,7 @@ public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>
     {
         // Arrange
         var client = _factory.CreateClient();
-        var response = await client.GetAuth("api/event?skip=0&take=100", SharedTestData.TestEmail);
+        var response = await client.GetAuth("api/event/own?skip=0&take=100", SharedTestData.TestEmail);
         var jsonResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()

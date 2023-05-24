@@ -125,6 +125,8 @@ namespace Infrastructure.Migrations
                     StartDay = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDay = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EventLimitation = table.Column<EventLimitation>(type: "jsonb", nullable: false),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     OrganizerId = table.Column<string>(type: "text", nullable: false)
                 },

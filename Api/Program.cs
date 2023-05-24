@@ -23,7 +23,11 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseMiddleware<ExceptionMiddleware>();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseMiddleware<ExceptionMiddleware>();
+        }
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
