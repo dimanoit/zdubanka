@@ -1,5 +1,4 @@
-﻿using Application.Helpers;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Mappers;
 using Domain.Entities;
 using Domain.Requests;
@@ -24,9 +23,13 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
     {
         var request = query.Request;
 
-        // TODO add location filter
         var dbQuery = _dbContext.Events
             .AsNoTracking();
+
+        if (request is { DistanceFromKm: not null, Longitude: not null, Latitude: not null })
+        {
+            dbQuery = GetEventsWithin5Km(request.Latitude.Value, request.Longitude.Value, request.DistanceFromKm.Value);
+        }
 
         if (request.StartDate.HasValue) dbQuery = dbQuery.Where(ap => ap.StartDay >= request.StartDate);
 
@@ -52,9 +55,6 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         if (request.MaxAge.HasValue)
             dbQuery = dbQuery.Where(ap => ap.EventLimitation.AgeLimit.Max <= request.MaxAge.Value);
 
-        if (request.DistanceFromKm.HasValue) ;
-
-
         var count = await dbQuery.CountAsync(cancellationToken);
         var data = await dbQuery
             .Skip(request.Skip)
@@ -71,7 +71,7 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
 
     private IQueryable<Event> GetEventsWithin5Km(double myLatitude, double myLongitude, double distanceThreshold)
     {
-        _dbContext.Events
+        return _dbContext.Events
             .FromSqlInterpolated($@"SELECT * FROM ""Events"" WHERE
              ACOS(SIN(RADIANS({myLatitude})) * SIN(RADIANS(""Latitude"")) +
              COS(RADIANS({myLatitude})) * COS(RADIANS(""Latitude"")) *
