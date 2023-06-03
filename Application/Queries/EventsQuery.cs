@@ -28,7 +28,7 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
 
         if (request is { DistanceFromKm: not null, Longitude: not null, Latitude: not null })
         {
-            dbQuery = GetEventsWithin5Km(request.Latitude.Value, request.Longitude.Value, request.DistanceFromKm.Value);
+            dbQuery = GetEventsDistanceFrom(request.Latitude.Value, request.Longitude.Value, request.DistanceFromKm.Value);
         }
 
         if (request.StartDate.HasValue) dbQuery = dbQuery.Where(ap => ap.StartDay >= request.StartDate);
@@ -69,7 +69,7 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         };
     }
 
-    private IQueryable<Event> GetEventsWithin5Km(double myLatitude, double myLongitude, double distanceThreshold)
+    private IQueryable<Event> GetEventsDistanceFrom(double myLatitude, double myLongitude, double distanceThreshold)
     {
         return _dbContext.Events
             .FromSqlInterpolated($@"SELECT * FROM ""Events"" WHERE
