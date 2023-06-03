@@ -13,4 +13,7 @@ public record SearchEventRequest : PageRequestBase
     public RelationshipStatus? RelationshipStatus { get; init; }
     public int? MinAge { get; init; }
     public int? MaxAge { get; init; }
+    public int? DistanceFromKm { get; init; }
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
 }

@@ -38,6 +38,8 @@ public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>
             Description = "Discuss project progress",
             StartDay = DateTime.UtcNow.AddDays(1),
             EndDay = DateTime.UtcNow.AddDays(1).AddHours(2),
+            Longitude = CoordinatesFixture.GenerateLongitude(),
+            Latitude = CoordinatesFixture.GenerateLatitude(),
             EventLimitation = new EventLimitation
             {
                 CountOfPeople = 3,
@@ -63,7 +65,7 @@ public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>
     {
         // Arrange
         var client = _factory.CreateClient();
-        var url = "api/event?skip=0&take=100";
+        var url = "api/event/own?skip=0&take=100";
 
         // Act
         var result = await client.GetAuth(url, SharedTestData.TestEmail);
@@ -83,7 +85,7 @@ public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>
     {
         // Arrange
         var client = _factory.CreateClient();
-        var response = await client.GetAuth("api/event?skip=0&take=100", SharedTestData.TestEmail);
+        var response = await client.GetAuth("api/event/own?skip=0&take=100", SharedTestData.TestEmail);
         var jsonResult = await response.Content.ReadAsStringAsync();
         var eventId = JsonDocument.Parse(jsonResult).RootElement.GetProperty("data")
             .EnumerateArray().Last()

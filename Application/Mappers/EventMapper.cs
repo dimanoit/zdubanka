@@ -17,7 +17,9 @@ public static class EventMapper
             StartDay = request.StartDay,
             EndDay = request.EndDay,
             EventLimitation = request.EventLimitation,
-            OrganizerId = organizerId
+            OrganizerId = organizerId,
+            Latitude = request.Latitude,
+            Longitude = request.Longitude
         };
 
         return eventEntity;

@@ -143,9 +143,15 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("jsonb");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
                     b.Property<Address>("Location")
                         .IsRequired()
                         .HasColumnType("jsonb");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("OrganizerId")
                         .IsRequired()

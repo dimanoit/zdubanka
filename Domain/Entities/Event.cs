@@ -12,7 +12,8 @@ public class Event : BaseEntity
     public DateTime StartDay { get; init; }
     public DateTime EndDay { get; init; }
     public EventLimitation EventLimitation { get; init; } = null!;
-
+    public double Latitude { get; init; }
+    public double Longitude { get; init; }
     public EventStatus Status { get; set; } = EventStatus.Opened;
     public string OrganizerId { get; set; } = null!;
     public Account? Organizer { get; set; }

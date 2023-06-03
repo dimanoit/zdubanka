@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230514072710_InitialCreate")]
+    [Migration("20230524143647_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -146,9 +146,15 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("jsonb");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
                     b.Property<Address>("Location")
                         .IsRequired()
                         .HasColumnType("jsonb");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("OrganizerId")
                         .IsRequired()
