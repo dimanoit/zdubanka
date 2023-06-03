@@ -69,7 +69,10 @@ internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
         };
     }
 
-    private IQueryable<Event> GetEventsDistanceFrom(double myLatitude, double myLongitude, double distanceThreshold)
+    private IQueryable<Event> GetEventsDistanceFrom(
+        double myLatitude,
+        double myLongitude,
+        double distanceThreshold)
     {
         return _dbContext.Events
             .FromSqlInterpolated($@"SELECT * FROM ""Events"" WHERE
