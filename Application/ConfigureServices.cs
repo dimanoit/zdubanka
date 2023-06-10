@@ -15,6 +15,8 @@ public static class ConfigureServices
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IEventService, EventService>();
+        services.AddScoped<IChatService, ChatService>();
+        services.AddScoped<IMessageService, MessageService>();
 
         services.AddValidatorsFromAssemblyContaining<AcceptEventParticipantCommandValidator>();
 

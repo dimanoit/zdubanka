@@ -25,8 +25,8 @@ public class ChatController : ControllerBase
         await _chatService.CreateAsync(request, cancellationToken);
     }
 
-    [HttpDelete("{id}")]
-    public async Task DeleteAsync([FromRoute] DeleteChatRequest request, CancellationToken cancellationToken)
+    [HttpDelete]
+    public async Task DeleteAsync([FromQuery] DeleteChatRequest request, CancellationToken cancellationToken)
     {
         await _chatService.DeleteAsync(request, cancellationToken);
     }
