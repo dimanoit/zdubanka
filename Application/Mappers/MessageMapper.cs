@@ -1,3 +1,4 @@
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Models;
 using Domain.Requests.Chat;
@@ -6,11 +7,13 @@ namespace Application.Mappers;
 
 public static class MessageMapper
 {
-    public static Message ToMessageEntity(this SendMessageRequest request)
+    public static Message ToMessageEntity(
+        this SendMessageRequest request,
+        ICurrentUserService userService)
     {
         return new Message
         {
-            SenderId = request.SenderId,
+            SenderId = userService.UserId!,
             Content = request.Content,
             SentDate = DateTime.Now,
             ChatId = request.ChatId

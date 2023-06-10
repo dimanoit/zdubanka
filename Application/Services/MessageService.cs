@@ -9,16 +9,20 @@ namespace Application.Services;
 
 public class MessageService : IMessageService
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IApplicationDbContext _dbContext;
 
-    public MessageService(IApplicationDbContext dbContext)
+    public MessageService(
+        IApplicationDbContext dbContext,
+        ICurrentUserService currentUserService)
     {
         _dbContext = dbContext;
+        _currentUserService = currentUserService;
     }
 
     public async Task SendMessageAsync(SendMessageRequest request, CancellationToken cancellationToken)
     {
-        var messageEntity = request.ToMessageEntity();
+        var messageEntity = request.ToMessageEntity(_currentUserService);
         _dbContext.Messages.Add(messageEntity);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
