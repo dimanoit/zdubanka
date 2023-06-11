@@ -3,6 +3,7 @@ using Application.Mappers;
 using Application.Services.Interfaces;
 using Domain.Requests.Chat;
 using Domain.Response;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
@@ -11,17 +12,23 @@ public class MessageService : IMessageService
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IApplicationDbContext _dbContext;
+    private readonly IValidator<DeleteMessageRequest> _deleteMessageRequestValidator;
+    private readonly IValidator<SendMessageRequest> _sendMessageRequestValidator;
 
     public MessageService(
         IApplicationDbContext dbContext,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IValidator<SendMessageRequest> sendMessageRequestValidator)
     {
         _dbContext = dbContext;
         _currentUserService = currentUserService;
+        _sendMessageRequestValidator = sendMessageRequestValidator;
     }
 
     public async Task SendMessageAsync(SendMessageRequest request, CancellationToken cancellationToken)
     {
+        await _sendMessageRequestValidator.ValidateAndThrowAsync(request, cancellationToken);
+
         var messageEntity = request.ToMessageEntity(_currentUserService);
         _dbContext.Messages.Add(messageEntity);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -29,6 +36,8 @@ public class MessageService : IMessageService
 
     public async Task DeleteMessagesAsync(DeleteMessageRequest request, CancellationToken cancellationToken)
     {
+        await _deleteMessageRequestValidator.ValidateAndThrowAsync(request, cancellationToken);
+
         var message = await _dbContext.Messages
             .FirstOrDefaultAsync(m => m.Id == request.MessageId, cancellationToken);
 

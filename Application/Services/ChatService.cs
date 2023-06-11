@@ -4,21 +4,34 @@ using Application.Services.Interfaces;
 using Domain.Models;
 using Domain.Requests.Chat;
 using Domain.Response;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
 public class ChatService : IChatService
 {
+    private readonly IValidator<CreateChatRequest> _createChatRequestValidator;
     private readonly IApplicationDbContext _dbContext;
+    private readonly IValidator<DeleteChatRequest> _deleteChatRequestValidator;
+    private readonly IValidator<UpdateChatRequest> _updateChatRequestValidator;
 
-    public ChatService(IApplicationDbContext dbContext)
+    public ChatService(
+        IApplicationDbContext dbContext,
+        IValidator<CreateChatRequest> createChatRequestValidator,
+        IValidator<UpdateChatRequest> updateChatRequestValidator,
+        IValidator<DeleteChatRequest> deleteChatRequestValidator)
     {
         _dbContext = dbContext;
+        _createChatRequestValidator = createChatRequestValidator;
+        _updateChatRequestValidator = updateChatRequestValidator;
+        _deleteChatRequestValidator = deleteChatRequestValidator;
     }
 
     public async Task CreateAsync(CreateChatRequest request, CancellationToken cancellationToken)
     {
+        await _createChatRequestValidator.ValidateAndThrowAsync(request, cancellationToken);
+
         var chat = request.ToChatEntity();
         _dbContext.Chats.Add(chat);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -26,6 +39,8 @@ public class ChatService : IChatService
 
     public async Task DeleteAsync(DeleteChatRequest request, CancellationToken cancellationToken)
     {
+        await _deleteChatRequestValidator.ValidateAndThrowAsync(request, cancellationToken);
+
         var chat = await _dbContext.Chats
             .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
 
@@ -37,6 +52,8 @@ public class ChatService : IChatService
 
     public async Task UpdateAsync(UpdateChatRequest request, CancellationToken cancellationToken)
     {
+        await _updateChatRequestValidator.ValidateAndThrowAsync(request, cancellationToken);
+
         var chat = request.ToChatEntity();
         _dbContext.Chats.Update(chat);
         await _dbContext.SaveChangesAsync(cancellationToken);

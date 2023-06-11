@@ -6,9 +6,9 @@ using FluentValidation;
 
 namespace Application.Validation.Validators;
 
-public class SendMessageRequestValidator : AbstractValidator<SendMessageRequest>
+public class UpdateChatRequestValidator : AbstractValidator<UpdateChatRequest>
 {
-    public SendMessageRequestValidator(
+    public UpdateChatRequestValidator(
         ICurrentUserService userService,
         IApplicationDbContext _dbContext)
     {
@@ -16,8 +16,7 @@ public class SendMessageRequestValidator : AbstractValidator<SendMessageRequest>
             .MustAsync((chatId, cancellationToken) =>
                 _dbContext.GetIsUserMemberOfChat(userService.UserId, chatId, cancellationToken));
 
-        RuleFor(x => x.Content)
-            .MaximumLength(1000)
-            .MinimumLength(1);
+        RuleFor(x => x.Members)
+            .Must(x => x.Length > 2);
     }
 }

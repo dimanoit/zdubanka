@@ -6,18 +6,14 @@ using FluentValidation;
 
 namespace Application.Validation.Validators;
 
-public class SendMessageRequestValidator : AbstractValidator<SendMessageRequest>
+public class DeleteChatRequestValidator : AbstractValidator<DeleteChatRequest>
 {
-    public SendMessageRequestValidator(
+    public DeleteChatRequestValidator(
         ICurrentUserService userService,
         IApplicationDbContext _dbContext)
     {
         RuleFor(x => x.ChatId)
             .MustAsync((chatId, cancellationToken) =>
                 _dbContext.GetIsUserMemberOfChat(userService.UserId, chatId, cancellationToken));
-
-        RuleFor(x => x.Content)
-            .MaximumLength(1000)
-            .MinimumLength(1);
     }
 }
