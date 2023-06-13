@@ -25,11 +25,11 @@ public static class ChatRules
         string messageId,
         CancellationToken cancellationToken)
     {
-        var isUserMemberOfChat = await dbContext.Messages.AnyAsync(
+        var isUserAuthorOfMessage = await dbContext.Messages.AnyAsync(
             message => message.Id == messageId &&
                        message.SenderId == userId
             , cancellationToken);
 
-        return isUserMemberOfChat;
+        return isUserAuthorOfMessage;
     }
 }

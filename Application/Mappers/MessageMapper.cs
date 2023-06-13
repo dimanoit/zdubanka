@@ -15,7 +15,7 @@ public static class MessageMapper
         {
             SenderId = userService.UserId!,
             Content = request.Content,
-            SentDate = DateTime.Now,
+            SentDate = DateTime.UtcNow,
             ChatId = request.ChatId
         };
     }

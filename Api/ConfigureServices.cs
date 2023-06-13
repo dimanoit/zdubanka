@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using Api.Services;
 using Api.Swagger;
+using Application.Services.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
@@ -30,6 +32,8 @@ public static class ConfigureServices
 
         services.AddCors(environment);
         services.AddScoped<AuthService>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -60,7 +64,7 @@ public static class ConfigureServices
             }
             else
             {
-                var allowedOrigins = "http://localhost:4200"; // TODO do not hard code
+                var allowedOrigins = "http://localhost:4200";
                 builder.WithOrigins(allowedOrigins);
             }
 

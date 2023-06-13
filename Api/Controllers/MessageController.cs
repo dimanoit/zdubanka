@@ -29,7 +29,7 @@ public class MessageController : ControllerBase
 
     [HttpGet]
     public async Task<GetMessagesResponse> GetMessagesAsync(
-        GetMessagesRequest request,
+        [FromQuery] GetMessagesRequest request,
         CancellationToken cancellationToken)
     {
         return await _messageService.GetMessagesAsync(request, cancellationToken);
@@ -37,7 +37,7 @@ public class MessageController : ControllerBase
 
     [HttpDelete]
     public async Task DeleteMessagesAsync(
-        DeleteMessageRequest request,
+        [FromQuery] DeleteMessageRequest request,
         CancellationToken cancellationToken)
     {
         await _messageService.DeleteMessagesAsync(request, cancellationToken);

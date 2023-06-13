@@ -18,11 +18,13 @@ public class MessageService : IMessageService
     public MessageService(
         IApplicationDbContext dbContext,
         ICurrentUserService currentUserService,
-        IValidator<SendMessageRequest> sendMessageRequestValidator)
+        IValidator<SendMessageRequest> sendMessageRequestValidator,
+        IValidator<DeleteMessageRequest> deleteMessageRequestValidator)
     {
         _dbContext = dbContext;
         _currentUserService = currentUserService;
         _sendMessageRequestValidator = sendMessageRequestValidator;
+        _deleteMessageRequestValidator = deleteMessageRequestValidator;
     }
 
     public async Task SendMessageAsync(SendMessageRequest request, CancellationToken cancellationToken)
