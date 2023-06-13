@@ -20,6 +20,8 @@ public sealed class ApplicationDbContext : IdentityUserContext<Account>, IApplic
     }
 
     public DbSet<Event> Events { get; set; } = null!;
+    public DbSet<Chat> Chats { get; set; } = null!;
+    public DbSet<Message> Messages { get; set; } = null!;
     public DbSet<Account> Accounts { get; set; } = null!;
     public DbSet<EventParticipant> EventParticipants { get; set; } = null!;
 
