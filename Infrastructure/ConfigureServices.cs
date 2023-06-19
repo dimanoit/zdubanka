@@ -31,18 +31,9 @@ public static class ConfigureServices
 
     private static void AddDb(IServiceCollection services, IConfiguration configuration)
     {
-        // TODO get data from config
+        services.Configure<IdentityOptions>(configuration.GetSection("IdentityOptions"));
         services
-            .AddIdentityCore<Account>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = true;
-                options.User.RequireUniqueEmail = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-            })
+            .AddIdentityCore<Account>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
