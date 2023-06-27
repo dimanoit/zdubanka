@@ -10,7 +10,7 @@ public class EventParticipantsFixture : IEnumerable<object[]>
     public IEnumerator<object[]> GetEnumerator()
     {
         yield return new object[] { GetEvent(), EventStatus.Closed };
-        yield return new object[] { EventFaker.GenerateFakeEvent(3), EventStatus.Opened };
+        yield return new object[] { EventFaker.CreateEvent(3), EventStatus.Opened };
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -20,7 +20,7 @@ public class EventParticipantsFixture : IEnumerable<object[]>
 
     private Event GetEvent()
     {
-        var eventEntity = EventFaker.GenerateFakeEvent(3);
+        var eventEntity = EventFaker.CreateEvent(3);
         eventEntity.EventParticipants = EventFaker.GenerateFakeEventParticipants((eventEntity.Id, ParticipantStatus.Accepted), 3);
 
         return eventEntity;

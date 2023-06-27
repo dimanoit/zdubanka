@@ -24,7 +24,9 @@ public class ParticipantAcceptedEventHandlerTests
 
     [Theory]
     [ClassData(typeof(EventParticipantsFixture))]
-    public async Task Handle_WhenAllParticipantsAccepted_ClosesEvent(Event  eventEntity, EventStatus status)
+    public async Task Handle_ShouldCloseOrNotCloseEvent_DependsOnAlreadyAcceptedParticipants(
+        Event eventEntity,
+        EventStatus status)
     {
         // Arrange
         _dbContext.Events.Add(eventEntity);

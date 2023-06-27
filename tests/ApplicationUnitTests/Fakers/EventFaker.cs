@@ -59,7 +59,7 @@ public static class EventFaker
         };
     }
 
-    public static Event GenerateFakeEvent(int countOfPeople)
+    public static Event CreateEvent(int countOfPeople = 3)
     {
         var faker = new Faker<Event>()
             .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
