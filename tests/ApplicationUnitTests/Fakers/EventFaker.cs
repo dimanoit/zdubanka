@@ -59,6 +59,11 @@ public static class EventFaker
         };
     }
 
+    public static IEnumerable<Event> CreateEvents(int countOfEvents)
+    {
+        for (var i = 0; i < countOfEvents; i++) yield return CreateEvent();
+    }
+
     public static Event CreateEvent(int countOfPeople = 3)
     {
         var faker = new Faker<Event>()

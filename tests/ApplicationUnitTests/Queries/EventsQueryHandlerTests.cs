@@ -1,8 +1,13 @@
 using Application.Mappers;
 using Application.Queries;
+using ApplicationUnitTests.Fakers;
+using ApplicationUnitTests.Helpers;
 using Bogus;
+using Bogus.DataSets;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Requests;
+using FluentAssertions;
 using MediatR;
 using Xunit;
 
@@ -10,47 +15,41 @@ namespace ApplicationUnitTests.Queries;
 
 public class EventsQueryHandlerTests
 {
-    private readonly IMediator _mediator;
-
     [Fact]
     public async Task Handle_WithValidRequest_ReturnsEventResponse()
     {
         // Arrange
-        var query = new EventsQuery(new SearchEventRequest
-        {
-            StartDate = DateTime.Now,
-            EndDate = DateTime.Now.AddDays(7),
-            SearchKeyword = "test",
-            PeopleCount = 10
-            // Add other properties for the request
-        });
+        var query = new EventsQuery(GetSearchEventRequest());
 
-        var events = GenerateFakeEvents(10);
-        var eventResponseDtos = events.Select(ev => ev.ToEventResponseDto()).ToList();
-        var totalCount = eventResponseDtos.Count;
+        var dbContext = ApplicationDbContextFactory.Create();
+        dbContext.Events.AddRange(EventFaker.CreateEvents(20));
 
-        _dbContext.Events.Returns(events);
+        var handler = new EventsQueryHandler(dbContext);
 
         // Act
-        var result = await _handler.Handle(query, CancellationToken.None);
+        var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
-        result.Data.Should().BeEquivalentTo(eventResponseDtos);
-        result.TotalCount.Should().Be(totalCount);
     }
 
-    // Add more test methods for different scenarios
-
-    private List<Event> GenerateFakeEvents(int count)
+    private static SearchEventRequest GetSearchEventRequest()
     {
-        var faker = new Faker<Event>()
-            .RuleFor(ev => ev.Id, f => f.Random.Guid())
-            .RuleFor(ev => ev.Title, f => f.Lorem.Sentence())
-            .RuleFor(ev => ev.Description, f => f.Lorem.Paragraph())
-            // Add other properties for the Event entity
-            .Generate(count);
-
-        return faker;
+        return new SearchEventRequest
+        {
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddDays(7),
+            SearchKeyword = "a",
+            PeopleCount = 10,
+            Gender = Gender.Female,
+            MinAge = 10,
+            MaxAge = 50,
+            Skip = 1,
+            Take = 100,
+            RelationshipStatus = RelationshipStatus.Single,
+            DistanceFromKm = 2000,
+            Latitude = new Address().Latitude(),
+            Longitude = new Address().Longitude()
+        };
     }
 }

@@ -10,7 +10,7 @@ namespace Application.Queries;
 
 public record EventsQuery(SearchEventRequest Request) : IRequest<EventResponse>;
 
-internal class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
+public class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
 {
     private readonly IApplicationDbContext _dbContext;
 
