@@ -6,7 +6,7 @@ namespace ApplicationUnitTests.Helpers;
 
 public static class DbConfigurationHelper
 {
-    public static void HasJsonConversion<T,TResponse>(
+    public static void HasJsonConversion<T, TResponse>(
         this ModelBuilder modelBuilder,
         Expression<Func<T, TResponse>> propertyExpression) where T : class
     {
