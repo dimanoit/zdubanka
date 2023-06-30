@@ -1,16 +1,12 @@
 ﻿using Application.EventHandlers;
 using Application.Interfaces;
 using ApplicationUnitTests.Fakers;
-using ApplicationUnitTests.Fixtures;
 using ApplicationUnitTests.Helpers;
-using Domain.Entities;
-using Domain.Enums;
 using Domain.Events;
-using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace ApplicationUnitTests.Tests;
+namespace ApplicationUnitTests.Tests.Handlers;
 
 public class ParticipantAppliedEventHandlerTests
 {
