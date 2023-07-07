@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Application.Behaviours;
 using Application.Commands;
 using Application.Services;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 
+[ExcludeFromCodeCoverage]
 public static class ConfigureServices
 {
     public static void AddApplicationServices(this IServiceCollection services)

@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Mappers;
-using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using MediatR;
@@ -10,7 +9,7 @@ namespace Application.Queries;
 
 public record EventParticipantQuery(EventParticipantRequest Request) : IRequest<EventParticipantsResponse>;
 
-internal class EventParticipantQueryHandler : IRequestHandler<EventParticipantQuery, EventParticipantsResponse>
+public class EventParticipantQueryHandler : IRequestHandler<EventParticipantQuery, EventParticipantsResponse>
 {
     private readonly IApplicationDbContext _dbContext;
 

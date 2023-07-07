@@ -2,7 +2,6 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Models;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace ApplicationUnitTests.Fakers;
 
@@ -79,5 +78,25 @@ public static class EventFaker
             .RuleFor(e => e.OrganizerId, f => f.Random.Guid().ToString());
 
         return faker.Generate();
+    }
+
+    public static Event CreateEventWithParticipants()
+    {
+        var account = AccountFaker.Create();
+        var eventParticipant = AccountFaker.Create();
+
+        var @event = CreateEvent();
+        @event.EventParticipants = new List<EventParticipant>
+        {
+            new()
+            {
+                EventId = @event.Id,
+                Account = eventParticipant
+            }
+        };
+
+        @event.Organizer = account;
+
+        return @event;
     }
 }
