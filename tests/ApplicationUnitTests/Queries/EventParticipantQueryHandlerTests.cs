@@ -19,7 +19,7 @@ public class EventParticipantQueryHandlerTests
         var dbContext = ApplicationDbContextFactory.Create();
         dbContext.Events.Add(eventWithParticipants);
         await dbContext.SaveChangesAsync();
-        
+
         var handler = new EventParticipantQueryHandler(dbContext);
 
         // Act

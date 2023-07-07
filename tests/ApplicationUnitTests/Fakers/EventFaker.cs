@@ -84,7 +84,7 @@ public static class EventFaker
     {
         var account = AccountFaker.Create();
         var eventParticipant = AccountFaker.Create();
-        
+
         var @event = CreateEvent();
         @event.EventParticipants = new List<EventParticipant>
         {
