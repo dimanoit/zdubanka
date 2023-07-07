@@ -42,7 +42,7 @@ public class AccountServiceTests
         var expected = await CreateAccount();
         var newFullName = new Faker().Person.FirstName;
         expected.FullName = newFullName;
-        
+
         // Act
         await _sut.UpdateAccountAsync(expected);
 
