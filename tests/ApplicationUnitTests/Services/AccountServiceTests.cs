@@ -12,8 +12,8 @@ namespace ApplicationUnitTests.Services;
 
 public class AccountServiceTests
 {
-    private readonly IAccountService _sut;
     private readonly IApplicationDbContext _dbContext;
+    private readonly IAccountService _sut;
 
     public AccountServiceTests()
     {
@@ -40,27 +40,25 @@ public class AccountServiceTests
     {
         // Arrange 
         var expected = await CreateAccount();
-
-        // Act
         var newFullName = new Faker().Person.FirstName;
         expected.FullName = newFullName;
-
+        
+        // Act
         await _sut.UpdateAccountAsync(expected);
 
         // Assert
         var actual = await _dbContext.Accounts.FindAsync(expected.Id);
         actual.FullName.Should().Be(newFullName);
     }
-    
+
     [Fact]
     public async Task SaveRefreshTokenAsync_Should_SaveRefreshToken()
     {
         // Arrange 
         var expected = await CreateAccount();
+        var newRefreshToken = Guid.NewGuid().ToString();
 
         // Act
-        var newRefreshToken = Guid.NewGuid().ToString();
-        
         await _sut.SaveRefreshTokenAsync(expected, newRefreshToken, DateTime.Today);
 
         // Assert
@@ -68,7 +66,7 @@ public class AccountServiceTests
         actual.RefreshToken.Should().Be(newRefreshToken);
         actual.RefreshTokenExpiryTime.Should().Be(DateTime.Today);
     }
-    
+
     [Fact]
     public async Task DeleteAccountAsync_Should_DeleteAccount()
     {
