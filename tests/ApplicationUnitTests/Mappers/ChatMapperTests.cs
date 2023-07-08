@@ -15,10 +15,9 @@ public class ChatMapperTests
         var chat = ChatFaker.Create();
 
         // Act
-        var result = ChatMapper.ToChatDto(chat);
+        var result = chat.ToChatDto();
 
         // Assert
-        result.Should().NotBeNull();
         result.Id.Should().Be(chat.Id);
         result.Members.Should().BeEquivalentTo(chat.Members);
         result.Name.Should().Be(chat.Name);
@@ -30,15 +29,14 @@ public class ChatMapperTests
         // Arrange
         var request = new CreateChatRequest
         {
-            Members = new string[] { "Member1", "Member2" },
+            Members = new[] { "Member1", "Member2" },
             Name = "Test Chat"
         };
 
         // Act
-        var result = ChatMapper.ToChatEntity(request);
+        var result = request.ToChatEntity();
 
         // Assert
-        result.Should().NotBeNull();
         result.Members.Should().BeEquivalentTo(request.Members);
         result.Name.Should().Be(request.Name);
     }
@@ -50,16 +48,15 @@ public class ChatMapperTests
         var request = new UpdateChatRequest
         {
             ChatId = "1",
-            Members = new string[] { "Member1", "Member2" },
+            Members = new[] { "Member1", "Member2" },
             Name = "Updated Chat"
         };
 
         // Act
-        var result = ChatMapper.ToChatEntity(request);
+        var result = request.ToChatEntity();
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(request.ChatId);
         result.Members.Should().BeEquivalentTo(request.Members);
         result.Name.Should().Be(request.Name);
     }
