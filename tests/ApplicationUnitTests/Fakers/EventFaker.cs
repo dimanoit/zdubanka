@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Models;
+using Domain.Requests;
 
 namespace ApplicationUnitTests.Fakers;
 
@@ -98,5 +99,20 @@ public static class EventFaker
         @event.Organizer = account;
 
         return @event;
+    }
+
+    public static EventCreationRequest CreateEventCreationRequest()
+    {
+        var faker = new Faker<EventCreationRequest>()
+            .RuleFor(r => r.Location, GenerateAddress)
+            .RuleFor(r => r.Latitude, f => f.Address.Latitude())
+            .RuleFor(r => r.Longitude, f => f.Address.Longitude())
+            .RuleFor(r => r.Title, f => f.Commerce.ProductName())
+            .RuleFor(r => r.Description, f => f.Lorem.Sentence())
+            .RuleFor(r => r.StartDay, f => f.Date.Future())
+            .RuleFor(r => r.EndDay, (f, r) => f.Date.Between(r.StartDay, r.StartDay.AddDays(7)))
+            .RuleFor(r => r.EventLimitation, f => GenerateEventLimitation(f, 2));
+
+        return faker.Generate();
     }
 }
