@@ -25,13 +25,12 @@ public class MessageMapperTests
         userService.UserId.Returns("TestUserId");
         
         // Act
-        var result = MessageMapper.ToMessageEntity(request, userService);
+        var result = request.ToMessageEntity(userService);
 
         // Assert
-        result.Should().NotBeNull();
         result.SenderId.Should().Be(userService.UserId);
         result.Content.Should().Be(request.Content);
-        result.SentDate.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(1));
+        result.SentDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
         result.ChatId.Should().Be(request.ChatId);
     }
 
@@ -42,7 +41,7 @@ public class MessageMapperTests
         var message = MessageFaker.Create();
 
         // Act
-        var result = MessageMapper.ToMessageDto(message);
+        var result = message.ToMessageDto();
 
         // Assert
         AssertMessageData(result, message);
@@ -50,7 +49,6 @@ public class MessageMapperTests
 
     private static void AssertMessageData(MessageDto result, Message message)
     {
-        result.Should().NotBeNull();
         result.SenderId.Should().Be(message.SenderId);
         result.Content.Should().Be(message.Content);
         result.SentDate.Should().Be(message.SentDate);
