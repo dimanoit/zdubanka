@@ -13,7 +13,7 @@ public static class MessageFaker
             .RuleFor(m => m.Content, f => f.Lorem.Sentence())
             .RuleFor(m => m.SentDate, f => f.Date.Past())
             .RuleFor(m => m.ChatId, f => f.Random.Guid().ToString())
-            .RuleFor(m => m.Chat, f => f.PickRandom<Chat>());
+            .Ignore(m => m.Chat);
 
         return faker.Generate();
     }
