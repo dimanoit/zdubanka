@@ -23,12 +23,12 @@ public class EventParticipantCommonRulesTests
         var @event = EventFaker.CreateEventWithParticipants();
         _dbContext.Events.Add(@event);
         await _dbContext.SaveChangesAsync();
-        
+
         // Act 
         var result = await _dbContext
             .IsEventBelongsToOrganizerAsync(@event.OrganizerId, @event.EventParticipants!.First().Id, default);
 
-        
+
         // Assert
         result.Should().BeTrue();
     }

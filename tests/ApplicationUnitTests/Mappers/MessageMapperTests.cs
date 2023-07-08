@@ -23,7 +23,7 @@ public class MessageMapperTests
         };
         var userService = Substitute.For<ICurrentUserService>();
         userService.UserId.Returns("TestUserId");
-        
+
         // Act
         var result = request.ToMessageEntity(userService);
 

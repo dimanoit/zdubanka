@@ -38,7 +38,7 @@ public class EventServiceTests
             .Which.Should().BeOfType<EventCreatedEvent>();
     }
 
-        
+
     [Fact]
     public async Task GetUsersEventsAsync_ValidRequest_ReturnsEventResponse()
     {

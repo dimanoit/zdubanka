@@ -12,7 +12,7 @@ namespace ApplicationUnitTests.Validators.Rules;
 public class ChatRulesTests
 {
     private readonly IApplicationDbContext _dbContext;
-    
+
     public ChatRulesTests()
     {
         _dbContext = Substitute.For<IApplicationDbContext>();
