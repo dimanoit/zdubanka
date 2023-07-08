@@ -19,7 +19,6 @@ public static class EventFaker
         };
     }
 
-
     public static EventParticipant[] GenerateFakeEventParticipants(
         (string EventId, ParticipantStatus Status) eventData, int count)
     {
@@ -57,11 +56,6 @@ public static class EventFaker
                 Max = faker.Random.Int(31, 50)
             }
         };
-    }
-
-    public static IEnumerable<Event> CreateEvents(int countOfEvents)
-    {
-        for (var i = 0; i < countOfEvents; i++) yield return CreateEvent();
     }
 
     public static Event CreateEvent(int countOfPeople = 3)
