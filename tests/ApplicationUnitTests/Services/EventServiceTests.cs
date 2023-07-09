@@ -47,7 +47,7 @@ public class EventServiceTests
         var account = AccountFaker.Create();
         _dbContext.Accounts.Add(account);
         var @event = await GetEventWithinDatabase();
-        
+
         var eventService = new EventService(_dbContext);
 
         // Act
@@ -56,7 +56,7 @@ public class EventServiceTests
         // Assert
         var eventParticipant = await _dbContext.EventParticipants
             .FirstAsync(ep => ep.UserId == account.Id && ep.EventId == @event.Id);
-        
+
         eventParticipant.Status.Should().Be(ParticipantStatus.InReview);
     }
 
