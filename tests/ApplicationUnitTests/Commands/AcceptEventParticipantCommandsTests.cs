@@ -14,15 +14,13 @@ public class AcceptEventParticipantCommandsTests
     public async Task Handle_ShouldUpdateEventParticipantToAcceptStatusAndSaveChanges()
     {
         // Arrange
-        var dbContext = ApplicationDbContextFactory.Create();
-
         var testEvent = EventFaker.CreateEventWithParticipants();
 
+        var dbContext = ApplicationDbContextFactory.Create();
         dbContext.Events.Add(testEvent);
         await dbContext.SaveChangesAsync();
 
-        var request = new AcceptEventParticipantCommand(
-            new EventParticipantStateRequest(testEvent.OrganizerId, testEvent.EventParticipants.First().Id));
+        var request = new AcceptEventParticipantCommand(new EventParticipantStateRequest(testEvent.OrganizerId, testEvent.EventParticipants!.First().Id));
 
         var handler = new AcceptEventParticipantCommandHandler(dbContext);
 
@@ -30,9 +28,7 @@ public class AcceptEventParticipantCommandsTests
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        var updatedEventParticipant =
-            await dbContext.EventParticipants.FindAsync(testEvent.EventParticipants.FirstOrDefault().Id);
-        updatedEventParticipant.Should().NotBeNull();
-        updatedEventParticipant.Status.Should().Be(ParticipantStatus.Accepted);
+        var updatedEventParticipant = await dbContext.EventParticipants.FindAsync(testEvent.EventParticipants!.FirstOrDefault()!.Id);
+        updatedEventParticipant!.Status.Should().Be(ParticipantStatus.Accepted);
     }
 }

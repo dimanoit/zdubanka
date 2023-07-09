@@ -3,9 +3,11 @@ using Application.Services;
 using ApplicationUnitTests.Fakers;
 using ApplicationUnitTests.Helpers;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Events;
 using Domain.Requests;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace ApplicationUnitTests.Services;
@@ -38,6 +40,25 @@ public class EventServiceTests
             .Which.Should().BeOfType<EventCreatedEvent>();
     }
 
+    [Fact]
+    public async Task ApplyOnEventAsync_ValidParameters_AppliesParticipant()
+    {
+        // Arrange
+        var account = AccountFaker.Create();
+        _dbContext.Accounts.Add(account);
+        var @event = await GetEventWithinDatabase();
+        
+        var eventService = new EventService(_dbContext);
+
+        // Act
+        await eventService.ApplyOnEventAsync(@event.Id, account.Id, default);
+
+        // Assert
+        var eventParticipant = await _dbContext.EventParticipants
+            .FirstAsync(ep => ep.UserId == account.Id && ep.EventId == @event.Id);
+        
+        eventParticipant.Status.Should().Be(ParticipantStatus.InReview);
+    }
 
     [Fact]
     public async Task GetUsersEventsAsync_ValidRequest_ReturnsEventResponse()
