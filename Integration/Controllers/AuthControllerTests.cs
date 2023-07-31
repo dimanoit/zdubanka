@@ -25,7 +25,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
 
         var userRegistrationModel = new RegistrationRequestModel
         {
-            Email = SharedTestData.TestEmail,
+            Email = "alexgameplay00@gmail.com",
             Name = "Dimonchik Testyvalbnuk",
             Password = "somePassword123",
             DateOfBirth = DateTime.UtcNow.AddYears(-20),

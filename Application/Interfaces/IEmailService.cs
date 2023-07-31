@@ -1,6 +1,8 @@
-﻿namespace Application.Interfaces;
+﻿using Domain.Models;
+
+namespace Application.Interfaces;
 
 public interface IEmailService
 {
-    Task SendEmailAsync(string emailTo, string message, string subject);
+    Task SendEmailAsync(SendEmailRequest request);
 }

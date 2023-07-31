@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
@@ -59,7 +60,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IResult> PostUser(RegistrationRequestModel user)
+    public async Task<IResult> PostUser(RegistrationRequestModel user/*SendEmailRequest request*/)
     {
         var identityUser = new Account
         {
@@ -77,7 +78,7 @@ public class AuthController : ControllerBase
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
 
         var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{emailToken}/confirmation";
-        await _emailService.SendEmailAsync(identityUser.Email, confirmationLink, "You confirmation link");
+        await _emailService.SendEmailAsync(null);//request);
 
         var userResponse = new
         {
@@ -160,7 +161,7 @@ public class AuthController : ControllerBase
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetPasswordLink = $"{Request.Scheme}://{Request.Host}/api/auth/{resetToken}/password";
 
-        await _emailService.SendEmailAsync(email, resetPasswordLink, "Your password reset link");
+        await _emailService.SendEmailAsync(null);//email, resetPasswordLink, "Your password reset link");
         return Ok();
     }
 
