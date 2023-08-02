@@ -12,8 +12,7 @@ public static class ChatRules
         CancellationToken cancellationToken)
     {
         var isUserMemberOfChat = await dbContext.Chats.AnyAsync(
-            chat => chat.Id == chatId &&
-                    chat.Members.Any(id => id == userId)
+            chat => chat.Id == chatId && chat.Members.Any(id => id == userId)
             , cancellationToken);
 
         return isUserMemberOfChat;
