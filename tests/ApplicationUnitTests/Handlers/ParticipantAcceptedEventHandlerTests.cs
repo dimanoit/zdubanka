@@ -8,7 +8,7 @@ using Domain.Events;
 using FluentAssertions;
 using Xunit;
 
-namespace ApplicationUnitTests.Tests.Handlers;
+namespace ApplicationUnitTests.Handlers;
 
 public class ParticipantAcceptedEventHandlerTests
 {

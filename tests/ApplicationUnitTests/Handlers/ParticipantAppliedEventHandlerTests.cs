@@ -6,7 +6,7 @@ using Domain.Events;
 using NSubstitute;
 using Xunit;
 
-namespace ApplicationUnitTests.Tests.Handlers;
+namespace ApplicationUnitTests.Handlers;
 
 public class ParticipantAppliedEventHandlerTests
 {
