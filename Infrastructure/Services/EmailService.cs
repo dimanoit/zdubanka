@@ -15,7 +15,7 @@ public class EmailService : IEmailService
     private readonly string _sendGridCompanyName;
     private readonly ILogger<EmailService> _logger;
 
-    public EmailService(ILogger<EmailService> logger,IConfiguration configuration,ISendGridClient client)
+    public EmailService(ILogger<EmailService> logger, IConfiguration configuration, ISendGridClient client)
     {
         _sendGridApiKey = configuration["SendGrid:ApiKey"];
         _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
@@ -26,7 +26,7 @@ public class EmailService : IEmailService
 
     public async Task SendEmailAsync(SendEmailRequest request)
     {
-        var from = new EmailAddress(_sendGridSenderEmail,_sendGridCompanyName);
+        var from = new EmailAddress(_sendGridSenderEmail, _sendGridCompanyName);
         var to = new EmailAddress(request.RecipientEmail);
         var msg = MailHelper.CreateSingleEmail(from, to, request.Subject, request.Message, null);
         try
@@ -43,12 +43,12 @@ public class EmailService : IEmailService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Error sending email:");
+            _logger.LogError(ex, "Error sending email:");
             // Handle the exception as required
         }
     }
 
 
-   
+
 }
 
