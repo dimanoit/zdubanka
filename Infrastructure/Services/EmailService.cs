@@ -9,26 +9,29 @@ namespace Infrastructure.Services;
 
 public class EmailService : IEmailService
 {
+    private readonly SendGridClient _client;
     private readonly string _sendGridApiKey;
+    private readonly string _sendGridSenderEmail;
+    private readonly string _sendGridCompanyName;
     private readonly ILogger<EmailService> _logger;
 
-    public EmailService(ILogger<EmailService> logger,IConfiguration configuration)
+    public EmailService(ILogger<EmailService> logger,IConfiguration configuration,SendGridClient client)
     {
         _sendGridApiKey = configuration["SendGrid:ApiKey"];
+        _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
+        _sendGridCompanyName = configuration["SendGrid:CompanyName"];
         _logger = logger;
+        _client = client;
     }
 
     public async Task SendEmailAsync(SendEmailRequest request)
     {
-        var client = new SendGridClient(_sendGridApiKey);
-        var from = new EmailAddress("oleksiibahmet@gmail.com", "Zdubanka Inc.");
+        var from = new EmailAddress(_sendGridSenderEmail,_sendGridCompanyName);
         var to = new EmailAddress(request.RecipientEmail);
         var msg = MailHelper.CreateSingleEmail(from, to, request.Subject, request.Message, null);
-        //msg.SetTemplateId(request.TemplateId);
-        
         try
         {
-            var response = await client.SendEmailAsync(msg);
+            var response = await _client.SendEmailAsync(msg);
             if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
             {
                 _logger.LogInformation($"Email sent to {request.RecipientEmail}");
@@ -40,7 +43,7 @@ public class EmailService : IEmailService
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error sending email: {ex.Message}");
+            _logger.LogError(ex,"Error sending email:");
             // Handle the exception as required
         }
     }

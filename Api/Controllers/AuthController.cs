@@ -13,6 +13,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using SendGrid;
 
 namespace Api.Controllers;
 
@@ -22,6 +23,7 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly GoogleOptions _applicationSettings;
+    private readonly string _sendGridSenderEmail;  
     private readonly AuthService _authService;
     private readonly IEmailService _emailService;
     private readonly UserManager<Account> _userManager;
@@ -31,13 +33,14 @@ public class AuthController : ControllerBase
         IAccountService accountService,
         IOptions<GoogleOptions> applicationSettings,
         AuthService authService,
-        IEmailService emailService)
+        IEmailService emailService,IConfiguration configuration)
     {
         _userManager = userManager;
         _accountService = accountService;
         _authService = authService;
         _emailService = emailService;
         _applicationSettings = applicationSettings.Value;
+        _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
     }
 
     [HttpPost("google")]
@@ -78,7 +81,15 @@ public class AuthController : ControllerBase
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
 
         var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{emailToken}/confirmation";
-        await _emailService.SendEmailAsync(null);//request);
+
+        var request = new SendEmailRequest()
+        {
+            RecipientEmail = user.Email, 
+            SenderEmail = _sendGridSenderEmail,
+            Message = confirmationLink,
+            Subject = "U have created account in Zdubanka!"
+        };
+        await _emailService.SendEmailAsync(request);
 
         var userResponse = new
         {

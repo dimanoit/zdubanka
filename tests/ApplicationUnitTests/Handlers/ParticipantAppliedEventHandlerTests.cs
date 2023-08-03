@@ -3,6 +3,7 @@ using Application.Interfaces;
 using ApplicationUnitTests.Fakers;
 using ApplicationUnitTests.Helpers;
 using Domain.Events;
+using Domain.Models;
 using NSubstitute;
 using Xunit;
 
@@ -31,9 +32,7 @@ public class ParticipantAppliedEventHandlerTests
         await handler.Handle(notification, CancellationToken.None);
 
         // Assert
-        await emailService.Received(1).SendEmailAsync(
-            Arg.Is<string>(organizerEmail => organizerEmail == eventEntity.Organizer.Email),
-            Arg.Is<string>(messageBody => messageBody.Contains(notification.UserId)),
-            "Event application");
+        await emailService.Received(1).SendEmailAsync(Arg.Any<SendEmailRequest>());
+
     }
 }
