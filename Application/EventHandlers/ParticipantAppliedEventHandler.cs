@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Domain.Events;
+using Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +27,7 @@ public class ParticipantAppliedEventHandler : INotificationHandler<ParticipantAp
 
         var messageBody = $"User {notification.UserId} applied on your event";
 
-        await _emailService.SendEmailAsync(organizerEmail!, messageBody, "Event application");
+        await _emailService.SendEmailAsync(null);
     }
 }
 

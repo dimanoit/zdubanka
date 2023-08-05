@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SendGrid.Extensions.DependencyInjection;
 using TokenOptions = Infrastructure.Options.TokenOptions;
 
 namespace Infrastructure;
@@ -24,6 +25,10 @@ public static class ConfigureServices
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();
+
+        // TODO get key from app settings 
+        var sendGridKey = "klek";
+        services.AddSendGrid(options => options.ApiKey = sendGridKey);
 
         AddOptions(services, configuration);
         AddDb(services, configuration);
