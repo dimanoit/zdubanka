@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SendGrid;
 using SendGrid.Extensions.DependencyInjection;
 using TokenOptions = Infrastructure.Options.TokenOptions;
 
@@ -25,9 +26,12 @@ public static class ConfigureServices
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();
-        services.AddSendGrid(options =>
-            options.ApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY"));
+        
+       
 
+        var sendGridKey = configuration["SendGrid:ApiKey"];
+        services.AddSendGrid(options => options.ApiKey = sendGridKey);
+        
         AddOptions(services, configuration);
         AddDb(services, configuration);
     }

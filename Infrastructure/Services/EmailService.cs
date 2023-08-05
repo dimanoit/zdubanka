@@ -9,13 +9,13 @@ namespace Infrastructure.Services;
 
 public class EmailService : IEmailService
 {
-    private readonly SendGridClient _client;
+    private readonly ISendGridClient _client;
     private readonly string _sendGridApiKey;
     private readonly string _sendGridSenderEmail;
     private readonly string _sendGridCompanyName;
     private readonly ILogger<EmailService> _logger;
 
-    public EmailService(ILogger<EmailService> logger,IConfiguration configuration,SendGridClient client)
+    public EmailService(ILogger<EmailService> logger,IConfiguration configuration,ISendGridClient client)
     {
         _sendGridApiKey = configuration["SendGrid:ApiKey"];
         _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
