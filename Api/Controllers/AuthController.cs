@@ -1,4 +1,5 @@
-﻿using Api.Mappers;
+﻿using System.Net;
+using Api.Mappers;
 using Api.Models;
 using Application.Interfaces;
 using Application.Services.Interfaces;
@@ -27,6 +28,7 @@ public class AuthController : ControllerBase
     private readonly AuthService _authService;
     private readonly IEmailService _emailService;
     private readonly UserManager<Account> _userManager;
+    private readonly string _templateId;
 
     public AuthController(
         UserManager<Account> userManager,
@@ -41,6 +43,7 @@ public class AuthController : ControllerBase
         _emailService = emailService;
         _applicationSettings = applicationSettings.Value;
         _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
+        _templateId = configuration["SendGrid:TemplateId"];
     }
 
     [HttpPost("google")]
@@ -80,16 +83,16 @@ public class AuthController : ControllerBase
 
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
 
-        var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{emailToken}/confirmation";
+        var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{(emailToken)}/confirmation";
 
         var request = new SendEmailRequest()
         {
             RecipientEmail = user.Email, 
-            SenderEmail = _sendGridSenderEmail,
-            Message = confirmationLink,
-            Subject = "U have created account in Zdubanka!"
+            SenderEmail = _sendGridSenderEmail
+            //Message = confirmationLink,
+           // Subject = "U have created account in Zdubanka!"
         };
-        await _emailService.SendEmailAsync(request);
+        await _emailService.SendEmailAsync(request,_templateId,confirmationLink);
 
         var userResponse = new
         {
@@ -172,7 +175,7 @@ public class AuthController : ControllerBase
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetPasswordLink = $"{Request.Scheme}://{Request.Host}/api/auth/{resetToken}/password";
 
-        await _emailService.SendEmailAsync(null);//email, resetPasswordLink, "Your password reset link");
+        await _emailService.SendEmailAsync(null,null,resetPasswordLink);//email, resetPasswordLink, "Your password reset link");
         return Ok();
     }
 

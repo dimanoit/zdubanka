@@ -6,10 +6,7 @@ public record SendEmailRequest
     
     public string SenderEmail { get; set; }= null!;
     
-    public string Message { get; set; }= null!;
     
-    public string Subject { get; set; }= null!;
     
-   // public string TemplateId { get; set; }= null!;
     
 }
