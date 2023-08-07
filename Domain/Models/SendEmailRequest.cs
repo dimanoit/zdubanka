@@ -6,7 +6,4 @@ public record SendEmailRequest
     
     public string SenderEmail { get; set; }= null!;
     
-    
-    
-    
 }
