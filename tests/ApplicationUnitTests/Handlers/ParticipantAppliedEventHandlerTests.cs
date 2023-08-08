@@ -27,12 +27,12 @@ public class ParticipantAppliedEventHandlerTests
         var handler = new ParticipantAppliedEventHandler(emailService, dbContext);
 
         var notification = new ParticipantAppliedEvent(string.Empty, eventEntity.Id);
-        
+
         // Act
         await handler.Handle(notification, CancellationToken.None);
 
         // Assert
-        await emailService.Received(1).SendEmailAsync(Arg.Any<SendEmailRequest>(),null,null);
+        await emailService.Received(1).SendEmailAsync(Arg.Any<SendEmailRequest>(), null, null);
 
     }
 }

@@ -29,7 +29,7 @@ public static class ConfigureServices
 
         var sendGridKey = configuration["SendGrid:ApiKey"];
         services.AddSendGrid(options => options.ApiKey = sendGridKey);
-        
+
         AddOptions(services, configuration);
         AddDb(services, configuration);
     }

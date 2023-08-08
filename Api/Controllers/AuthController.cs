@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly GoogleOptions _applicationSettings;
-    private readonly string _sendGridSenderEmail;  
+    private readonly string _sendGridSenderEmail;
     private readonly AuthService _authService;
     private readonly IEmailService _emailService;
     private readonly UserManager<Account> _userManager;
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
         IAccountService accountService,
         IOptions<GoogleOptions> applicationSettings,
         AuthService authService,
-        IEmailService emailService,IConfiguration configuration)
+        IEmailService emailService, IConfiguration configuration)
     {
         _userManager = userManager;
         _accountService = accountService;
@@ -88,10 +88,10 @@ public class AuthController : ControllerBase
 
         var request = new SendEmailRequest()
         {
-            RecipientEmail = user.Email, 
+            RecipientEmail = user.Email,
             SenderEmail = _sendGridSenderEmail
         };
-        await _emailService.SendEmailAsync(request,_confirmationTemplateId,confirmationLink);
+        await _emailService.SendEmailAsync(request, _confirmationTemplateId, confirmationLink);
 
         var userResponse = new
         {
@@ -176,11 +176,11 @@ public class AuthController : ControllerBase
 
         var request = new SendEmailRequest()
         {
-            RecipientEmail = user.Email, 
+            RecipientEmail = user.Email,
             SenderEmail = _sendGridSenderEmail
         };
-        
-        await _emailService.SendEmailAsync(request,_resetTemplateId,resetPasswordLink);
+
+        await _emailService.SendEmailAsync(request, _resetTemplateId, resetPasswordLink);
         return Ok();
     }
 

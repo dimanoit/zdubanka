@@ -14,7 +14,7 @@ public class EmailService : IEmailService
     private readonly string _sendGridCompanyName;
     private readonly ILogger<EmailService> _logger;
 
-    public EmailService(ILogger<EmailService> logger,IConfiguration configuration,ISendGridClient client)
+    public EmailService(ILogger<EmailService> logger, IConfiguration configuration, ISendGridClient client)
     {
         _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
         _sendGridCompanyName = configuration["SendGrid:CompanyName"];
@@ -22,16 +22,16 @@ public class EmailService : IEmailService
         _client = client;
     }
 
-    public async Task SendEmailAsync(SendEmailRequest request,string templateId,string confirmationLink)
+    public async Task SendEmailAsync(SendEmailRequest request, string templateId, string confirmationLink)
     {
         var dynamicData = new
         {
             confirmation_link = confirmationLink,
         };
-        
-        var from = new EmailAddress(_sendGridSenderEmail,_sendGridCompanyName);
+
+        var from = new EmailAddress(_sendGridSenderEmail, _sendGridCompanyName);
         var to = new EmailAddress(request.RecipientEmail);
-        var msg = MailHelper.CreateSingleTemplateEmail(from, to,templateId, dynamicData);
+        var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, dynamicData);
         try
         {
             var response = await _client.SendEmailAsync(msg);
@@ -46,12 +46,12 @@ public class EmailService : IEmailService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Error sending email:");
+            _logger.LogError(ex, "Error sending email:");
             // Handle the exception as required
         }
     }
 
 
-   
+
 }
 
