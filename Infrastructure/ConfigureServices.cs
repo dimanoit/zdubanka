@@ -26,8 +26,6 @@ public static class ConfigureServices
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();
-        
-       
 
         var sendGridKey = configuration["SendGrid:ApiKey"];
         services.AddSendGrid(options => options.ApiKey = sendGridKey);
