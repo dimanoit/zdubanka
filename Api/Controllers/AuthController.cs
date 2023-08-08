@@ -28,7 +28,8 @@ public class AuthController : ControllerBase
     private readonly AuthService _authService;
     private readonly IEmailService _emailService;
     private readonly UserManager<Account> _userManager;
-    private readonly string _templateId;
+    private readonly string _confirmationTemplateId;
+    private readonly string _resetTemplateId;
 
     public AuthController(
         UserManager<Account> userManager,
@@ -43,7 +44,8 @@ public class AuthController : ControllerBase
         _emailService = emailService;
         _applicationSettings = applicationSettings.Value;
         _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
-        _templateId = configuration["SendGrid:TemplateId"];
+        _confirmationTemplateId = configuration["SendGrid:ConfirmationTemplateId"];
+        _resetTemplateId = configuration["SendGrid:ResetTemplateId"];
     }
 
     [HttpPost("google")]
@@ -89,10 +91,8 @@ public class AuthController : ControllerBase
         {
             RecipientEmail = user.Email, 
             SenderEmail = _sendGridSenderEmail
-            //Message = confirmationLink,
-           // Subject = "U have created account in Zdubanka!"
         };
-        await _emailService.SendEmailAsync(request,_templateId,confirmationLink);
+        await _emailService.SendEmailAsync(request,_confirmationTemplateId,confirmationLink);
 
         var userResponse = new
         {
@@ -175,7 +175,13 @@ public class AuthController : ControllerBase
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetPasswordLink = $"{Request.Scheme}://{Request.Host}/api/auth/{resetToken}/password";
 
-        await _emailService.SendEmailAsync(null,null,resetPasswordLink);//email, resetPasswordLink, "Your password reset link");
+        var request = new SendEmailRequest()
+        {
+            RecipientEmail = user.Email, 
+            SenderEmail = _sendGridSenderEmail
+        };
+        
+        await _emailService.SendEmailAsync(request,_resetTemplateId,resetPasswordLink);
         return Ok();
     }
 
