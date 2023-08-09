@@ -12,7 +12,7 @@ public class EmailService : IEmailService
     private readonly ISendGridClient _client;
     private readonly string _sendGridSenderEmail;
     private readonly string _sendGridCompanyName;
-    private static  string _confirmationTemplateId;
+    private static string _confirmationTemplateId;
     private static string _resetTemplateId;
     private readonly ILogger<EmailService> _logger;
     public EmailService(ILogger<EmailService> logger, IConfiguration configuration, ISendGridClient client)
@@ -39,7 +39,7 @@ public class EmailService : IEmailService
         var dynamicData = new
         {
             confirmation_link = "test link 1",
-            reset_link = "test link 2" 
+            reset_link = "test link 2"
         };
 
         var from = new EmailAddress(_sendGridSenderEmail, _sendGridCompanyName);
