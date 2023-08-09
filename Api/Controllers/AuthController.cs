@@ -14,7 +14,6 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SendGrid;
 namespace Api.Controllers;
 
 [ApiController]
@@ -67,7 +66,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IResult> PostUser(RegistrationRequestModel user/*SendEmailRequest request*/)
+    public async Task<IResult> PostUser(RegistrationRequestModel user)
     {
         var identityUser = new Account
         {
@@ -86,12 +85,16 @@ public class AuthController : ControllerBase
 
         var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{(emailToken)}/confirmation";
 
-        var request = new SendEmailRequest()
+        var request = new SendEmailBaseRequest()
         {
             RecipientEmail = user.Email,
             SenderEmail = _sendGridSenderEmail
         };
-        await _emailService.SendEmailAsync(request, _confirmationTemplateId, confirmationLink);
+        var templateSelector = new Dictionary<SendEmailBaseRequest, string>
+        {
+            { request, _confirmationTemplateId }
+        };
+        await _emailService.SendEmailAsync(request, templateSelector);
 
         var userResponse = new
         {
@@ -174,13 +177,17 @@ public class AuthController : ControllerBase
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetPasswordLink = $"{Request.Scheme}://{Request.Host}/api/auth/{resetToken}/password";
 
-        var request = new SendEmailRequest()
+        var request = new SendEmailBaseRequest()
         {
             RecipientEmail = user.Email,
             SenderEmail = _sendGridSenderEmail
         };
 
-        await _emailService.SendEmailAsync(request, _resetTemplateId, resetPasswordLink);
+        var templateSelector = new Dictionary<SendEmailBaseRequest, string>
+        {
+            { request, _resetTemplateId }
+        };
+        await _emailService.SendEmailAsync(request, templateSelector);
         return Ok();
     }
 

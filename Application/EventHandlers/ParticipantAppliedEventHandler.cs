@@ -27,7 +27,7 @@ public class ParticipantAppliedEventHandler : INotificationHandler<ParticipantAp
 
         var messageBody = $"User {notification.UserId} applied on your event";
 
-        await _emailService.SendEmailAsync(null, null, null);
+        await _emailService.SendEmailAsync(null, null);
     }
 }
 

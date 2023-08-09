@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models;
 
-public record SendEmailRequest
+public record SendEmailBaseRequest
 {
     public string RecipientEmail { get; set; } = null!;
 
