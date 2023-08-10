@@ -23,28 +23,23 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly GoogleOptions _applicationSettings;
-    private readonly string _sendGridSenderEmail;
     private readonly AuthService _authService;
     private readonly IEmailService _emailService;
     private readonly UserManager<Account> _userManager;
-    private readonly string _confirmationTemplateId;
-    private readonly string _resetTemplateId;
-
+    private readonly string _sendGridSenderEmail;
     public AuthController(
         UserManager<Account> userManager,
         IAccountService accountService,
         IOptions<GoogleOptions> applicationSettings,
         AuthService authService,
-        IEmailService emailService, IConfiguration configuration, IOptions<SendGridSettings> sendGridSettings)
+        IEmailService emailService, IConfiguration configuration)
     {
         _userManager = userManager;
         _accountService = accountService;
         _authService = authService;
         _emailService = emailService;
         _applicationSettings = applicationSettings.Value;
-        _sendGridSenderEmail = sendGridSettings.Value.SenderEmail;
-        _confirmationTemplateId = sendGridSettings.Value.ConfirmationTemplateId;
-        _resetTemplateId = sendGridSettings.Value.ResetTemplateId;
+        _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
     }
 
     [HttpPost("google")]
