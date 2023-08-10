@@ -32,7 +32,7 @@ public class ParticipantAppliedEventHandlerTests
         await handler.Handle(notification, CancellationToken.None);
 
         // Assert
-        await emailService.Received(1).SendEmailAsync(Arg.Any<SendEmailRequest>());
+        await emailService.Received(1).SendEmailAsync(Arg.Any<SendEmailBaseRequest>());
 
     }
 }

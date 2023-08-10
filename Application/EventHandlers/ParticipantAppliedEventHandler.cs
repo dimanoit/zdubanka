@@ -1,6 +1,5 @@
 using Application.Interfaces;
 using Domain.Events;
-using Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

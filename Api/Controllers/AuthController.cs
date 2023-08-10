@@ -8,12 +8,12 @@ using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
+using Infrastructure;
 using Infrastructure.Options;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SendGrid;
 
 namespace Api.Controllers;
 
@@ -23,11 +23,10 @@ public class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly GoogleOptions _applicationSettings;
-    private readonly string _sendGridSenderEmail;
     private readonly AuthService _authService;
     private readonly IEmailService _emailService;
     private readonly UserManager<Account> _userManager;
-
+    private readonly string _sendGridSenderEmail;
     public AuthController(
         UserManager<Account> userManager,
         IAccountService accountService,
@@ -63,7 +62,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IResult> PostUser(RegistrationRequestModel user/*SendEmailRequest request*/)
+    public async Task<IResult> PostUser(RegistrationRequestModel user)
     {
         var identityUser = new Account
         {
@@ -80,15 +79,15 @@ public class AuthController : ControllerBase
 
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
 
-        var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{emailToken}/confirmation";
+        var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{(emailToken)}/confirmation";
 
-        var request = new SendEmailRequest()
+        var request = new SendConfirmationEmailRequest
         {
             RecipientEmail = user.Email,
             SenderEmail = _sendGridSenderEmail,
-            Message = confirmationLink,
-            Subject = "U have created account in Zdubanka!"
+            ConfirmationLink = confirmationLink
         };
+
         await _emailService.SendEmailAsync(request);
 
         var userResponse = new
@@ -172,7 +171,14 @@ public class AuthController : ControllerBase
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetPasswordLink = $"{Request.Scheme}://{Request.Host}/api/auth/{resetToken}/password";
 
-        await _emailService.SendEmailAsync(null);//email, resetPasswordLink, "Your password reset link");
+        var request = new SendResetEmailRequest
+        {
+            RecipientEmail = user.Email!,
+            SenderEmail = _sendGridSenderEmail,
+            ResetLink = resetPasswordLink
+        };
+
+        await _emailService.SendEmailAsync(request);
         return Ok();
     }
 

@@ -4,5 +4,5 @@ namespace Application.Interfaces;
 
 public interface IEmailService
 {
-    Task SendEmailAsync(SendEmailRequest request);
+    Task SendEmailAsync(SendEmailBaseRequest baseRequest);
 }

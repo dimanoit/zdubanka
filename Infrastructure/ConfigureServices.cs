@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SendGrid;
 using SendGrid.Extensions.DependencyInjection;
 using TokenOptions = Infrastructure.Options.TokenOptions;
 
@@ -26,8 +27,7 @@ public static class ConfigureServices
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();
 
-        // TODO get key from app settings 
-        var sendGridKey = "klek";
+        var sendGridKey = configuration["SendGrid:ApiKey"];
         services.AddSendGrid(options => options.ApiKey = sendGridKey);
 
         AddOptions(services, configuration);
@@ -64,5 +64,6 @@ public static class ConfigureServices
     {
         services.Configure<GoogleOptions>(configuration.GetSection("GoogleOptions"));
         services.Configure<TokenOptions>(configuration.GetSection("TokenOptions"));
+        services.Configure<SendGridSettings>(configuration.GetSection("SendGrid"));
     }
 }
