@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Api.Mappers;
+﻿using Api.Mappers;
 using Api.Models;
 using Application.Interfaces;
 using Application.Services.Interfaces;
@@ -14,6 +13,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+
 namespace Api.Controllers;
 
 [ApiController]
@@ -85,16 +85,14 @@ public class AuthController : ControllerBase
 
         var confirmationLink = $"{Request.Scheme}://{Request.Host}/api/auth/{(emailToken)}/confirmation";
 
-        var request = new SendEmailBaseRequest()
+        var request = new SendConfirmationEmailRequest
         {
             RecipientEmail = user.Email,
-            SenderEmail = _sendGridSenderEmail
+            SenderEmail = _sendGridSenderEmail,
+            ConfirmationLink = confirmationLink
         };
-        var templateSelector = new Dictionary<SendEmailBaseRequest, string>
-        {
-            { request, _confirmationTemplateId }
-        };
-        await _emailService.SendEmailAsync(request, templateSelector);
+       
+        await _emailService.SendEmailAsync(request);
 
         var userResponse = new
         {
@@ -177,17 +175,14 @@ public class AuthController : ControllerBase
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetPasswordLink = $"{Request.Scheme}://{Request.Host}/api/auth/{resetToken}/password";
 
-        var request = new SendEmailBaseRequest()
+        var request = new SendResetEmailRequest
         {
-            RecipientEmail = user.Email,
-            SenderEmail = _sendGridSenderEmail
+            RecipientEmail = user.Email!,
+            SenderEmail = _sendGridSenderEmail,
+            ResetLink = resetPasswordLink
         };
-
-        var templateSelector = new Dictionary<SendEmailBaseRequest, string>
-        {
-            { request, _resetTemplateId }
-        };
-        await _emailService.SendEmailAsync(request, templateSelector);
+       
+        await _emailService.SendEmailAsync(request);
         return Ok();
     }
 
