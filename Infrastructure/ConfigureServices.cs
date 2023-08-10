@@ -64,5 +64,6 @@ public static class ConfigureServices
     {
         services.Configure<GoogleOptions>(configuration.GetSection("GoogleOptions"));
         services.Configure<TokenOptions>(configuration.GetSection("TokenOptions"));
+        services.Configure<SendGridSettings>(configuration.GetSection("SendGrid"));
     }
 }

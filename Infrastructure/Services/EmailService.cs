@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -13,21 +14,17 @@ public class EmailService : IEmailService
 {
     private readonly ISendGridClient _client;
     private readonly ILogger<EmailService> _logger;
-    private readonly string _sendGridCompanyName;
-    private readonly string _sendGridSenderEmail;
-
+    private readonly SendGridSettings _sendGridSettings;
     private readonly Dictionary<Type, string?> _templateSelector;
 
-    public EmailService(ILogger<EmailService> logger, IConfiguration configuration, ISendGridClient client)
+    public EmailService(ILogger<EmailService> logger, ISendGridClient client, IOptions<SendGridSettings> sendGridSettings)
     {
-        // TODO get it as a IOptions<>
-        _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
-        _sendGridCompanyName = configuration["SendGrid:CompanyName"];
+        _sendGridSettings = sendGridSettings.Value;
 
         _templateSelector = new Dictionary<Type, string?>
         {
-            { typeof(SendConfirmationEmailRequest), configuration["SendGrid:ConfirmationTemplateId"] },
-            { typeof(SendResetEmailRequest), configuration["SendGrid:ResetTemplateId"] }
+            { typeof(SendConfirmationEmailRequest), _sendGridSettings.ConfirmationTemplateId },
+            { typeof(SendResetEmailRequest), _sendGridSettings.ResetTemplateId }
         };
 
         _logger = logger;
@@ -38,7 +35,7 @@ public class EmailService : IEmailService
     {
         var templateId = GetTemplateId(baseRequest);
 
-        var from = new EmailAddress(_sendGridSenderEmail, _sendGridCompanyName);
+        var from = new EmailAddress(_sendGridSettings.SenderEmail, _sendGridSettings.CompanyName);
         var to = new EmailAddress(baseRequest.RecipientEmail);
         var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, baseRequest);
         try
@@ -56,6 +53,7 @@ public class EmailService : IEmailService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error sending email:");
+            throw;
         }
     }
 

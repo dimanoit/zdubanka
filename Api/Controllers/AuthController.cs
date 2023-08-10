@@ -8,6 +8,7 @@ using Domain.Models;
 using Domain.Requests;
 using Domain.Response;
 using Google.Apis.Auth;
+using Infrastructure;
 using Infrastructure.Options;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -34,16 +35,16 @@ public class AuthController : ControllerBase
         IAccountService accountService,
         IOptions<GoogleOptions> applicationSettings,
         AuthService authService,
-        IEmailService emailService, IConfiguration configuration)
+        IEmailService emailService, IConfiguration configuration, IOptions<SendGridSettings> sendGridSettings)
     {
         _userManager = userManager;
         _accountService = accountService;
         _authService = authService;
         _emailService = emailService;
         _applicationSettings = applicationSettings.Value;
-        _sendGridSenderEmail = configuration["SendGrid:SenderEmail"];
-        _confirmationTemplateId = configuration["SendGrid:ConfirmationTemplateId"];
-        _resetTemplateId = configuration["SendGrid:ResetTemplateId"];
+        _sendGridSenderEmail = sendGridSettings.Value.SenderEmail;
+        _confirmationTemplateId = sendGridSettings.Value.ConfirmationTemplateId;
+        _resetTemplateId = sendGridSettings.Value.ResetTemplateId;
     }
 
     [HttpPost("google")]
@@ -91,7 +92,7 @@ public class AuthController : ControllerBase
             SenderEmail = _sendGridSenderEmail,
             ConfirmationLink = confirmationLink
         };
-       
+
         await _emailService.SendEmailAsync(request);
 
         var userResponse = new
@@ -181,7 +182,7 @@ public class AuthController : ControllerBase
             SenderEmail = _sendGridSenderEmail,
             ResetLink = resetPasswordLink
         };
-       
+
         await _emailService.SendEmailAsync(request);
         return Ok();
     }
