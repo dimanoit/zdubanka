@@ -21,7 +21,7 @@ public class AccountController : ControllerBase
     private readonly IMediator _mediator;
     private readonly IAzureBlobStorageService _azureBlobStorageService;
 
-    public AccountController(IAccountService accountService, IMediator mediator,IAzureBlobStorageService azureBlobStorageService)
+    public AccountController(IAccountService accountService, IMediator mediator, IAzureBlobStorageService azureBlobStorageService)
     {
         _accountService = accountService;
         _azureBlobStorageService = azureBlobStorageService;
@@ -66,7 +66,7 @@ public class AccountController : ControllerBase
             return BadRequest("No file uploaded.");
         }
 
-        var uploadedPhotoBlobName = await _azureBlobStorageService.UploadFileAsync(file); 
+        var uploadedPhotoBlobName = await _azureBlobStorageService.UploadFileAsync(file);
 
         user.ImageUrl = uploadedPhotoBlobName;
 
