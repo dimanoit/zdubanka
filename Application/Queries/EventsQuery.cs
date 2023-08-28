@@ -57,6 +57,7 @@ public class EventsQueryHandler : IRequestHandler<EventsQuery, EventResponse>
 
         var count = await dbQuery.CountAsync(cancellationToken);
         var data = await dbQuery
+            .Include(e => e.Organizer)
             .Skip(request.Skip)
             .Take(request.Take)
             .Select(ev => ev.ToEventResponseDto())

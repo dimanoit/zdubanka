@@ -69,6 +69,7 @@ public class EventService : IEventService
         var baseQuery = _context.Events
             .AsNoTracking()
             .Where(ap => ap.OrganizerId == request.UserId)
+            .Include(e => e.Organizer)
             .Select(ap => ap.ToEventResponseDto());
 
         var totalCount = await baseQuery.CountAsync(cancellationToken);

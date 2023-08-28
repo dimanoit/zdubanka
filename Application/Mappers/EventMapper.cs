@@ -28,6 +28,8 @@ public static class EventMapper
 
     public static EventResponseDto ToEventResponseDto(this Event entity)
     {
+        var organizer = entity.Organizer!.ToAccountShort();
+        
         var eventEntity = new EventResponseDto
         {
             Location = entity.Location,
@@ -36,9 +38,9 @@ public static class EventMapper
             StartDay = entity.StartDay,
             EndDay = entity.EndDay,
             EventLimitation = entity.EventLimitation,
-            OrganizerId = entity.OrganizerId,
             Id = entity.Id,
-            Status = entity.Status
+            Status = entity.Status,
+            Organizer = organizer
         };
 
         return eventEntity;
