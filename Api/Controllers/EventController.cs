@@ -37,7 +37,7 @@ public class EventController : ControllerBase
         return Created("api/Event", createdEvent);
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     public async Task<EventResponse> GetEventsAsync(
         [FromQuery] SearchEventRequest request,
         CancellationToken cancellationToken)

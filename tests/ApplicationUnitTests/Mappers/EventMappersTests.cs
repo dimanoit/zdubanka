@@ -47,7 +47,6 @@ public class EventMappersTests
         result.StartDay.Should().Be(entity.StartDay);
         result.EndDay.Should().Be(entity.EndDay);
         result.EventLimitation.Should().Be(entity.EventLimitation);
-        result.OrganizerId.Should().Be(entity.OrganizerId);
         result.Id.Should().Be(entity.Id);
         result.Status.Should().Be(entity.Status);
     }

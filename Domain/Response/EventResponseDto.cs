@@ -13,5 +13,5 @@ public record EventResponseDto
     public DateTime EndDay { get; init; }
     public EventStatus Status { get; init; }
     public EventLimitation EventLimitation { get; init; } = null!;
-    public string OrganizerId { get; init; } = null!;
+    public AccountShort Organizer { get; init; } = null!;
 }
