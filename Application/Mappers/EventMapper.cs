@@ -29,7 +29,7 @@ public static class EventMapper
     public static EventResponseDto ToEventResponseDto(this Event entity)
     {
         var organizer = entity.Organizer!.ToAccountShort();
-        
+
         var eventEntity = new EventResponseDto
         {
             Location = entity.Location,

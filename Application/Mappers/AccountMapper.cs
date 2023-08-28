@@ -14,7 +14,7 @@ public static class AccountMapper
         account.RelationshipStatus = accountRequest.RelationshipStatus;
         account.UserLanguages = accountRequest.UserLanguages;
     }
-    
+
     public static AccountShort ToAccountShort(this Account account)
     {
         var accountShort = new AccountShort()
