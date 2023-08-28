@@ -35,13 +35,13 @@ public class AzureBlobStorageService : IAzureBlobStorageService
         {
             contentType = "image/png";
         }
-        // Add more conditions for other file types if needed
 
         // Create a blob client and upload the file with the specified Content-Type
         BlobClient blobClient = containerClient.GetBlobClient(uniqueBlobName);
         await blobClient.UploadAsync(file.OpenReadStream(), new BlobUploadOptions { HttpHeaders = new BlobHttpHeaders { ContentType = contentType } });
+        var photoLink = blobClient.Uri.ToString();
+        return photoLink;
 
-        return blobClient.Name;
     }
 
     public async Task<Stream> DownloadFileAsync(string blobName)
