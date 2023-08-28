@@ -8,11 +8,11 @@ public static class AccountMapper
 {
     public static void UpdateAccount(this UpdateAccountRequest accountRequest, Account account)
     {
-        account.FullName = accountRequest.FullName;
-        account.Bio = accountRequest.Bio;
-        account.ImageUrl = accountRequest.ImageUrl;
-        account.RelationshipStatus = accountRequest.RelationshipStatus;
-        account.UserLanguages = accountRequest.UserLanguages;
+        account.FullName = accountRequest.FullName ?? account.FullName;
+        account.Bio = accountRequest.Bio ?? account.Bio;
+        account.ImageUrl = accountRequest.ImageUrl ?? account.ImageUrl;
+        account.RelationshipStatus = accountRequest.RelationshipStatus ?? account.RelationshipStatus;
+        account.UserLanguages = accountRequest.UserLanguages ?? account.UserLanguages;
     }
 
     public static AccountShort ToAccountShort(this Account account)
