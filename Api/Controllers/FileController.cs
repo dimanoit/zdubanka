@@ -1,8 +1,12 @@
 ﻿using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+namespace Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Admin")]
 public class FilesController : ControllerBase
 {
     private readonly IAzureBlobStorageService _blobStorageService;
@@ -28,6 +32,6 @@ public class FilesController : ControllerBase
     public async Task<IActionResult> DownloadFile(string blobName)
     {
         Stream fileStream = await _blobStorageService.DownloadFileAsync(blobName);
-        return File(fileStream, "application/octet-stream", blobName, true); // Set the 'enableRangeProcessing' parameter to true
+        return File(fileStream, "application/octet-stream", blobName, true); 
     }
 }

@@ -1,11 +1,8 @@
 ﻿using Api.Extensions;
-using Api.Services;
 using Application.Commands;
-using Application.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Requests;
-using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +16,9 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly IMediator _mediator;
-    private readonly IAzureBlobStorageService _azureBlobStorageService;
-
-    public AccountController(IAccountService accountService, IMediator mediator, IAzureBlobStorageService azureBlobStorageService)
+    public AccountController(IAccountService accountService, IMediator mediator)
     {
         _accountService = accountService;
-        _azureBlobStorageService = azureBlobStorageService;
         _mediator = mediator;
     }
 
@@ -54,25 +48,14 @@ public class AccountController : ControllerBase
     }
     [HttpPut("update-photo")]
     public async Task<IActionResult> UpdateAccountPhotoAsync(
-        string userId, IFormFile file, CancellationToken cancellationToken)
+       string userId, IFormFile file, CancellationToken cancellationToken)
     {
-        var user = await _accountService.GetAccountByIdAsync(userId, cancellationToken);
-        if (user == null)
-        {
-            return NotFound($"User with ID {userId} not found.");
-        }
-        if (file == null || file.Length == 0)
-        {
-            return BadRequest("No file uploaded.");
-        }
+        if (User.GetId() != userId) return Forbid();
+        
+        var updateAccountPhotoCommand = new UpdateAccountPhotoCommand(userId, file,cancellationToken);
+        await _mediator.Send(updateAccountPhotoCommand, cancellationToken);
 
-        var uploadedPhotoBlobName = await _azureBlobStorageService.UploadFileAsync(file);
-
-        user.ImageUrl = uploadedPhotoBlobName;
-
-        await _accountService.UpdateAccountAsync(user);
-
-        return Ok($"Account photo for user {userId} updated successfully.");
+        return Ok();
     }
 
     [HttpGet]
