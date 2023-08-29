@@ -51,8 +51,8 @@ public class AccountController : ControllerBase
        string userId, IFormFile file, CancellationToken cancellationToken)
     {
         if (User.GetId() != userId) return Forbid();
-        
-        var updateAccountPhotoCommand = new UpdateAccountPhotoCommand(userId, file,cancellationToken);
+
+        var updateAccountPhotoCommand = new UpdateAccountPhotoCommand(userId, file, cancellationToken);
         await _mediator.Send(updateAccountPhotoCommand, cancellationToken);
 
         return Ok();

@@ -32,6 +32,6 @@ public class FilesController : ControllerBase
     public async Task<IActionResult> DownloadFile(string blobName)
     {
         Stream fileStream = await _blobStorageService.DownloadFileAsync(blobName);
-        return File(fileStream, "application/octet-stream", blobName, true); 
+        return File(fileStream, "application/octet-stream", blobName, true);
     }
 }

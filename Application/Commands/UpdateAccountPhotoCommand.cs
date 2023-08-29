@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Commands;
 
-public record UpdateAccountPhotoCommand(string userId, IFormFile File,CancellationToken CancellationToken) : IRequest;
+public record UpdateAccountPhotoCommand(string userId, IFormFile File, CancellationToken CancellationToken) : IRequest;
 
 public class UpdateAccountPhotoCommandHandler : IRequestHandler<UpdateAccountPhotoCommand>
 {
