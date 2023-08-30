@@ -29,4 +29,3 @@ public class ParticipantAppliedEventHandler : INotificationHandler<ParticipantAp
         await _emailService.SendEmailAsync(null);
     }
 }
-
