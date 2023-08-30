@@ -2,8 +2,8 @@
 
 namespace Application.Interfaces;
 
-public interface IAzureBlobStorageService
+public interface IFileService
 {
     Task<string> UploadFileAsync(IFormFile file);
-    Task<Stream> DownloadFileAsync(string blobName);
+    Task<Stream> DownloadFileAsync(string filePath);
 }

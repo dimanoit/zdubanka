@@ -7,12 +7,12 @@ using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Services
 {
-    public class AzureBlobStorageService : IAzureBlobStorageService
+    public class FileService : IFileService
     {
         private readonly BlobServiceClient _blobServiceClient;
         private readonly AzureBlobOptions _azureBlobOptions;
 
-        public AzureBlobStorageService(IOptions<AzureBlobOptions> applicationSettings)
+        public FileService(IOptions<AzureBlobOptions> applicationSettings)
         {
             _azureBlobOptions = applicationSettings.Value;
             _blobServiceClient = new BlobServiceClient(_azureBlobOptions.ConnectionString ??
@@ -39,10 +39,10 @@ namespace Infrastructure.Services
             return blobClient.Uri.ToString();
         }
 
-        public async Task<Stream> DownloadFileAsync(string blobName)
+        public async Task<Stream> DownloadFileAsync(string filePath)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(_azureBlobOptions.ContainerName);
-            var blobClient = containerClient.GetBlobClient(blobName);
+            var blobClient = containerClient.GetBlobClient(filePath);
             BlobDownloadInfo download = await blobClient.DownloadAsync();
 
             return download.Content;

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Services;
 
-public class LocalFileStorageService : ILocalFileStorageService
+public class LocalFileStorageService : IFileService
 {
     private readonly string _storagePath;
 
@@ -12,7 +12,7 @@ public class LocalFileStorageService : ILocalFileStorageService
         _storagePath = storagePath;
     }
 
-    public async Task<string> SaveFileAsync(IFormFile file)
+    public async Task<string> UploadFileAsync(IFormFile file)
     {
         string filePath = Path.Combine(_storagePath, file.FileName);
         using var stream = new FileStream(filePath, FileMode.Create);
@@ -20,8 +20,9 @@ public class LocalFileStorageService : ILocalFileStorageService
         return filePath;
     }
 
-    public async Task<Stream> GetFileAsync(string filePath)
+    public Task<Stream> DownloadFileAsync(string filePath)
     {
-        return new FileStream(filePath, FileMode.Open);
+        Stream stream = new FileStream(filePath, FileMode.Open);
+        return Task.FromResult(stream);
     }
 }

@@ -22,7 +22,7 @@ public static class ConfigureServices
         IConfiguration configuration)
     {
         LogInjector.AddLogging();
-        services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+        services.AddScoped<IFileService, FileService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();

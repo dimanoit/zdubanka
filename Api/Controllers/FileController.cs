@@ -9,9 +9,9 @@ namespace Api.Controllers;
 [Authorize(Roles = "Admin")]
 public class FilesController : ControllerBase
 {
-    private readonly IAzureBlobStorageService _blobStorageService;
+    private readonly IFileService _blobStorageService;
 
-    public FilesController(IAzureBlobStorageService blobStorageService)
+    public FilesController(IFileService blobStorageService)
     {
         _blobStorageService = blobStorageService;
     }
