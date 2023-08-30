@@ -8,3 +8,4 @@ cd "$parent_dir" || exit 1  # Change to the parent directory or exit if it fails
 . "$current_dir/_/husky.sh"
 
 dotnet format
+echo "Format done"
