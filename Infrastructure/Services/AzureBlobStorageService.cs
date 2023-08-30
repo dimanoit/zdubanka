@@ -4,7 +4,6 @@ using Azure.Storage.Blobs.Models;
 using Infrastructure.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
