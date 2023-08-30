@@ -1,7 +1,10 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 current_dir=$(dirname "$0")
+parent_dir=$(dirname "$current_dir")
 echo "Current Directory: $current_dir"
+echo "Parent Directory: $parent_dir"
+
+cd "$parent_dir" || exit 1  # Change to the parent directory or exit if it fails
+. "$current_dir/_/husky.sh"
 
 dotnet format
