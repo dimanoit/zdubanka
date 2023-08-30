@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SendGrid;
 using SendGrid.Extensions.DependencyInjection;
 using TokenOptions = Infrastructure.Options.TokenOptions;
 
@@ -23,12 +22,14 @@ public static class ConfigureServices
         IConfiguration configuration)
     {
         LogInjector.AddLogging();
+        services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<ITokenHandler, JwtTokenHandler>();
 
         var sendGridKey = configuration["SendGrid:ApiKey"];
         services.AddSendGrid(options => options.ApiKey = sendGridKey);
+
 
         AddOptions(services, configuration);
         AddDb(services, configuration);

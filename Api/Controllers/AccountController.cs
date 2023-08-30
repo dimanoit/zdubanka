@@ -16,7 +16,6 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
     private readonly IMediator _mediator;
-
     public AccountController(IAccountService accountService, IMediator mediator)
     {
         _accountService = accountService;
@@ -44,6 +43,17 @@ public class AccountController : ControllerBase
 
         var updateAccountCommand = new UpdateAccountCommand(request, cancellationToken);
         await _mediator.Send(updateAccountCommand, cancellationToken);
+
+        return Ok();
+    }
+    [HttpPut("update-photo")]
+    public async Task<IActionResult> UpdateAccountPhotoAsync(
+       string userId, IFormFile file, CancellationToken cancellationToken)
+    {
+        if (User.GetId() != userId) return Forbid();
+
+        var updateAccountPhotoCommand = new UpdateAccountPhotoCommand(userId, file, cancellationToken);
+        await _mediator.Send(updateAccountPhotoCommand, cancellationToken);
 
         return Ok();
     }
