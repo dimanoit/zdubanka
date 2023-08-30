@@ -30,14 +30,12 @@ public static class ConfigureServices
         var sendGridKey = configuration["SendGrid:ApiKey"];
         services.AddSendGrid(options => options.ApiKey = sendGridKey);
 
-
         AddOptions(services, configuration);
         AddDb(services, configuration);
     }
 
     private static void AddDb(IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<IdentityOptions>(configuration.GetSection("IdentityOptions"));
         services
             .AddIdentityCore<Account>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -63,6 +61,7 @@ public static class ConfigureServices
 
     private static void AddOptions(IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<AzureBlobOptions>(configuration.GetSection("AzureBlobOptions"));
         services.Configure<GoogleOptions>(configuration.GetSection("GoogleOptions"));
         services.Configure<TokenOptions>(configuration.GetSection("TokenOptions"));
         services.Configure<SendGridSettings>(configuration.GetSection("SendGrid"));

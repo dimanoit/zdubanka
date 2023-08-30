@@ -1,54 +1,65 @@
 ﻿using Application.Interfaces;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Infrastructure.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
-namespace Infrastructure.Services;
-
-public class AzureBlobStorageService : IAzureBlobStorageService
+namespace Infrastructure.Services
 {
-    private readonly BlobServiceClient _blobServiceClient;
-    private readonly string _containerName;
-
-    public AzureBlobStorageService(IConfiguration configuration)
+    public class AzureBlobStorageService : IAzureBlobStorageService
     {
-        string connectionString = configuration["AzureBlobStorageSettings:ConnectionString"];
-        _blobServiceClient = new BlobServiceClient(connectionString);
-        _containerName = "uploads"; // Name of the container in Azure Blob Storage
-    }
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly AzureBlobOptions _azureBlobOptions;
 
-    public async Task<string> UploadFileAsync(IFormFile file)
-    {
-        BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-
-        // Generate a unique blob name
-        string uniqueBlobName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-        // Set the correct Content-Type based on the file type
-        string contentType = "application/octet-stream"; // Default content type
-        if (file.ContentType == "image/jpeg")
+        public AzureBlobStorageService(IOptions<AzureBlobOptions> applicationSettings)
         {
-            contentType = "image/jpeg";
-        }
-        else if (file.ContentType == "image/png")
-        {
-            contentType = "image/png";
+            _azureBlobOptions = applicationSettings.Value;
+            _blobServiceClient = new BlobServiceClient(_azureBlobOptions.ConnectionString ??
+                                                       throw new ArgumentNullException(nameof(applicationSettings)));
         }
 
-        // Create a blob client and upload the file with the specified Content-Type
-        BlobClient blobClient = containerClient.GetBlobClient(uniqueBlobName);
-        await blobClient.UploadAsync(file.OpenReadStream(), new BlobUploadOptions { HttpHeaders = new BlobHttpHeaders { ContentType = contentType } });
-        var photoLink = blobClient.Uri.ToString();
-        return photoLink;
+        public async Task<string> UploadFileAsync(IFormFile file)
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_azureBlobOptions.ContainerName);
 
-    }
+            var uniqueBlobName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var contentType = GetContentType(file.ContentType);
 
-    public async Task<Stream> DownloadFileAsync(string blobName)
-    {
-        BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-        BlobClient blobClient = containerClient.GetBlobClient(blobName);
-        BlobDownloadInfo download = await blobClient.DownloadAsync();
-        return download.Content;
+            var blobClient = containerClient.GetBlobClient(uniqueBlobName);
+            await blobClient.UploadAsync(file.OpenReadStream(),
+                new BlobUploadOptions
+                {
+                    HttpHeaders = new BlobHttpHeaders
+                    {
+                        ContentType = contentType
+                    }
+                });
+
+            return blobClient.Uri.ToString();
+        }
+
+        public async Task<Stream> DownloadFileAsync(string blobName)
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_azureBlobOptions.ContainerName);
+            var blobClient = containerClient.GetBlobClient(blobName);
+            BlobDownloadInfo download = await blobClient.DownloadAsync();
+
+            return download.Content;
+        }
+
+        private static string GetContentType(string fileContentType)
+        {
+            return fileContentType switch
+            {
+                "image/jpeg" => "image/jpeg",
+                "image/png" => "image/png",
+                _ => "application/octet-stream"
+            };
+        }
     }
 }
