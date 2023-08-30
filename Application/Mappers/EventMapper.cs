@@ -44,6 +44,7 @@ public static class EventMapper
             EventLimitation = entity.EventLimitation,
             Id = entity.Id,
             Status = entity.Status,
+            PictureUrl = entity.PictureUrl,
             Organizer = organizer
         };
 
