@@ -31,7 +31,7 @@ public class EventService : IEventService
 
         var eventEntity = eventRequest.ToEvent(organizerId, pictureUrl);
         eventEntity.AddDomainEvent(new EventCreatedEvent(eventEntity.Id));
-        
+
         _context.Events.Add(eventEntity);
         await _context.SaveChangesAsync(cancellationToken);
         return eventEntity;
