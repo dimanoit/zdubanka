@@ -1,7 +1,7 @@
 ﻿using Domain.Enums;
 using Domain.Requests.Common;
 
-namespace Domain.Requests;
+namespace Application.Models.Requests.Events;
 
 public record SearchEventRequest : PageRequestBase
 {

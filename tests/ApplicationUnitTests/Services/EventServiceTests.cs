@@ -1,13 +1,14 @@
 ﻿using Application.Interfaces;
+using Application.Models.Requests.Events;
 using Application.Services;
 using ApplicationUnitTests.Fakers;
 using ApplicationUnitTests.Helpers;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Events;
-using Domain.Requests;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using Xunit;
 
 namespace ApplicationUnitTests.Services;
@@ -20,7 +21,7 @@ public class EventServiceTests
     public EventServiceTests()
     {
         _dbContext = ApplicationDbContextFactory.Create();
-        _eventService = new EventService(_dbContext);
+        _eventService = new EventService(_dbContext, Substitute.For<IFileService>());
     }
 
     [Fact]
@@ -48,7 +49,7 @@ public class EventServiceTests
         _dbContext.Accounts.Add(account);
         var @event = await GetEventWithinDatabase();
 
-        var eventService = new EventService(_dbContext);
+        var eventService = new EventService(_dbContext, Substitute.For<IFileService>());
 
         // Act
         await eventService.ApplyOnEventAsync(@event.Id, account.Id, default);

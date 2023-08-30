@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Exceptions;
-using Domain.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
@@ -12,12 +11,12 @@ public record UpdateAccountPhotoCommand(string userId, IFormFile File, Cancellat
 public class UpdateAccountPhotoCommandHandler : IRequestHandler<UpdateAccountPhotoCommand>
 {
     private readonly IAccountService _accountService;
-    private readonly IAzureBlobStorageService _azureBlobStorageService;
+    private readonly IFileService _fileService;
 
-    public UpdateAccountPhotoCommandHandler(IAccountService accountService, IAzureBlobStorageService azureBlobStorageService)
+    public UpdateAccountPhotoCommandHandler(IAccountService accountService, IFileService fileService)
     {
         _accountService = accountService;
-        _azureBlobStorageService = azureBlobStorageService;
+        _fileService = fileService;
     }
 
     public async Task Handle(UpdateAccountPhotoCommand command, CancellationToken cancellationToken)
@@ -32,7 +31,7 @@ public class UpdateAccountPhotoCommandHandler : IRequestHandler<UpdateAccountPho
             throw new ArgumentException("No file uploaded.");
         }
 
-        var uploadedPhotoBlobName = await _azureBlobStorageService.UploadFileAsync(command.File);
+        var uploadedPhotoBlobName = await _fileService.UploadFileAsync(command.File);
 
         user.ImageUrl = uploadedPhotoBlobName;
 

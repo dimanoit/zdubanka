@@ -1,8 +1,8 @@
-﻿using Bogus;
+﻿using Application.Models.Requests.Events;
+using Bogus;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Models;
-using Domain.Requests;
 
 namespace ApplicationUnitTests.Fakers;
 

@@ -1,7 +1,7 @@
 ﻿using Api.Extensions;
+using Application.Models.Requests.Events;
 using Application.Queries;
 using Application.Services.Interfaces;
-using Domain.Requests;
 using Domain.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -27,8 +27,7 @@ public class EventController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> CreateEvent(
-        [FromBody]
-        EventCreationRequest eventCreationRequest,
+        [FromForm] EventCreationRequest eventCreationRequest,
         CancellationToken cancellationToken)
     {
         var userId = User.GetId();

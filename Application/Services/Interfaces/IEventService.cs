@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Domain.Requests;
+﻿using Application.Models.Requests.Events;
+using Domain.Entities;
 using Domain.Response;
 
 namespace Application.Services.Interfaces;

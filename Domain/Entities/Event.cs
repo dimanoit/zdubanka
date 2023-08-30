@@ -7,6 +7,7 @@ namespace Domain.Entities;
 public class Event : BaseEntity
 {
     public Address Location { get; init; } = null!;
+    public string PictureUrl { get; init; } = null!;
     public string Title { get; init; } = null!;
     public string Description { get; init; } = null!;
     public DateTime StartDay { get; init; }

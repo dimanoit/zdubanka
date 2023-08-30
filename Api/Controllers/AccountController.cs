@@ -46,7 +46,8 @@ public class AccountController : ControllerBase
 
         return Ok();
     }
-    [HttpPut("update-photo")]
+
+    [HttpPut("photo")]
     public async Task<IActionResult> UpdateAccountPhotoAsync(
        string userId, IFormFile file, CancellationToken cancellationToken)
     {

@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Mappers;
+using Application.Models.Requests.Events;
 using Domain.Entities;
-using Domain.Requests;
 using Domain.Response;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

@@ -13,9 +13,10 @@ public class EventMappersTests
         // Arrange
         var request = EventFaker.CreateEventCreationRequest();
         var organizerId = "TestOrganizerId";
+        var pictureUrl = "some_url";
 
         // Act
-        var result = request.ToEvent(organizerId);
+        var result = request.ToEvent(organizerId, pictureUrl);
 
         // Assert
         result.Should().NotBeNull();
