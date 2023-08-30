@@ -24,7 +24,7 @@ public class ParticipantAppliedEventHandler : INotificationHandler<ParticipantAp
             .Select(ap => ap.Organizer!.Email)
             .FirstAsync(cancellationToken);
 
-                                                var messageBody = $"User {notification.UserId} applied on your event";
+        var messageBody = $"User {notification.UserId} applied on your event";
 
         await _emailService.SendEmailAsync(null);
     }
