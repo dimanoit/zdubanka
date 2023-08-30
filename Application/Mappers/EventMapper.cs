@@ -1,12 +1,15 @@
-﻿using Domain.Entities;
-using Domain.Requests;
+﻿using Application.Models.Requests.Events;
+using Domain.Entities;
 using Domain.Response;
 
 namespace Application.Mappers;
 
 public static class EventMapper
 {
-    public static Event ToEvent(this EventCreationRequest request, string organizerId)
+    public static Event ToEvent(
+        this EventCreationRequest request,
+        string organizerId,
+        string pictureUrl)
     {
         var eventEntity = new Event
         {
@@ -19,7 +22,8 @@ public static class EventMapper
             EventLimitation = request.EventLimitation,
             OrganizerId = organizerId,
             Latitude = request.Latitude,
-            Longitude = request.Longitude
+            Longitude = request.Longitude,
+            PictureUrl = pictureUrl
         };
 
         return eventEntity;

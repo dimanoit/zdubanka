@@ -1,6 +1,6 @@
 ﻿using Domain.Requests.Common;
 
-namespace Domain.Requests;
+namespace Application.Models.Requests.Events;
 
 public record EventRetrieveRequest : PageRequestBase
 {

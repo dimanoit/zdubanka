@@ -1,8 +1,8 @@
+using Application.Models.Requests.Events;
 using Application.Queries;
 using ApplicationUnitTests.Fixtures;
 using ApplicationUnitTests.Helpers;
 using Domain.Entities;
-using Domain.Requests;
 using FluentAssertions;
 using Xunit;
 

@@ -1,9 +1,9 @@
 using System.Net;
 using System.Text.Json;
 using Api;
+using Application.Models.Requests.Events;
 using Domain.Enums;
 using Domain.Models;
-using Domain.Requests;
 using FluentAssertions;
 using Integration.Extensions;
 using Integration.Fixtures;

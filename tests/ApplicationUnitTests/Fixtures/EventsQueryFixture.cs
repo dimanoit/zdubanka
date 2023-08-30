@@ -1,9 +1,9 @@
 ﻿using System.Collections;
+using Application.Models.Requests.Events;
 using ApplicationUnitTests.Fakers;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Models;
-using Domain.Requests;
 
 namespace ApplicationUnitTests.Fixtures;
 

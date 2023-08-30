@@ -13,4 +13,8 @@
 
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Requests\Events\"/>
+    </ItemGroup>
+
 </Project>

@@ -1,26 +1,25 @@
 ﻿using Application.Interfaces;
 using Application.Mappers;
+using Application.Models.Requests.Events;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Events;
 using Domain.Exceptions;
-using Domain.Requests;
 using Domain.Response;
-using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
-using ValidationException = Domain.Exceptions.ValidationException;
 
 namespace Application.Services;
 
 public class EventService : IEventService
 {
     private readonly IApplicationDbContext _context;
+    private readonly IFileService _fileService;
 
-    public EventService(IApplicationDbContext context)
+    public EventService(IApplicationDbContext context, IFileService fileService)
     {
         _context = context;
+        _fileService = fileService;
     }
 
     public async Task<Event> CreateAsync(
@@ -28,9 +27,11 @@ public class EventService : IEventService
         string organizerId,
         CancellationToken cancellationToken)
     {
-        var eventEntity = eventRequest.ToEvent(organizerId);
-        eventEntity.AddDomainEvent(new EventCreatedEvent(eventEntity.Id));
+        var pictureUrl = await _fileService.UploadFileAsync(eventRequest.Picture);
 
+        var eventEntity = eventRequest.ToEvent(organizerId, pictureUrl);
+        eventEntity.AddDomainEvent(new EventCreatedEvent(eventEntity.Id));
+        
         _context.Events.Add(eventEntity);
         await _context.SaveChangesAsync(cancellationToken);
         return eventEntity;

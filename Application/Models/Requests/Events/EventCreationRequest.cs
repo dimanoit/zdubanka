@@ -1,6 +1,7 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Http;
 
-namespace Domain.Requests;
+namespace Application.Models.Requests.Events;
 
 public record EventCreationRequest
 {
@@ -12,4 +13,5 @@ public record EventCreationRequest
     public DateTime StartDay { get; init; }
     public DateTime EndDay { get; init; }
     public EventLimitation EventLimitation { get; init; } = null!;
+    public IFormFile Picture { get; init; } = null!;
 }
