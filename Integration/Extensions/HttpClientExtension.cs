@@ -95,7 +95,7 @@ public static class HttpClientExtension
         var userSignInModel = new AuthenticationRequest
         {
             Email = email,
-            Password = "somePassword123"
+            Password = SharedTestData.TestPassword
         };
 
         var response = await client.Post("api/auth/token", userSignInModel);

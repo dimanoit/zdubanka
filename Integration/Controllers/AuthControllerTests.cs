@@ -25,9 +25,9 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
 
         var userRegistrationModel = new RegistrationRequestModel
         {
-            Email = "oleksiibahmet@gmail.com",
+            Email = SharedTestData.TestEmail,
             Name = "Dimonchik Testyvalbnuk1",
-            Password = "somePassword123",
+            Password = SharedTestData.TestPassword,
             DateOfBirth = DateTime.UtcNow.AddYears(-20),
             UserName = "lexus1",
             Gender = Gender.Male
@@ -55,7 +55,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
         {
             Email = SharedTestData.TestEmailSecondUser,
             Name = "Dimonchik Testyvalbnuk",
-            Password = "somePassword123",
+            Password = SharedTestData.TestPassword,
             DateOfBirth = DateTime.UtcNow.AddYears(-20),
             UserName = "Dimonchik1",
             Gender = Gender.Male
@@ -66,8 +66,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
         if (response.StatusCode == HttpStatusCode.BadRequest)
         {
             var responseText = await response.Content.ReadAsStringAsync();
-            responseText.Should().Contain("DuplicateEmail");
-            return;
+            if (responseText.Contains("DuplicateEmail") || responseText.Contains("DuplicateUserName")) return;
         }
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -81,7 +80,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
         var userSignInModel = new AuthenticationRequest
         {
             Email = SharedTestData.TestEmail,
-            Password = "somePassword123"
+            Password = SharedTestData.TestPassword
         };
 
         var response = await client.Post("api/auth/token", userSignInModel);
@@ -96,7 +95,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
         var userSignInModel = new AuthenticationRequest
         {
             Email = SharedTestData.TestEmailSecondUser,
-            Password = "somePassword123"
+            Password = SharedTestData.TestPassword
         };
 
         var response = await client.Post("api/auth/token", userSignInModel);

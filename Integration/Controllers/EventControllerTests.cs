@@ -54,11 +54,32 @@ public class EventControllerTests : IClassFixture<WebApplicationFactory<Program>
         };
 
         // Act 
-        var result = await client.PostAuth("api/event", eventRequest, SharedTestData.TestEmail);
+        var formData = new Dictionary<string, string>
+        {
+            { "Location.Street", eventRequest.Location.Street },
+            { "Location.City", eventRequest.Location.City },
+            { "Location.State", eventRequest.Location.State },
+            { "Location.Country", eventRequest.Location.Country },
+            { "Title", eventRequest.Title },
+            { "Description", eventRequest.Description },
+            { "StartDay", eventRequest.StartDay.ToString("yyyy-MM-ddTHH:mm:ss") },
+            { "EndDay", eventRequest.EndDay.ToString("yyyy-MM-ddTHH:mm:ss") },
+            { "Longitude", eventRequest.Longitude.ToString() },
+            { "Latitude", eventRequest.Latitude.ToString() },
+            { "EventLimitation.CountOfPeople", eventRequest.EventLimitation.CountOfPeople.ToString() },
+            { "EventLimitation.Gender[0]", eventRequest.EventLimitation.Gender[0].ToString() },
+            { "EventLimitation.Gender[1]", eventRequest.EventLimitation.Gender[1].ToString() },
+            { "EventLimitation.RelationshipStatus[0]", eventRequest.EventLimitation.RelationshipStatus[0].ToString() },
+            { "EventLimitation.AgeLimit.Min", eventRequest.EventLimitation.AgeLimit.Min.ToString() },
+            { "EventLimitation.AgeLimit.Max", eventRequest.EventLimitation.AgeLimit.Max.ToString() }
+        };
+
+        var result = await client.PostAuth("api/event", new FormUrlEncodedContent(formData), SharedTestData.TestEmail);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
     }
+
 
     [Fact]
     public async Task GetCurrentUserEvents_ShouldReturn_EventResultWithoutErrors()
